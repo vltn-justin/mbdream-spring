@@ -101,7 +101,8 @@ public class MotoService {
         newMoto.setNomMoto(motoRequest.getNomMoto());
         newMoto.setPrixMoto(motoRequest.getPrixMoto());
         newMoto.setDateAjout(Instant.now());
-        newMoto.setFeatured(false);
+        newMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
+        newMoto.setFeatured(motoRequest.isFeatured());
 
         newMoto = this.motoRepository.save(newMoto);
 
