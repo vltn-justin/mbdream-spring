@@ -85,7 +85,7 @@ public class MediaService {
 
         this.saveMediaIntoFolder(mediaRequest);
 
-        image.setLienImage("http://chamalo-web.ddns.net:16650/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+        image.setLienImage("http://chamalo-web.ddns.net:16650/media/img/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
         image.setDescriptionImage(mediaRequest.getDescriptionMedia());
         image.setMoto(moto);
         image = this.imageRepository.save(image);
