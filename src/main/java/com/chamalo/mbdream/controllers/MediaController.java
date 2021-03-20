@@ -5,11 +5,16 @@ import com.chamalo.mbdream.models.ImageModel;
 import com.chamalo.mbdream.models.VideoModel;
 import com.chamalo.mbdream.services.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -176,9 +181,9 @@ public class MediaController {
      */
     @GetMapping("/img/get-all-moto/{idMoto}")
     public ResponseEntity<List<ImageModel>> getAllImgOfMoto(@PathVariable final Long idMoto) {
-            List<ImageModel> imageModelList = this.mediaService.getAllImgOfMoto(idMoto);
+        List<ImageModel> imageModelList = this.mediaService.getAllImgOfMoto(idMoto);
 
-            return ResponseEntity.ok(imageModelList);
+        return ResponseEntity.ok(imageModelList);
     }
 
     /**
@@ -193,5 +198,63 @@ public class MediaController {
         List<VideoModel> videoModelList = this.mediaService.getAllVideoOfMoto(idMoto);
 
         return ResponseEntity.ok(videoModelList);
+    }
+
+    /**
+     * Method to get one img
+     *
+     * @param type Type of img, if it's for moto or marque
+     * @param slug Slug of moto or marque
+     * @param nom  Name of img + format
+     *
+     * @return ResponseEntity
+     *
+     * @throws IOException Exception for file
+     */
+    @GetMapping(value = "/img/{type}/{slug}/{nom}")
+    @ResponseBody
+    public ResponseEntity<Object> getOneImg(@PathVariable final String type,
+                                            @PathVariable final String slug,
+                                            @PathVariable final String nom) throws IOException {
+        Path path = Paths.get("/home/pi/mbdream-spring/resources/static/images/" + type + "/" + slug + "/");
+        Resource resource = new UrlResource(path.resolve(nom).toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline")
+                    .contentType(MediaType.parseMediaType("image/png"))
+                    .body(resource);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Method to get one img
+     *
+     * @param type Type of Video, if it's for moto or marque
+     * @param slug Slug of moto or marque
+     * @param nom  Name of Video + format
+     *
+     * @return ResponseEntity
+     *
+     * @throws IOException Exception for file
+     */
+    @GetMapping(value = "/video/{type}/{slug}/{nom}")
+    @ResponseBody
+    public ResponseEntity<Object> getOneVideo(@PathVariable final String type,
+                                            @PathVariable final String slug,
+                                            @PathVariable final String nom) throws IOException {
+        Path path = Paths.get("/home/pi/mbdream-spring/resources/static/video/" + type + "/" + slug + "/");
+        Resource resource = new UrlResource(path.resolve(nom).toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline")
+                    .contentType(MediaType.parseMediaType("image/png"))
+                    .body(resource);
+        }
+        return ResponseEntity.noContent().build();
     }
 }

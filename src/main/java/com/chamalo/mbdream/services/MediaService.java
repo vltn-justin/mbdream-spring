@@ -85,7 +85,7 @@ public class MediaService {
 
         this.saveMediaIntoFolder(mediaRequest);
 
-        image.setLienImage("http://" + InetAddress.getLocalHost().getHostAddress() + ":8080\\images\\moto\\" + mediaRequest.getSlugMoto() + "\\" + mediaRequest.getFileMedia().getOriginalFilename());
+        image.setLienImage("http://chamalo-web.ddns.net:16650/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
         image.setDescriptionImage(mediaRequest.getDescriptionMedia());
         image.setMoto(moto);
         image = this.imageRepository.save(image);
@@ -226,12 +226,12 @@ public class MediaService {
      */
     private void saveMediaIntoFolder(final MediaRequest mediaRequest) throws IOException {
         // Changer le path pour le final
-        String path = "C:\\Users\\Chamalo\\Desktop\\Motorbike Dream\\spring\\src\\main\\resources\\static\\";
+        String path = "/home/pi/mbdream-spring/resources/static/";
 
-        path += (mediaRequest.getIsVideo() ? "videos\\moto\\" : "images\\moto\\");
+        path += (mediaRequest.getIsVideo() ? "videos/moto/" : "images/moto/");
         path += mediaRequest.getSlugMoto();
 
-        final String pathFile = path + "\\" + mediaRequest.getFileMedia().getOriginalFilename();
+        final String pathFile = path + "/" + mediaRequest.getFileMedia().getOriginalFilename();
 
         final File folder = new File(path);
 
