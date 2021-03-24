@@ -20,6 +20,8 @@ public class MediaRequest {
 
     private MultipartFile fileMedia;
 
+    private String urlMedia;
+
     private String descriptionMedia;
 
     private boolean isVideo;
