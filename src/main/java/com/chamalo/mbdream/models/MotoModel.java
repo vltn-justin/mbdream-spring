@@ -48,6 +48,9 @@ public class MotoModel {
     @Column(columnDefinition = "BOOLEAN", nullable = false)
     private boolean isFeatured;
 
+    @Column(columnDefinition = "TEXT")
+    private String backgroundImgMoto;
+
     @ManyToOne
     @JoinColumn(name = "marque_id")
     private MarqueModel marque;
@@ -94,6 +97,7 @@ public class MotoModel {
         map.put("nomMoto", this.nomMoto);
         map.put("prixMoto", this.prixMoto);
         map.put("descriptionMoto", this.descriptionMoto);
+        map.put("backgroundImgMoto", this.backgroundImgMoto);
 
         if (this.marque != null) {
             Map<String, String> marqueMap = new LinkedHashMap<>();
