@@ -51,9 +51,14 @@ public class MediaService {
 
         VideoModel video = new VideoModel();
 
-        this.saveMediaIntoFolder(mediaRequest);
+        if (mediaRequest.getUrlMedia() != null && mediaRequest.getUrlMedia().length() > 1) {
+            video.setLienVideo(mediaRequest.getUrlMedia());
+        } else {
+            this.saveMediaIntoFolder(mediaRequest);
 
-        video.setLienVideo("http://" + InetAddress.getLocalHost().getHostAddress() + ":8080\\videos\\moto\\" + mediaRequest.getSlugMoto() + "\\" + mediaRequest.getFileMedia().getOriginalFilename());
+            video.setLienVideo("http://chamalo-web.ddns.net:16650/media/video/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+        }
+
         video.setDescriptionVideo(mediaRequest.getDescriptionMedia());
         video.setMoto(moto);
         video = this.videoRepository.save(video);
@@ -83,9 +88,14 @@ public class MediaService {
 
         ImageModel image = new ImageModel();
 
-        this.saveMediaIntoFolder(mediaRequest);
+        if (mediaRequest.getUrlMedia() != null && mediaRequest.getUrlMedia().length() > 1) {
+            image.setLienImage(mediaRequest.getUrlMedia());
+        } else {
+            this.saveMediaIntoFolder(mediaRequest);
 
-        image.setLienImage("http://chamalo-web.ddns.net:16650/media/img/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+            image.setLienImage("http://chamalo-web.ddns.net:16650/media/img/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+        }
+
         image.setDescriptionImage(mediaRequest.getDescriptionMedia());
         image.setMoto(moto);
         image = this.imageRepository.save(image);
@@ -95,7 +105,11 @@ public class MediaService {
             return image;
         }
 
+        if(moto.getImages().size() == 0) {
+            moto.setBackgroundImgMoto(image.getLienImage());
+        }
         moto.addImage(image);
+
         this.motoRepository.save(moto);
 
         return image;
