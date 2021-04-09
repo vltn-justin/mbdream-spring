@@ -34,7 +34,7 @@ public class InfoService {
 
         motoModel.orElseThrow(() -> new MBDreamException("Moto introuvable avec l'id " + infoRequest.getIdMoto()));
 
-        final InfoModel infoModel = new InfoModel();
+        InfoModel infoModel = new InfoModel();
 
         infoModel.setMoto(motoModel.get());
         infoModel.setPrix(infoRequest.getPrix());
@@ -46,7 +46,11 @@ public class InfoService {
         infoModel.setCapaciteReservoir(infoRequest.getCapaciteReservoir());
         infoModel.setConsommation(infoRequest.getConsommation());
 
-        return this.infoRepository.save(infoModel);
+        infoModel = this.infoRepository.save(infoModel);
+        motoModel.get().setInfos(infoModel);
+        this.motoRepository.save(motoModel.get());
+
+        return infoModel;
     }
 
     /**
