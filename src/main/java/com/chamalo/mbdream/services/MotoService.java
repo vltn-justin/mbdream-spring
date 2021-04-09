@@ -106,8 +106,6 @@ public class MotoService {
 
         newMoto = this.motoRepository.save(newMoto);
 
-        motoRequest.setIdMoto(newMoto.getIdMoto());
-
         if (motoRequest.getMarqueId() != null) {
             newMoto = this.addMarque(motoRequest);
         }

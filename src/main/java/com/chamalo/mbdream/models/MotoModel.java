@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -64,6 +63,9 @@ public class MotoModel {
 
     @OneToMany(mappedBy = "moto")
     private Collection<VideoModel> videos;
+
+    @OneToOne
+    private InfoModel infos;
 
     /**
      * Method to add an image in images

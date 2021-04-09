@@ -10,15 +10,9 @@ import com.chamalo.mbdream.repositories.MotoRepository;
 import com.chamalo.mbdream.repositories.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +46,7 @@ public class MediaService {
         VideoModel video = new VideoModel();
 
         if (mediaRequest.getUrlMedia() != null && mediaRequest.getUrlMedia().length() > 1) {
+            // Si on ajoute la vidéo via un liens
             video.setLienVideo(mediaRequest.getUrlMedia());
         } else {
             this.saveMediaIntoFolder(mediaRequest);
@@ -89,9 +84,10 @@ public class MediaService {
         ImageModel image = new ImageModel();
 
         if (mediaRequest.getUrlMedia() != null && mediaRequest.getUrlMedia().length() > 1) {
+            // Si on ajoute l'image grâce a un lien
             image.setLienImage(mediaRequest.getUrlMedia());
         } else {
-            this.saveMediaIntoFolder(mediaRequest);
+             this.saveMediaIntoFolder(mediaRequest);
 
             image.setLienImage("http://chamalo-web.ddns.net:16650/media/img/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
         }
