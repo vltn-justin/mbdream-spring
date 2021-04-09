@@ -32,23 +32,21 @@ public class InfoService {
     public InfoModel addInfo(final InfoRequest infoRequest) {
         final Optional<MotoModel> motoModel = this.motoRepository.findById(infoRequest.getIdMoto());
 
-        if (motoModel.isPresent()) {
-            final InfoModel infoModel = new InfoModel();
+        motoModel.orElseThrow(() -> new MBDreamException("Moto introuvable avec l'id " + infoRequest.getIdMoto()));
 
-            infoModel.setMoto(motoModel.get());
-            infoModel.setPrix(infoRequest.getPrix());
-            infoModel.setArchitectureMoteur(infoRequest.getArchitectureMoteur());
-            infoModel.setCylindre(infoRequest.getCylindre());
-            infoModel.setPuissance(infoRequest.getPuissance());
-            infoModel.setCouple(infoRequest.getCouple());
-            infoModel.setPoid(infoRequest.getPoid());
-            infoModel.setCapaciteReservoir(infoRequest.getCapaciteReservoir());
-            infoModel.setConsommation(infoRequest.getConsommation());
+        final InfoModel infoModel = new InfoModel();
 
-            return this.infoRepository.save(infoModel);
-        }
+        infoModel.setMoto(motoModel.get());
+        infoModel.setPrix(infoRequest.getPrix());
+        infoModel.setArchitectureMoteur(infoRequest.getArchitectureMoteur());
+        infoModel.setCylindre(infoRequest.getCylindre());
+        infoModel.setPuissance(infoRequest.getPuissance());
+        infoModel.setCouple(infoRequest.getCouple());
+        infoModel.setPoid(infoRequest.getPoid());
+        infoModel.setCapaciteReservoir(infoRequest.getCapaciteReservoir());
+        infoModel.setConsommation(infoRequest.getConsommation());
 
-        throw new MBDreamException("Moto introuvable avec l'id " + infoRequest.getIdMoto());
+        return this.infoRepository.save(infoModel);
     }
 
     /**
