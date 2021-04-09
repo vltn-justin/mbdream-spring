@@ -129,6 +129,8 @@ public class MotoModel {
         map.put("nbImages", this.images.size());
         map.put("nbVideos", this.videos.size());
 
+        map.put("idInfo", this.infos.getIdInfo());
+
         return map;
     }
 }
