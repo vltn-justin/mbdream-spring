@@ -1,6 +1,5 @@
 package com.chamalo.mbdream.models;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Model for Moto
@@ -83,54 +80,5 @@ public class MotoModel {
      */
     public void addVideo (final VideoModel video) {
         this.videos.add(video);
-    }
-
-    /**
-     * Method to send a custom JSON Response
-     *
-     * @return Map
-     */
-    @JsonValue
-    public Map<String, Object> toJson () {
-        Map<String, Object> map = new LinkedHashMap<>();
-
-        map.put("idMoto", this.idMoto);
-        map.put("slugMoto", this.slugMoto);
-        map.put("nomMoto", this.nomMoto);
-        map.put("prixMoto", this.prixMoto);
-        map.put("descriptionMoto", this.descriptionMoto);
-        map.put("backgroundImgMoto", this.backgroundImgMoto);
-
-        if (this.marque != null) {
-            Map<String, String> marqueMap = new LinkedHashMap<>();
-
-            marqueMap.put("nomMarque", this.marque.getNomMarque());
-            marqueMap.put("slugMarque", this.marque.getSlugMarque());
-
-            map.put("marque", marqueMap);
-        } else {
-            map.put("marque", null);
-        }
-
-        if (this.categorie != null) {
-            Map<String, String> categorieMap = new LinkedHashMap<>();
-
-            categorieMap.put("nomCategorie", this.categorie.getNomCategorie());
-            categorieMap.put("slugCategorie", this.categorie.getSlugCategorie());
-
-            map.put("categorie", categorieMap);
-        } else {
-            map.put("categorie", null);
-        }
-
-        map.put("dateAjout", this.dateAjout);
-        map.put("isFeatured", this.isFeatured);
-
-        map.put("nbImages", this.images.size());
-        map.put("nbVideos", this.videos.size());
-
-        map.put("idInfo", this.infos.getIdInfo());
-
-        return map;
     }
 }

@@ -1,15 +1,11 @@
 package com.chamalo.mbdream.models;
 
-import com.chamalo.mbdream.utils.MethodUtils;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.lang.reflect.Method;
 import java.sql.Date;
 import java.util.*;
 
@@ -64,26 +60,5 @@ public class MarqueModel {
      */
     public void removeMoto (final MotoModel moto) {
         motos.remove(moto);
-    }
-
-    /**
-     * Method to send a custom JSON Response
-     *
-     * @return Map
-     */
-    @JsonValue
-    public Map<String, Object> toJson () {
-        Map<String, Object> map = new LinkedHashMap<>();
-
-        map.put("idMarque", this.idMarque);
-        map.put("slugMarque", this.slugMarque);
-        map.put("nomMarque", this.nomMarque);
-        map.put("dateCreation", this.dateCreation);
-        map.put("descriptionMarque", this.descriptionMarque);
-        map.put("logoMarque", this.logoMarque);
-
-        map.put("motos", MethodUtils.extractMoto(this.motos));
-
-        return map;
     }
 }

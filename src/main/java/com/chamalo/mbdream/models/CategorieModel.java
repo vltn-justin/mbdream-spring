@@ -1,7 +1,5 @@
 package com.chamalo.mbdream.models;
 
-import com.chamalo.mbdream.utils.MethodUtils;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.*;
+import java.util.Collection;
 
 /**
  * Model for Categorie
@@ -45,23 +43,5 @@ public class CategorieModel {
      */
     public void addMoto (final MotoModel moto) {
         this.motos.add(moto);
-    }
-
-    /**
-     * Method to send a custom JSON Response
-     *
-     * @return Map
-     */
-    @JsonValue
-    public Map<String, Object> toJson () {
-        Map<String, Object> map = new LinkedHashMap<>();
-
-        map.put("idCategorie", this.idCategorie);
-        map.put("slugCategorie", this.slugCategorie);
-        map.put("nomCategorie", this.nomCategorie);
-
-        map.put("motos", MethodUtils.extractMoto(this.motos));
-
-        return map;
     }
 }
