@@ -2,10 +2,15 @@ package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.MotoRequest;
 import com.chamalo.mbdream.models.MotoModel;
+import com.chamalo.mbdream.responses.MarqueResponse;
+import com.chamalo.mbdream.responses.MotoResponse;
+import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Rest Controller for Moto
@@ -62,11 +67,11 @@ public class MotoController {
      * @return Moto or MBDreamException
      */
     @GetMapping(value = "/get/id/{id}")
-    public ResponseEntity<MotoModel> findMotoById(@PathVariable final String id) {
+    public ResponseEntity<Map<String, Object>> findMotoById(@PathVariable final String id) {
         MotoModel moto = this.motoService.findMotoById(id);
 
         if (moto != null) {
-            return ResponseEntity.ok(moto);
+            return ResponseEntity.ok(MotoResponse.buildResponse(ResponseType.BASIC, moto));
         }
         return ResponseEntity.notFound().build();
     }
@@ -79,11 +84,11 @@ public class MotoController {
      * @return ResponseEntity of MotoModel
      */
     @GetMapping(value = "/get/slug/{slug}")
-    public ResponseEntity<MotoModel> findMotoBySlug(@PathVariable final String slug) {
+    public ResponseEntity<Map<String, Object>> findMotoBySlug(@PathVariable final String slug) {
         MotoModel moto = this.motoService.findMotoBySlug(slug);
 
         if (moto != null) {
-            return ResponseEntity.ok(moto);
+            return ResponseEntity.ok(MotoResponse.buildResponse(ResponseType.BASIC, moto));
         }
         return ResponseEntity.notFound().build();
     }

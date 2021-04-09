@@ -2,10 +2,14 @@ package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.MarqueRequest;
 import com.chamalo.mbdream.models.MarqueModel;
+import com.chamalo.mbdream.responses.MarqueResponse;
+import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MarqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Rest Controller for Marque
@@ -63,11 +67,11 @@ public class MarqueController {
      * @return Marque or MBDreamException
      */
     @GetMapping("/get/id/{id}")
-    public ResponseEntity<MarqueModel> findMarqueById(@PathVariable final String id) {
+    public ResponseEntity<Map<String, Object>> findMarqueById(@PathVariable final String id) {
         MarqueModel marque = this.marqueService.findMarqueById(id);
 
         if (marque != null) {
-            return ResponseEntity.ok(marque);
+            return ResponseEntity.ok(MarqueResponse.buildResponse(ResponseType.BASIC, marque));
         }
 
         return ResponseEntity.notFound().build();
@@ -81,11 +85,11 @@ public class MarqueController {
      * @return Marque or MBDreamException
      */
     @GetMapping("/get/slug/{slug}")
-    public ResponseEntity<MarqueModel> findMarqueBySlug(@PathVariable final String slug) {
+    public ResponseEntity<Map<String, Object>> findMarqueBySlug(@PathVariable final String slug) {
         MarqueModel marque = this.marqueService.findMarqueBySlug(slug);
 
         if (marque != null) {
-            return ResponseEntity.ok(marque);
+            return ResponseEntity.ok(MarqueResponse.buildResponse(ResponseType.BASIC, marque));
         }
 
         return ResponseEntity.notFound().build();

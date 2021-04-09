@@ -2,10 +2,14 @@ package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.CategorieRequest;
 import com.chamalo.mbdream.models.CategorieModel;
+import com.chamalo.mbdream.responses.CategorieResponse;
+import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.CategorieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Rest Controller for Categorie
@@ -48,11 +52,11 @@ public class CategorieController {
      * @return Category or MBDreamException
      */
     @GetMapping("/get/id/{id}")
-    public ResponseEntity<CategorieModel> findCategorieById(@PathVariable final String id) {
+    public ResponseEntity<Map<String, Object>> findCategorieById(@PathVariable final String id) {
         CategorieModel categorie = this.categorieService.findCategorieById(id);
 
         if (categorie != null) {
-            return ResponseEntity.ok(categorie);
+            return ResponseEntity.ok(CategorieResponse.buildResponse(ResponseType.BASIC, categorie));
         }
 
         return ResponseEntity.notFound().build();
@@ -66,11 +70,11 @@ public class CategorieController {
      * @return Category or MBDreamException
      */
     @GetMapping("/get/slug/{slug}")
-    public ResponseEntity<CategorieModel> findCategorieBySlug(@PathVariable final String slug) {
+    public ResponseEntity<Map<String, Object>> findCategorieBySlug(@PathVariable final String slug) {
         CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
 
         if (categorie != null) {
-            return ResponseEntity.ok(categorie);
+            return ResponseEntity.ok(CategorieResponse.buildResponse(ResponseType.BASIC, categorie));
         }
 
         return ResponseEntity.notFound().build();
