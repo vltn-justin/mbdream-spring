@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,8 +100,16 @@ public class MotoController {
      * @return List of moto
      */
     @GetMapping(value = "/get")
-    public ResponseEntity<Iterable<MotoModel>> findAll() {
-        return ResponseEntity.ok(this.motoService.findAllMoto());
+    public ResponseEntity<List<Map<String, Object>>> findAll() {
+        Iterable<MotoModel> allMoto = this.motoService.findAllMoto();
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for (MotoModel moto : allMoto) {
+            mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
+        }
+
+        return ResponseEntity.ok(mapList);
     }
 
     /**
