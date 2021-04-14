@@ -23,6 +23,7 @@ public class CategorieResponse extends Response<CategorieModel>{
     protected void lightResponse(final Map<String, Object> map, final CategorieModel categorie) {
         map.put("nomCategorie", categorie.getNomCategorie());
         map.put("slugCategorie", categorie.getSlugCategorie());
+        map.put("nbMoto", categorie.getMotos().size());
     }
 
     private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection) {

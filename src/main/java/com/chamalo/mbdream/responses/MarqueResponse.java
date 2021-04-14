@@ -28,6 +28,7 @@ public class MarqueResponse extends Response<MarqueModel>{
     protected void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
         map.put("nomMarque", marque.getNomMarque());
         map.put("slugMarque", marque.getSlugMarque());
+        map.put("nbMoto", marque.getMotos().size());
     }
 
     private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection) {
