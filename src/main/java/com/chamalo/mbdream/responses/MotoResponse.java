@@ -16,7 +16,6 @@ public class MotoResponse extends Response<MotoModel> {
         map.put("nomMoto", model.getNomMoto());
         map.put("prixMoto", model.getPrixMoto());
         map.put("descriptionMoto", model.getDescriptionMoto());
-        map.put("backgroundImgMoto", model.getBackgroundImgMoto());
 
         if (model.getMarque() != null) {
             map.put("marque", new MarqueResponse().buildResponse(ResponseType.LIGHT, model.getMarque()));
@@ -44,5 +43,6 @@ public class MotoResponse extends Response<MotoModel> {
     protected void lightResponse(final Map<String, Object> map, final MotoModel model) {
         map.put("slugMoto", model.getSlugMoto());
         map.put("nomMoto", model.getNomMoto());
+        map.put("backgroundImgMoto", model.getBackgroundImgMoto());
     }
 }
