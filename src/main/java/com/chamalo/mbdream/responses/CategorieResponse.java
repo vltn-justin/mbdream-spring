@@ -8,23 +8,9 @@ import java.util.*;
 /**
  * Class to build a JSON response for Categorie
  */
-public class CategorieResponse {
-    public static Map<String, Object> buildResponse(final ResponseType type, final CategorieModel categorie) {
-        Map<String, Object> map = new LinkedHashMap<>();
-
-        switch (type) {
-            case BASIC:
-                basicResponse(map, categorie);
-                break;
-            case LIGHT:
-                lightResponse(map, categorie);
-                break;
-        }
-
-        return map;
-    }
-
-    private static void basicResponse(final Map<String, Object> map, final CategorieModel categorie) {
+public class CategorieResponse extends Response<CategorieModel>{
+    @Override
+    protected void basicResponse(final Map<String, Object> map, final CategorieModel categorie) {
         lightResponse(map, categorie);
 
         if (categorie.getMotos() != null) {
@@ -33,7 +19,8 @@ public class CategorieResponse {
 
     }
 
-    private static void lightResponse(final Map<String, Object> map, final CategorieModel categorie) {
+    @Override
+    protected void lightResponse(final Map<String, Object> map, final CategorieModel categorie) {
         map.put("nomCategorie", categorie.getNomCategorie());
         map.put("slugCategorie", categorie.getSlugCategorie());
     }
@@ -42,7 +29,7 @@ public class CategorieResponse {
         List<Map<String, Object>> listMoto = new ArrayList<>();
 
         for (MotoModel moto : motoModelCollection) {
-            listMoto.add(MotoResponse.buildResponse(ResponseType.LIGHT, moto));
+            listMoto.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
         }
 
         return listMoto;

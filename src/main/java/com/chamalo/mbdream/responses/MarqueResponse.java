@@ -8,24 +8,10 @@ import java.util.*;
 /**
  * Class to build a JSON response for Marque
  */
-public class MarqueResponse {
+public class MarqueResponse extends Response<MarqueModel>{
 
-    public static Map<String, Object> buildResponse(final ResponseType type, final MarqueModel marque) {
-        Map<String, Object> map = new LinkedHashMap<>();
-
-        switch (type) {
-            case BASIC:
-                basicResponse(map, marque);
-                break;
-            case LIGHT:
-                lightResponse(map, marque);
-                break;
-        }
-
-        return map;
-    }
-
-    private static void basicResponse(final Map<String, Object> map, final MarqueModel marque) {
+    @Override
+    protected void basicResponse(final Map<String, Object> map, final MarqueModel marque) {
         lightResponse(map, marque);
 
         map.put("dateCreation", marque.getDateCreation());
@@ -38,7 +24,8 @@ public class MarqueResponse {
 
     }
 
-    private static void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
+    @Override
+    protected void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
         map.put("nomMarque", marque.getNomMarque());
         map.put("slugMarque", marque.getSlugMarque());
     }
@@ -47,7 +34,7 @@ public class MarqueResponse {
         List<Map<String, Object>> listMoto = new ArrayList<>();
 
         for(MotoModel moto : motoModelCollection) {
-            listMoto.add(MotoResponse.buildResponse(ResponseType.LIGHT, moto));
+            listMoto.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
         }
 
         return listMoto;
