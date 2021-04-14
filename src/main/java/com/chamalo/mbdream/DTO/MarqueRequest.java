@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MarqueRequest {
-    private Long idMarque;
+    private String slugMarque;
 
     private String nomMarque;
 

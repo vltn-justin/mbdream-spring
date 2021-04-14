@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InfoRequest {
-    private Long idInfo;
-
-    private Long idMoto;
+    private String slugMoto;
 
     private Integer prix;
 

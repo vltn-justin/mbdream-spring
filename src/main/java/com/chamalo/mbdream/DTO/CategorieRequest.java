@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategorieRequest {
+    private String slugCategorie;
+
     private String nomCategorie;
 }
