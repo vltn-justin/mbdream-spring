@@ -1,7 +1,9 @@
 package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.MarqueRequest;
+import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.models.MarqueModel;
+import com.chamalo.mbdream.responses.CategorieResponse;
 import com.chamalo.mbdream.responses.MarqueResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MarqueService;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -101,8 +105,16 @@ public class MarqueController {
      * @return Iterable of MarqueModel
      */
     @GetMapping("/get")
-    public ResponseEntity<Iterable<MarqueModel>> findAllMarque() {
-        return ResponseEntity.ok(this.marqueService.findAllMarque());
+    public ResponseEntity<List<Map<String, Object>>> findAllMarque() {
+        Iterable<MarqueModel> allMarque = this.marqueService.findAllMarque();
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for (MarqueModel marque : allMarque) {
+            mapList.add(new MarqueResponse().buildResponse(ResponseType.LIGHT, marque));
+        }
+
+        return ResponseEntity.ok(mapList);
     }
 
     /**

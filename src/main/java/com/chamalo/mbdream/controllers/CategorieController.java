@@ -2,13 +2,17 @@ package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.CategorieRequest;
 import com.chamalo.mbdream.models.CategorieModel;
+import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.CategorieResponse;
+import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.CategorieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,8 +90,16 @@ public class CategorieController {
      * @return Iterable of CategorieModel
      */
     @GetMapping("/get")
-    public ResponseEntity<Iterable<CategorieModel>> findAllCategorie() {
-        return ResponseEntity.ok(this.categorieService.findAllCategorie());
+    public ResponseEntity<List<Map<String, Object>>> findAllCategorie() {
+        Iterable<CategorieModel> allCategorie = this.categorieService.findAllCategorie();
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for (CategorieModel categorie : allCategorie) {
+            mapList.add(new CategorieResponse().buildResponse(ResponseType.LIGHT, categorie));
+        }
+
+        return ResponseEntity.ok(mapList);
     }
 
     /**
