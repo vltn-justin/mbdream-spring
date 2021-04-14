@@ -48,6 +48,5 @@ public class InfoModel {
     private Double consommation;
 
     @OneToOne
-    @JsonIgnore
     private MotoModel moto;
 }
