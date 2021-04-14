@@ -100,7 +100,7 @@ public class MarqueService {
      * @return updatedMarque
      */
     public MarqueModel updateMarque (final MarqueRequest marqueRequest) {
-        MarqueModel updatedMarque = this.findMarqueById(marqueRequest.getIdMarque().toString());
+        MarqueModel updatedMarque = this.findMarqueBySlug(marqueRequest.getSlugMarque());
 
         updatedMarque.setNomMarque(marqueRequest.getNomMarque());
         updatedMarque.setDescriptionMarque(marqueRequest.getDescriptionMarque());

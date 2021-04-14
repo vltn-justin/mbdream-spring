@@ -30,9 +30,9 @@ public class InfoService {
      * @return InfoModel or throw MBDreamException if moto not found
      */
     public InfoModel addInfo(final InfoRequest infoRequest) {
-        final Optional<MotoModel> motoModel = this.motoRepository.findById(infoRequest.getIdMoto());
+        final Optional<MotoModel> motoModel = this.motoRepository.findMotoBySlug(infoRequest.getSlugMoto());
 
-        motoModel.orElseThrow(() -> new MBDreamException("Moto introuvable avec l'id " + infoRequest.getIdMoto()));
+        motoModel.orElseThrow(() -> new MBDreamException("Moto introuvable avec le slug " + infoRequest.getSlugMoto()));
 
         InfoModel infoModel = new InfoModel();
 
