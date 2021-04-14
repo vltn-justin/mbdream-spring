@@ -71,7 +71,7 @@ public class MarqueController {
         MarqueModel marque = this.marqueService.findMarqueById(id);
 
         if (marque != null) {
-            return ResponseEntity.ok(MarqueResponse.buildResponse(ResponseType.BASIC, marque));
+            return ResponseEntity.ok(new MarqueResponse().buildResponse(ResponseType.BASIC, marque));
         }
 
         return ResponseEntity.notFound().build();
@@ -89,7 +89,7 @@ public class MarqueController {
         MarqueModel marque = this.marqueService.findMarqueBySlug(slug);
 
         if (marque != null) {
-            return ResponseEntity.ok(MarqueResponse.buildResponse(ResponseType.BASIC, marque));
+            return ResponseEntity.ok(new MarqueResponse().buildResponse(ResponseType.BASIC, marque));
         }
 
         return ResponseEntity.notFound().build();

@@ -56,7 +56,7 @@ public class CategorieController {
         CategorieModel categorie = this.categorieService.findCategorieById(id);
 
         if (categorie != null) {
-            return ResponseEntity.ok(CategorieResponse.buildResponse(ResponseType.BASIC, categorie));
+            return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
         }
 
         return ResponseEntity.notFound().build();
@@ -74,7 +74,7 @@ public class CategorieController {
         CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
 
         if (categorie != null) {
-            return ResponseEntity.ok(CategorieResponse.buildResponse(ResponseType.BASIC, categorie));
+            return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
         }
 
         return ResponseEntity.notFound().build();

@@ -2,7 +2,6 @@ package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.MotoRequest;
 import com.chamalo.mbdream.models.MotoModel;
-import com.chamalo.mbdream.responses.MarqueResponse;
 import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MotoService;
@@ -71,7 +70,7 @@ public class MotoController {
         MotoModel moto = this.motoService.findMotoById(id);
 
         if (moto != null) {
-            return ResponseEntity.ok(MotoResponse.buildResponse(ResponseType.BASIC, moto));
+            return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
         }
         return ResponseEntity.notFound().build();
     }
@@ -88,7 +87,7 @@ public class MotoController {
         MotoModel moto = this.motoService.findMotoBySlug(slug);
 
         if (moto != null) {
-            return ResponseEntity.ok(MotoResponse.buildResponse(ResponseType.BASIC, moto));
+            return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
         }
         return ResponseEntity.notFound().build();
     }
