@@ -11,7 +11,7 @@ import java.util.*;
 public class CategorieResponse extends Response<CategorieModel>{
     @Override
     protected void basicResponse(final Map<String, Object> map, final CategorieModel categorie) {
-        lightResponse(map, categorie);
+        this.lightResponse(map, categorie);
 
         if (categorie.getMotos() != null) {
             map.put("motos", motoToMap(categorie.getMotos()));

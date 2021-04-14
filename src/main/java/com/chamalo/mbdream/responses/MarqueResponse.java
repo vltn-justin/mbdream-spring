@@ -12,7 +12,7 @@ public class MarqueResponse extends Response<MarqueModel>{
 
     @Override
     protected void basicResponse(final Map<String, Object> map, final MarqueModel marque) {
-        lightResponse(map, marque);
+        this.lightResponse(map, marque);
 
         map.put("dateCreation", marque.getDateCreation());
         map.put("descriptionMarque", marque.getDescriptionMarque());
