@@ -43,22 +43,4 @@ public class MarqueModel {
 
     @OneToMany(mappedBy = "marque")
     private Collection<MotoModel> motos;
-
-    /**
-     * Method to add a Moto in motos
-     *
-     * @param moto Moto to add
-     */
-    public void addMoto (final MotoModel moto) {
-        this.motos.add(moto);
-    }
-
-    /**
-     * Method to remove a Moto in motos
-     *
-     * @param moto Moto to remove
-     */
-    public void removeMoto (final MotoModel moto) {
-        motos.remove(moto);
-    }
 }

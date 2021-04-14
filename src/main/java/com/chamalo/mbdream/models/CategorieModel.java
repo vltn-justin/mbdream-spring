@@ -35,13 +35,4 @@ public class CategorieModel {
 
     @OneToMany(mappedBy = "categorie")
     private Collection<MotoModel> motos;
-
-    /**
-     * Method to add a Moto in motos
-     *
-     * @param moto Moto to add
-     */
-    public void addMoto (final MotoModel moto) {
-        this.motos.add(moto);
-    }
 }
