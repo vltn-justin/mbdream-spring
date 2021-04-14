@@ -56,29 +56,8 @@ public class MotoModel {
     private CategorieModel categorie;
 
     @OneToMany(mappedBy = "moto")
-    private Collection<ImageModel> images;
-
-    @OneToMany(mappedBy = "moto")
-    private Collection<VideoModel> videos;
+    private Collection<MediaModel> medias;
 
     @OneToOne
     private InfoModel infos;
-
-    /**
-     * Method to add an image in images
-     *
-     * @param image Image to add
-     */
-    public void addImage (final ImageModel image) {
-        this.images.add(image);
-    }
-
-    /**
-     * Method to add a video in videos
-     *
-     * @param video Video to add
-     */
-    public void addVideo (final VideoModel video) {
-        this.videos.add(video);
-    }
 }

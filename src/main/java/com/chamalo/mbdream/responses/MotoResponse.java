@@ -31,8 +31,7 @@ public class MotoResponse extends Response<MotoModel> {
             map.put("categorie", null);
         }
 
-        map.put("nbImages", model.getImages().size());
-        map.put("nbVideos", model.getVideos().size());
+        map.put("nbMedia", model.getMedias().size());
 
         if (model.getInfos() != null) {
             map.put("idInfo", model.getInfos().getIdInfo());

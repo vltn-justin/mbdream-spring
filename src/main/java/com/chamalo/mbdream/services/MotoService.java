@@ -16,20 +16,17 @@ public class MotoService {
     private final MotoRepository motoRepository;
     private final MarqueRepository marqueRepository;
     private final CategorieRepository categorieRepository;
-    private final VideoRepository videoRepository;
-    private final ImageRepository imageRepository;
+    private final MediaRepository mediaRepository;
 
     @Autowired
     public MotoService(final MotoRepository motoRepository,
                        final MarqueRepository marqueRepository,
                        final CategorieRepository categorieRepository,
-                       final VideoRepository videoRepository,
-                       final ImageRepository imageRepository) {
+                       final MediaRepository mediaRepository) {
         this.motoRepository = motoRepository;
         this.marqueRepository = marqueRepository;
         this.categorieRepository = categorieRepository;
-        this.videoRepository = videoRepository;
-        this.imageRepository = imageRepository;
+        this.mediaRepository = mediaRepository;
     }
 
     /**
@@ -152,12 +149,8 @@ public class MotoService {
     public void deleteMoto(final String id) {
         MotoModel moto = this.findMotoById(id);
 
-        for (ImageModel img : moto.getImages()) {
-            this.imageRepository.delete(img);
-        }
-
-        for (VideoModel video : moto.getVideos()) {
-            this.videoRepository.delete(video);
+        for (MediaModel media : moto.getMedias()) {
+            this.mediaRepository.delete(media);
         }
 
         this.motoRepository.deleteById(Long.parseLong(id));
