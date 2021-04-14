@@ -56,13 +56,13 @@ public class InfoService {
     /**
      * Method to get info of a moto
      *
-     * @param idMoto ID of moto
+     * @param slugMoto Slug of moto
      *
      * @return InfoModel
      */
-    public InfoModel getInfoMoto(final String idMoto) {
-        return this.infoRepository.findInfoMoto(Long.parseLong(idMoto)).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver des informations sur la moto avec l'id " + idMoto)
+    public InfoModel getInfoMoto(final String slugMoto) {
+        return this.infoRepository.findInfoMoto(slugMoto).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver des informations sur la moto avec le slug " + slugMoto)
         );
     }
 

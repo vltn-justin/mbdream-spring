@@ -16,6 +16,6 @@ import java.util.Optional;
  */
 @Repository
 public interface InfoRepository extends CrudRepository<InfoModel, Long> {
-    @Query("SELECT i FROM Info i WHERE i.moto.idMoto = :idMoto")
-    Optional<InfoModel> findInfoMoto(final Long idMoto);
+    @Query("SELECT i FROM Info i WHERE i.moto.slugMoto = :slugMoto")
+    Optional<InfoModel> findInfoMoto(final String slugMoto);
 }
