@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collection;
 
 @Service
 public class MotoService {
@@ -95,6 +96,10 @@ public class MotoService {
         Slugify slug = new Slugify();
         newMoto.setSlugMoto(slug.slugify(motoRequest.getNomMoto()));
 
+        if (this.motoRepository.findMotoBySlug(newMoto.getSlugMoto()).isPresent()) {
+            throw new MBDreamException("Une moto avec le slug " + newMoto.getSlugMoto() + " existe deja");
+        }
+
         newMoto.setNomMoto(motoRequest.getNomMoto());
         newMoto.setPrixMoto(motoRequest.getPrixMoto());
         newMoto.setDateAjout(Instant.now());
@@ -103,11 +108,13 @@ public class MotoService {
 
         newMoto = this.motoRepository.save(newMoto);
 
-        if (motoRequest.getMarqueId() != null) {
+        motoRequest.setSlugMoto(newMoto.getSlugMoto());
+
+        if (motoRequest.getSlugMoto() != null) {
             newMoto = this.addMarque(motoRequest);
         }
 
-        if (motoRequest.getCategorieId() != null) {
+        if (motoRequest.getSlugCategorie() != null) {
             newMoto = this.addCategory(motoRequest);
         }
 
@@ -122,18 +129,18 @@ public class MotoService {
      * @return updatedmoto
      */
     public MotoModel updateMoto(final MotoRequest motoRequest) {
-        MotoModel updatedMoto = this.findMotoById(motoRequest.getIdMoto().toString());
+        MotoModel updatedMoto = this.findMotoBySlug(motoRequest.getSlugMoto());
 
         // Update tout car le formulaire aura de base toutes les infos et les envois
         updatedMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
         updatedMoto.setPrixMoto(motoRequest.getPrixMoto());
 
-        if (updatedMoto.getMarque() == null || !updatedMoto.getMarque().getIdMarque().equals(motoRequest.getMarqueId())) {
+        if (updatedMoto.getMarque() == null || !updatedMoto.getMarque().getSlugMarque().equals(motoRequest.getSlugMarque())) {
             this.deleteMarque(motoRequest);
             updatedMoto = this.addMarque(motoRequest);
         }
 
-        if (updatedMoto.getCategorie() == null || !updatedMoto.getCategorie().getIdCategorie().equals(motoRequest.getCategorieId())) {
+        if (updatedMoto.getCategorie() == null || !updatedMoto.getCategorie().getSlugCategorie().equals(motoRequest.getSlugCategorie())) {
             this.deleteCategory(motoRequest);
             updatedMoto = this.addCategory(motoRequest);
         }
@@ -164,15 +171,11 @@ public class MotoService {
      * @return Updated moto
      */
     public MotoModel addMarque(final MotoRequest motoRequest) {
-        MarqueModel marque = this.marqueRepository.findById(motoRequest.getMarqueId()).orElseThrow(
+        MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
                 () -> new MBDreamException("Impossible de trouver la marque")
         );
 
-        MotoModel moto = this.findMotoById(motoRequest.getIdMoto().toString());
-
-        marque.addMoto(moto);
-
-        marque = this.marqueRepository.save(marque);
+        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
 
         moto.setMarque(marque);
 
@@ -185,13 +188,15 @@ public class MotoService {
      * @param motoRequest MotoRequest with all data
      */
     private void deleteMarque(final MotoRequest motoRequest) {
-        MarqueModel marque = this.marqueRepository.findById(motoRequest.getMarqueId()).orElseThrow(
+        MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
                 () -> new MBDreamException("Impossible de trouver la marque")
         );
 
-        MotoModel moto = this.findMotoById(motoRequest.getIdMoto().toString());
+        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
 
-        marque.removeMoto(moto);
+        Collection<MotoModel> motoModelCollection = marque.getMotos();
+        motoModelCollection.remove(moto);
+        marque.setMotos(motoModelCollection);
         this.marqueRepository.save(marque);
 
         moto.setMarque(null);
@@ -207,15 +212,11 @@ public class MotoService {
      * @return Updated moto
      */
     public MotoModel addCategory(final MotoRequest motoRequest) {
-        CategorieModel categorie = this.categorieRepository.findById(motoRequest.getCategorieId()).orElseThrow(
+        CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
                 () -> new MBDreamException("Impossible de trouver la marque")
         );
 
-        MotoModel moto = this.findMotoById(motoRequest.getIdMoto().toString());
-
-        categorie.addMoto(moto);
-
-        categorie = this.categorieRepository.save(categorie);
+        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
 
         moto.setCategorie(categorie);
 
@@ -228,14 +229,15 @@ public class MotoService {
      * @param motoRequest MotoRequest with all data
      */
     private void deleteCategory(final MotoRequest motoRequest) {
-        CategorieModel categorie = this.categorieRepository.findById(motoRequest.getCategorieId()).orElseThrow(
+        CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
                 () -> new MBDreamException("Impossible de trouver la marque")
         );
 
-        MotoModel moto = this.findMotoById(motoRequest.getIdMoto().toString());
+        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
 
-        categorie.addMoto(moto);
-
+        Collection<MotoModel> motoModelCollection = categorie.getMotos();
+        motoModelCollection.remove(moto);
+        categorie.setMotos(motoModelCollection);
         this.categorieRepository.save(categorie);
 
         moto.setCategorie(null);
