@@ -3,7 +3,9 @@ package com.chamalo.mbdream.services;
 import com.chamalo.mbdream.DTO.MediaRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MediaModel;
+import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.repositories.MediaRepository;
+import com.chamalo.mbdream.repositories.MotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,17 +14,20 @@ import java.io.IOException;
 
 @Service
 public class MediaService {
-    private final MotoService motoService;
-
     private final MediaRepository mediaRepository;
+    private final MotoRepository motoRepository;
 
     @Autowired
-    public MediaService(final MediaRepository mediaRepository, final MotoService motoService) {
+    public MediaService(final MediaRepository mediaRepository, final MotoRepository motoRepository) {
         this.mediaRepository = mediaRepository;
-        this.motoService = motoService;
+        this.motoRepository = motoRepository;
     }
 
     public MediaModel addMedia(final MediaRequest mediaRequest) throws IOException {
+        final MotoModel moto = motoRepository.findMotoBySlug(mediaRequest.getSlugMoto()).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver la moto avec le slug " + mediaRequest.getSlugMoto())
+        );
+
         MediaModel mediaModel = new MediaModel();
 
         if (mediaRequest.getUrlMedia() != null && mediaRequest.getUrlMedia().length() > 1) {
@@ -36,9 +41,16 @@ public class MediaService {
 
         mediaModel.setDescriptionMedia(mediaRequest.getDescriptionMedia());
         mediaModel.setIsVideo(mediaRequest.getIsVideo());
-        mediaModel.setMoto(motoService.findMotoBySlug(mediaRequest.getSlugMoto()));
+        mediaModel.setMoto(moto);
 
-        return this.mediaRepository.save(mediaModel);
+        mediaModel = this.mediaRepository.save(mediaModel);
+
+        if (moto.getBackgroundImgMoto().length() == 0 && !mediaModel.getIsVideo()) {
+            moto.setBackgroundImgMoto(mediaModel.getLienMedia());
+            motoRepository.save(moto);
+        }
+
+        return mediaModel;
     }
 
     public Iterable<MediaModel> findAllMedia(final String slugMoto, final Boolean isVideo) {
