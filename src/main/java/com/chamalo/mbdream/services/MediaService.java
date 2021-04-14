@@ -36,7 +36,12 @@ public class MediaService {
         } else {
             this.saveMediaIntoFolder(mediaRequest);
 
-            mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/video/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+            if (mediaRequest.getIsVideo()) {
+                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/video/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+            } else {
+                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+            }
+
         }
 
         mediaModel.setDescriptionMedia(mediaRequest.getDescriptionMedia());
@@ -45,7 +50,7 @@ public class MediaService {
 
         mediaModel = this.mediaRepository.save(mediaModel);
 
-        if (moto.getBackgroundImgMoto().length() == 0 && !mediaModel.getIsVideo()) {
+        if (moto.getBackgroundImgMoto() == null && !mediaModel.getIsVideo()) {
             moto.setBackgroundImgMoto(mediaModel.getLienMedia());
             motoRepository.save(moto);
         }
