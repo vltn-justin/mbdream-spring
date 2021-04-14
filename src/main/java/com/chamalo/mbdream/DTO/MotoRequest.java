@@ -23,7 +23,7 @@ public class MotoRequest {
 
     private boolean isFeatured;
 
-    private Long marqueId;
+    private String slugMarque;
 
-    private Long categorieId;
+    private String slugCategorie;
 }
