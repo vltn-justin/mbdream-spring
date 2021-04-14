@@ -6,10 +6,16 @@ import com.chamalo.mbdream.responses.MediaResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -82,5 +88,36 @@ public class MediaController {
     public ResponseEntity<String> deleteMedia(@PathVariable final String idMedia) {
         this.mediaService.deleteMedia(idMedia);
         return ResponseEntity.ok("Media supprimer");
+    }
+
+    /**
+     * Method to get one media
+     *
+     * @param isVideo String to find video or images
+     * @param type Type of img, if it's for moto or marque
+     * @param slug Slug of moto or marque
+     * @param nom  Name of media + format
+     *
+     * @return ResponseEntity
+     *
+     * @throws IOException Exception for file
+     */
+    @GetMapping(value = "/{isVideo}/{type}/{slug}/{nom}")
+    @ResponseBody
+    public ResponseEntity<Object> getOneImg(@PathVariable final String isVideo,
+                                            @PathVariable final String type,
+                                            @PathVariable final String slug,
+                                            @PathVariable final String nom) throws IOException {
+        Path path = Paths.get("/home/pi/mbdream-spring/resources/static/"+ isVideo + "/" + type + "/" + slug + "/");
+        Resource resource = new UrlResource(path.resolve(nom).toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline")
+                    .contentType(MediaType.parseMediaType("image/png"))
+                    .body(resource);
+        }
+        return ResponseEntity.noContent().build();
     }
 }
