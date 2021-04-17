@@ -25,7 +25,7 @@ public class MarqueModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMarque;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 250, unique = true)
     private String slugMarque;
 
     @Column(nullable = false, length = 200, unique = true)

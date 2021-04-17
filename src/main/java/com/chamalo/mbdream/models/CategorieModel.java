@@ -25,7 +25,7 @@ public class CategorieModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCategorie;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 250, unique = true)
     @Value("")
     private String slugCategorie;
 
