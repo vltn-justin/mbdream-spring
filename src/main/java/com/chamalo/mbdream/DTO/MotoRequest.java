@@ -17,8 +17,6 @@ public class MotoRequest {
 
     private String nomMoto;
 
-    private Integer prixMoto;
-
     private String descriptionMoto;
 
     private boolean isFeatured;

@@ -88,7 +88,6 @@ public class MotoService {
         }
 
         newMoto.setNomMoto(motoRequest.getNomMoto());
-        newMoto.setPrixMoto(motoRequest.getPrixMoto());
         newMoto.setDateAjout(Instant.now());
         newMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
         newMoto.setFeatured(motoRequest.isFeatured());
@@ -120,7 +119,6 @@ public class MotoService {
 
         // Update tout car le formulaire aura de base toutes les infos et les envois
         updatedMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
-        updatedMoto.setPrixMoto(motoRequest.getPrixMoto());
 
         if (updatedMoto.getMarque() == null || !updatedMoto.getMarque().getSlugMarque().equals(motoRequest.getSlugMarque())) {
             this.deleteMarque(motoRequest);

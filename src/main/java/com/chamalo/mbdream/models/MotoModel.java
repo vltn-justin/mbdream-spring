@@ -32,9 +32,6 @@ public class MotoModel {
     @NotBlank(message = "Le nom dois être remplis")
     private String nomMoto;
 
-    @Column
-    private Integer prixMoto;
-
     @Column(columnDefinition = "TEXT")
     private String descriptionMoto;
 
