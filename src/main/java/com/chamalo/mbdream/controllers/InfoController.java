@@ -6,10 +6,9 @@ import com.chamalo.mbdream.responses.InfoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.InfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * Rest Controller for Info
@@ -49,36 +48,16 @@ public class InfoController {
      *
      * @param slugMoto Slug of moto
      *
-     * @return ResponseEntity<InfoModel>
+     * @return ResponseEntity Map<String, Object> or <String>
      */
-    @GetMapping("/get/moto/{slugMoto}")
-    public ResponseEntity<Map<String, Object>> getInfoMoto(@PathVariable final String slugMoto) {
+    @GetMapping("/get/{slugMoto}")
+    public ResponseEntity<?> getInfoMoto(@PathVariable final String slugMoto) {
         InfoModel infos = this.infoService.getInfoMoto(slugMoto);
 
         if (infos == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pas d'infos pour cette moto");
         }
 
         return ResponseEntity.ok(new InfoResponse().buildResponse(ResponseType.BASIC, infos));
     }
-
-    /**
-     * Method to get info of moto
-     *
-     * @param idInfo id of info to get
-     *
-     * @return ResponseEntity<InfoModel>
-     */
-    @GetMapping("/get/{idInfo}")
-    public ResponseEntity<InfoModel> getInfo(@PathVariable final String idInfo) {
-        InfoModel infos = this.infoService.getInfo(idInfo);
-
-        if (infos == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(infos);
-    }
-
-
 }
