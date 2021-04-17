@@ -92,17 +92,20 @@ public class MotoService {
         newMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
         newMoto.setFeatured(motoRequest.isFeatured());
 
+        final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoRequest.getSlugMarque())
+        );
+
+        final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoRequest.getSlugCategorie())
+        );
+
+        newMoto.setMarque(marque);
+        newMoto.setCategorie(categorie);
+
         newMoto = this.motoRepository.save(newMoto);
 
         motoRequest.setSlugMoto(newMoto.getSlugMoto());
-
-        if (motoRequest.getSlugMoto() != null) {
-            newMoto = this.addMarque(motoRequest);
-        }
-
-        if (motoRequest.getSlugCategorie() != null) {
-            newMoto = this.addCategory(motoRequest);
-        }
 
         return newMoto;
     }
@@ -120,14 +123,18 @@ public class MotoService {
         // Update tout car le formulaire aura de base toutes les infos et les envois
         updatedMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
 
-        if (updatedMoto.getMarque() == null || !updatedMoto.getMarque().getSlugMarque().equals(motoRequest.getSlugMarque())) {
-            this.deleteMarque(motoRequest);
-            updatedMoto = this.addMarque(motoRequest);
+        if (!updatedMoto.getMarque().getSlugMarque().equals(motoRequest.getSlugMarque())) {
+            final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
+                    () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoRequest.getSlugMarque())
+            );
+            updatedMoto.setMarque(marque);
         }
 
-        if (updatedMoto.getCategorie() == null || !updatedMoto.getCategorie().getSlugCategorie().equals(motoRequest.getSlugCategorie())) {
-            this.deleteCategory(motoRequest);
-            updatedMoto = this.addCategory(motoRequest);
+        if (!updatedMoto.getCategorie().getSlugCategorie().equals(motoRequest.getSlugCategorie())) {
+            final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
+                    () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoRequest.getSlugCategorie())
+            );
+            updatedMoto.setCategorie(categorie);
         }
 
         return this.motoRepository.save(updatedMoto);
@@ -146,87 +153,5 @@ public class MotoService {
         }
 
         this.motoRepository.deleteById(moto.getIdMoto());
-    }
-
-    /**
-     * Method to add Marque to Moto
-     *
-     * @param motoRequest MotoRequest with all data
-     *
-     * @return Updated moto
-     */
-    public MotoModel addMarque(final MotoRequest motoRequest) {
-        MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la marque")
-        );
-
-        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
-
-        moto.setMarque(marque);
-
-        return this.motoRepository.save(moto);
-    }
-
-    /**
-     * Method to delete Marque to Moto
-     *
-     * @param motoRequest MotoRequest with all data
-     */
-    private void deleteMarque(final MotoRequest motoRequest) {
-        MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la marque")
-        );
-
-        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
-
-        Collection<MotoModel> motoModelCollection = marque.getMotos();
-        motoModelCollection.remove(moto);
-        marque.setMotos(motoModelCollection);
-        this.marqueRepository.save(marque);
-
-        moto.setMarque(null);
-
-        this.motoRepository.save(moto);
-    }
-
-    /**
-     * Method to add Category to Moto
-     *
-     * @param motoRequest MotoRequest with all data
-     *
-     * @return Updated moto
-     */
-    public MotoModel addCategory(final MotoRequest motoRequest) {
-        CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la marque")
-        );
-
-        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
-
-        moto.setCategorie(categorie);
-
-        return this.motoRepository.save(moto);
-    }
-
-    /**
-     * Method to delete Category to Moto
-     *
-     * @param motoRequest MotoRequest with all data
-     */
-    private void deleteCategory(final MotoRequest motoRequest) {
-        CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la marque")
-        );
-
-        MotoModel moto = this.findMotoBySlug(motoRequest.getSlugMoto());
-
-        Collection<MotoModel> motoModelCollection = categorie.getMotos();
-        motoModelCollection.remove(moto);
-        categorie.setMotos(motoModelCollection);
-        this.categorieRepository.save(categorie);
-
-        moto.setCategorie(null);
-
-        this.motoRepository.save(moto);
     }
 }
