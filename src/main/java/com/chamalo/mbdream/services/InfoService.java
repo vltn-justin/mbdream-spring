@@ -65,17 +65,4 @@ public class InfoService {
                 () -> new MBDreamException("Impossible de trouver des informations sur la moto avec le slug " + slugMoto)
         );
     }
-
-    /**
-     * Method to get info of a moto
-     *
-     * @param idInfo ID of info
-     *
-     * @return InfoModel
-     */
-    public InfoModel getInfo(final String idInfo) {
-        return this.infoRepository.findById(Long.parseLong(idInfo)).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver des informations avec l'id " + idInfo)
-        );
-    }
 }
