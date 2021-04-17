@@ -61,30 +61,13 @@ public class MotoController {
     }
 
     /**
-     * Method to get a moto with is id, mapped at /moto/id
-     *
-     * @param id Id of Moto
-     *
-     * @return Moto or MBDreamException
-     */
-    @GetMapping(value = "/get/id/{id}")
-    public ResponseEntity<Map<String, Object>> findMotoById(@PathVariable final String id) {
-        MotoModel moto = this.motoService.findMotoById(id);
-
-        if (moto != null) {
-            return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    /**
      * Method to find a Moto with is slug
      *
      * @param slug Slug
      *
      * @return ResponseEntity of MotoModel
      */
-    @GetMapping(value = "/get/slug/{slug}")
+    @GetMapping(value = "/get/{slug}")
     public ResponseEntity<Map<String, Object>> findMotoBySlug(@PathVariable final String slug) {
         MotoModel moto = this.motoService.findMotoBySlug(slug);
 
@@ -95,13 +78,13 @@ public class MotoController {
     }
 
     /**
-     * Method to get all moto
+     * Method to get all moto, limited by 10 per page
      *
-     * @return List of moto
+     * @return Response Entity
      */
-    @GetMapping(value = "/get")
-    public ResponseEntity<List<Map<String, Object>>> findAll() {
-        Iterable<MotoModel> allMoto = this.motoService.findAllMoto();
+    @GetMapping(value = "/get/page/{page}")
+    public ResponseEntity<List<Map<String, Object>>> findAllByPage(@PathVariable final Integer page) {
+        Iterable<MotoModel> allMoto = this.motoService.findAllMotoByPage(page);
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 

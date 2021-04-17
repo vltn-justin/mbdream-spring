@@ -31,13 +31,13 @@ public class MotoService {
     }
 
     /**
-     * Method to get all moto
+     * Method to get all moto, limited by 10
+     *
+     * @param page Page number
      *
      * @return Iterable of MotoModel
      */
-    public Iterable<MotoModel> findAllMoto() {
-        return this.motoRepository.findAll();
-    }
+    public Iterable<MotoModel> findAllMotoByPage(final Integer page) { return this.motoRepository.getMotoByPage(page); }
 
     /**
      * Method to get all moto featured
@@ -55,19 +55,6 @@ public class MotoService {
      */
     public Long countAllMoto() {
         return this.motoRepository.count();
-    }
-
-    /**
-     * Method to get a moto with is id, mapped at /moto/id
-     *
-     * @param id Id of Moto
-     *
-     * @return Moto or MBDreamException
-     */
-    public MotoModel findMotoById(final String id) {
-        return this.motoRepository.findById(Long.parseLong(id)).orElseThrow(
-                () -> new MBDreamException("Moto introuvable avec l'id " + id)
-        );
     }
 
     /**
@@ -151,16 +138,16 @@ public class MotoService {
     /**
      * Method to delete a Moto
      *
-     * @param id ID of moto to delete
+     * @param slug Slug of moto to delete
      */
-    public void deleteMoto(final String id) {
-        MotoModel moto = this.findMotoById(id);
+    public void deleteMoto(final String slug) {
+        MotoModel moto = this.findMotoBySlug(slug);
 
         for (MediaModel media : moto.getMedias()) {
             this.mediaRepository.delete(media);
         }
 
-        this.motoRepository.deleteById(Long.parseLong(id));
+        this.motoRepository.deleteById(moto.getIdMoto());
     }
 
     /**

@@ -20,4 +20,7 @@ public interface MotoRepository extends CrudRepository<MotoModel, Long> {
 
     @Query("SELECT m FROM Moto m WHERE m.slugMoto = :slug")
     Optional<MotoModel> findMotoBySlug(final String slug);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM moto m LIMIT :page,10")
+    Iterable<MotoModel> getMotoByPage(final Integer page);
 }
