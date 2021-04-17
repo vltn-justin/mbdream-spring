@@ -39,8 +39,9 @@ public class MotoController {
      */
     @PostMapping("/add-moto")
     public ResponseEntity<String> addMoto(@RequestBody final MotoRequest motoRequest) {
-        if (this.motoService.addMoto(motoRequest).getIdMoto() != null) {
-            return ResponseEntity.ok("Moto ajoutée");
+        MotoModel moto = this.motoService.addMoto(motoRequest);
+        if (moto.getIdMoto() != null) {
+            return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
         }
         return ResponseEntity.ok("Impossible d'ajouter la moto, essayez à nouveau");
     }
@@ -113,46 +114,5 @@ public class MotoController {
     @GetMapping("/featured")
     public ResponseEntity<Iterable<MotoModel>> findAllFeaturedMoto() {
         return ResponseEntity.ok(this.motoService.findAllFeaturedMoto());
-    }
-
-    /**
-     * Method to add a Marque to a Moto
-     *
-     * @param motoRequest MotoRequest with all data
-     *
-     * @return ResponseEntity
-     */
-    @PostMapping("/add-marque")
-    public ResponseEntity<String> addMarque(@RequestBody final MotoRequest motoRequest) {
-        if (this.motoService.addMarque(motoRequest) != null) {
-            return ResponseEntity.ok("Marque ajoutée à la moto");
-        }
-        return ResponseEntity.ok("Impossible d'ajouter la marque à la moto, essayez à nouveau");
-    }
-
-    /**
-     * Method to add a Category to a Moto
-     *
-     * @param motoRequest MotoRequest with all data
-     *
-     * @return ResponseEntity
-     */
-    @PostMapping("/add-category")
-    public ResponseEntity<String> addCategorie(@RequestBody final MotoRequest motoRequest) {
-        if (this.motoService.addCategory(motoRequest) != null) {
-            return ResponseEntity.ok("Categorie ajoutée à la moto");
-        }
-        return ResponseEntity.ok("Impossible d'ajouter la marque à la moto, essayez à nouveau");
-    }
-
-    /**
-     * Method to delete a Moto
-     *
-     * @param slug Slug of moto to delete
-     */
-    @GetMapping("/delete/{slug}")
-    public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
-        this.motoService.deleteMoto(slug);
-        return ResponseEntity.ok("Moto supprimée");
     }
 }
