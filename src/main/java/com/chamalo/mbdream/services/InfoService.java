@@ -61,8 +61,6 @@ public class InfoService {
      * @return InfoModel
      */
     public InfoModel getInfoMoto(final String slugMoto) {
-        return this.infoRepository.findInfoMoto(slugMoto).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver des informations sur la moto avec le slug " + slugMoto)
-        );
+        return this.infoRepository.findInfoMoto(slugMoto).orElse(null);
     }
 }
