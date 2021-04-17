@@ -25,7 +25,7 @@ public class MotoModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMoto;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 250, unique = true)
     private String slugMoto;
 
     @Column(nullable = false, length = 200, unique = true)
