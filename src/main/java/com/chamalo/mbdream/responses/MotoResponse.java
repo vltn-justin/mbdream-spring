@@ -16,7 +16,6 @@ public class MotoResponse extends Response<MotoModel> {
 
         map.put("slugMoto", model.getSlugMoto());
         map.put("nomMoto", model.getNomMoto());
-        map.put("prixMoto", model.getPrixMoto());
         map.put("descriptionMoto", model.getDescriptionMoto());
 
         if (model.getMarque() != null) {
