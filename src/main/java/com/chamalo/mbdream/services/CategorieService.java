@@ -41,19 +41,6 @@ public class CategorieService {
     }
 
     /**
-     * Method to get a category with is id
-     *
-     * @param id Id of Category
-     *
-     * @return Category or MBDreamException
-     */
-    public CategorieModel findCategorieById (final String id) {
-        return this.categorieRepository.findById(Long.parseLong(id)).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la catégorie avec l'id " + id)
-        );
-    }
-
-    /**
      * Method to get a category with is slug
      *
      * @param slug Slug of Category
@@ -75,8 +62,12 @@ public class CategorieService {
         return this.categorieRepository.findAll();
     }
 
-    public void deleteCategorie(final String id) {
-        CategorieModel categorie = this.findCategorieById(id);
+    /**
+     * Method to delete a Category with is slug
+     * @param slug Slug of Category
+     */
+    public void deleteCategorie(final String slug) {
+        CategorieModel categorie = this.findCategorieBySlug(slug);
 
         for (MotoModel moto : categorie.getMotos()) {
             moto.setCategorie(null);

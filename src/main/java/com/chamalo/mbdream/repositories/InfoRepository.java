@@ -1,12 +1,10 @@
 package com.chamalo.mbdream.repositories;
 
-import com.chamalo.mbdream.models.ImageModel;
 import com.chamalo.mbdream.models.InfoModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

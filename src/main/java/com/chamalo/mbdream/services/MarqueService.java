@@ -49,19 +49,6 @@ public class MarqueService {
     }
 
     /**
-     * Method to get a marque with is id
-     *
-     * @param id Id of marque
-     *
-     * @return MarqueModel if found, MBDreamException otherwise
-     */
-    public MarqueModel findMarqueById (final String id) {
-        return this.marqueRepository.findById(Long.parseLong(id)).orElseThrow(
-                () -> new MBDreamException("Marque introuvable avec l'id " + id)
-        );
-    }
-
-    /**
      * Method to get a marque with is slug
      *
      * @param slug Slug of marque
@@ -113,10 +100,10 @@ public class MarqueService {
     /**
      * Method to delete marque
      *
-     * @param id Id of marque to delete
+     * @param slug Slug of marque to delete
      */
-    public void deleteMarque (final String id) {
-        final MarqueModel marque = this.findMarqueById(id);
+    public void deleteMarque (final String slug) {
+        final MarqueModel marque = this.findMarqueBySlug(slug);
 
         for (MotoModel moto : marque.getMotos()) {
             motoService.deleteMoto(moto.getIdMoto().toString());

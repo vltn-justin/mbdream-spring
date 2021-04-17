@@ -64,31 +64,13 @@ public class MarqueController {
     }
 
     /**
-     * Method to get a marque with is id, mapped at /marque/get/id/
-     *
-     * @param id Id of marque
-     *
-     * @return Marque or MBDreamException
-     */
-    @GetMapping("/get/id/{id}")
-    public ResponseEntity<Map<String, Object>> findMarqueById(@PathVariable final String id) {
-        MarqueModel marque = this.marqueService.findMarqueById(id);
-
-        if (marque != null) {
-            return ResponseEntity.ok(new MarqueResponse().buildResponse(ResponseType.BASIC, marque));
-        }
-
-        return ResponseEntity.notFound().build();
-    }
-
-    /**
      * Method to get a marque with is id, mapped at /marque/get/slug/
      *
      * @param slug Slug of marque
      *
      * @return Marque or MBDreamException
      */
-    @GetMapping("/get/slug/{slug}")
+    @GetMapping("/get/{slug}")
     public ResponseEntity<Map<String, Object>> findMarqueBySlug(@PathVariable final String slug) {
         MarqueModel marque = this.marqueService.findMarqueBySlug(slug);
 
@@ -130,13 +112,13 @@ public class MarqueController {
     /**
      * Method to delete a marque with is id
      *
-     * @param id Id of Marque
+     * @param slug Slug of Marque
      *
      * @return ResponseEntity
      */
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<String> deleteMarque(@PathVariable final String id) {
-        this.marqueService.deleteMarque(id);
+    @GetMapping("/delete/{slug}")
+    public ResponseEntity<String> deleteMarque(@PathVariable final String slug) {
+        this.marqueService.deleteMarque(slug);
         return ResponseEntity.ok("Marque supprimé");
     }
 }

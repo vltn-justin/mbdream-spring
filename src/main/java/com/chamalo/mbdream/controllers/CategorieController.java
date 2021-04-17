@@ -49,31 +49,13 @@ public class CategorieController {
     }
 
     /**
-     * Method to get a category with is id, mapped at /category/get/id/
-     *
-     * @param id Id of Category
-     *
-     * @return Category or MBDreamException
-     */
-    @GetMapping("/get/id/{id}")
-    public ResponseEntity<Map<String, Object>> findCategorieById(@PathVariable final String id) {
-        CategorieModel categorie = this.categorieService.findCategorieById(id);
-
-        if (categorie != null) {
-            return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
-        }
-
-        return ResponseEntity.notFound().build();
-    }
-
-    /**
      * Method to get a category with is slug, mapped at /category/get/slug/
      *
      * @param slug Slug of Category
      *
      * @return Category or MBDreamException
      */
-    @GetMapping("/get/slug/{slug}")
+    @GetMapping("/get/{slug}")
     public ResponseEntity<Map<String, Object>> findCategorieBySlug(@PathVariable final String slug) {
         CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
 
@@ -105,13 +87,13 @@ public class CategorieController {
     /**
      * Method to delete a categorie with is id
      *
-     * @param id Id of categorie to delete
+     * @param slug Slug of categorie to delete
      *
      * @return ResponseEntity
      */
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<String> deleteCategorie(@PathVariable final String id) {
-        this.categorieService.deleteCategorie(id);
+    @GetMapping("/delete/{slug}")
+    public ResponseEntity<String> deleteCategorie(@PathVariable final String slug) {
+        this.categorieService.deleteCategorie(slug);
         return ResponseEntity.ok("Catégorie supprimée");
     }
 }

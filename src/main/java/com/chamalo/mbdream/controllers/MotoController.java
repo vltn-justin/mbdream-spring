@@ -148,11 +148,11 @@ public class MotoController {
     /**
      * Method to delete a Moto
      *
-     * @param id ID of moto to delete
+     * @param slug Slug of moto to delete
      */
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<String> deleteMoto(@PathVariable final String id) {
-        this.motoService.deleteMoto(id);
+    @GetMapping("/delete/{slug}")
+    public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
+        this.motoService.deleteMoto(slug);
         return ResponseEntity.ok("Moto supprimée");
     }
 }
