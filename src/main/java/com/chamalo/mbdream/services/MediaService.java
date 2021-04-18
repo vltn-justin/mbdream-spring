@@ -127,7 +127,10 @@ public class MediaService {
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setStorageBucket("motorbike-dream.appspot.com")
                 .build();
-        FirebaseApp.initializeApp(options);
+
+        if (FirebaseApp.getInstance() == null) {
+            FirebaseApp.initializeApp(options);
+        }
 
         final Bucket bucket = StorageClient.getInstance().bucket();
 
