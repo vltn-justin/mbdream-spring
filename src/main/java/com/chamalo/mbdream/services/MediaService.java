@@ -6,11 +6,23 @@ import com.chamalo.mbdream.models.MediaModel;
 import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.repositories.MediaRepository;
 import com.chamalo.mbdream.repositories.MotoRepository;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Acl;
+import com.google.cloud.storage.Bucket;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.cloud.StorageClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class MediaService {
@@ -34,14 +46,14 @@ public class MediaService {
             // Si on ajoute le media via lien
             mediaModel.setLienMedia(mediaRequest.getUrlMedia());
         } else {
-            this.saveMediaIntoFolder(mediaRequest);
-
-            if (mediaRequest.getIsVideo()) {
-                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/video/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
-            } else {
-                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
-            }
-
+//            this.saveMediaIntoFolder(mediaRequest);
+//
+//            if (mediaRequest.getIsVideo()) {
+//                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/video/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+//            } else {
+//                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
+//            }
+            mediaModel.setLienMedia(this.uploadFile("image/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename(), mediaRequest.getFileMedia()));
         }
 
         mediaModel.setDescriptionMedia(mediaRequest.getDescriptionMedia());
@@ -96,5 +108,35 @@ public class MediaService {
         final File file = new File(pathFile);
 
         mediaRequest.getFileMedia().transferTo(file);
+    }
+
+    /**
+     * Method to upload a file into firebase storage
+     *
+     * @param storageFilePath File path where the file will be saved
+     * @param multipartFile   File to save
+     *
+     * @return URL of file saved
+     *
+     * @throws IOException Exception for FileInputStream
+     */
+    public String uploadFile(final String storageFilePath, final MultipartFile multipartFile) throws IOException {
+        final FileInputStream serviceAccount = new FileInputStream(ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json"));
+
+        final FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("motorbike-dream.appspot.com")
+                .build();
+        FirebaseApp.initializeApp(options);
+
+        final Bucket bucket = StorageClient.getInstance().bucket();
+
+        final InputStream tempFile = multipartFile.getInputStream();
+
+        bucket.create(storageFilePath, tempFile, "media");
+        // Make file readable public
+        bucket.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+
+        return String.format("https://firebasestorage.googleapis.com/v0/b/motorbike-dream.appspot.com/o/%s?alt=media", URLEncoder.encode(storageFilePath, StandardCharsets.UTF_8));
     }
 }
