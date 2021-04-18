@@ -137,8 +137,6 @@ public class MediaService {
         // Make file readable public
         bucket.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
 
-        final String url = String.format("https://firebasestorage.googleapis.com/v0/b/motorbike-dream.appspot.com/o/%s?alt=media", URLEncoder.encode(storageFilePath, StandardCharsets.UTF_8));
-        
-        return url;
+        return String.format("https://firebasestorage.googleapis.com/v0/b/motorbike-dream.appspot.com/o/%s?alt=media", URLEncoder.encode(storageFilePath, StandardCharsets.UTF_8));
     }
 }
