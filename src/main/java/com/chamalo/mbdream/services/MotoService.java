@@ -37,7 +37,7 @@ public class MotoService {
      *
      * @return Iterable of MotoModel
      */
-    public Iterable<MotoModel> findAllMotoByPage(final Integer page) { return this.motoRepository.getMotoByPage(page); }
+    public Iterable<MotoModel> findAllMotoByPage(final Integer page) { return this.motoRepository.getMotoByPage(page * 10); }
 
     /**
      * Method to get all moto featured
