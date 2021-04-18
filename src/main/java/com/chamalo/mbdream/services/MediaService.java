@@ -123,9 +123,12 @@ public class MediaService {
      * @throws IOException Exception for FileInputStream
      */
     public String uploadFile(final String storageFilePath, final MultipartFile multipartFile) throws IOException {
-        final FileInputStream serviceAccount = new FileInputStream(
-                ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json")
-        );
+        final File file = ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json");
+
+        System.out.println(file.exists());
+        System.out.println(file.getAbsoluteFile());
+
+        final FileInputStream serviceAccount = new FileInputStream(file);
 
         final FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
