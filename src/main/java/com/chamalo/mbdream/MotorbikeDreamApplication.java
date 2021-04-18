@@ -16,12 +16,4 @@ public class MotorbikeDreamApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
         SpringApplication.run(MotorbikeDreamApplication.class, args);
     }
-
-    // Grant access to IMG for angular
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler("/resources/**")
-                .addResourceLocations("/resources/");
-    }
 }
