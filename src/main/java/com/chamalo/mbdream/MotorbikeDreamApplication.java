@@ -21,7 +21,7 @@ public class MotorbikeDreamApplication implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
-                .addResourceHandler("/resources/static/images/**")
+                .addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
     }
 }
