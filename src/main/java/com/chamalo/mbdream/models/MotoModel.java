@@ -55,6 +55,6 @@ public class MotoModel {
     @OneToMany(mappedBy = "moto")
     private Collection<MediaModel> medias;
 
-    @OneToOne
+    @OneToOne(mappedBy = "moto")
     private InfoModel infos;
 }

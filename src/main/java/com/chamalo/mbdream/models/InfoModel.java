@@ -48,5 +48,6 @@ public class InfoModel {
     private Double consommation;
 
     @OneToOne
+    @JoinColumn(name = "info_id")
     private MotoModel moto;
 }
