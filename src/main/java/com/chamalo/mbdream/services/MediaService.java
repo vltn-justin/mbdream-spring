@@ -13,8 +13,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -123,12 +121,14 @@ public class MediaService {
      * @throws IOException Exception for FileInputStream
      */
     public String uploadFile(final String storageFilePath, final MultipartFile multipartFile) throws IOException {
-        final File file = ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json");
+//        final File file = ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json");
+//
+//        System.out.println(file.exists());
+//        System.out.println(file.getAbsoluteFile());
+//
+//        final FileInputStream serviceAccount = new FileInputStream(file);
 
-        System.out.println(file.exists());
-        System.out.println(file.getAbsoluteFile());
-
-        final FileInputStream serviceAccount = new FileInputStream(file);
+        final InputStream serviceAccount = ClassLoader.getSystemResourceAsStream("motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json");
 
         final FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
