@@ -141,7 +141,7 @@ public class MediaService {
             FirebaseApp.initializeApp(options, "mbdream_bucket");
         }
 
-        final Bucket bucket = StorageClient.getInstance().bucket();
+        final Bucket bucket = StorageClient.getInstance(FirebaseApp.getInstance("mbdream_bucket")).bucket();
 
         final InputStream tempFile = multipartFile.getInputStream();
 
