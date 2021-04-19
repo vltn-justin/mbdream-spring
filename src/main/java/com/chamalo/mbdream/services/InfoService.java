@@ -36,15 +36,9 @@ public class InfoService {
 
         InfoModel infoModel = new InfoModel();
 
+        this.putDataIntoModel(infoModel, infoRequest);
+
         infoModel.setMoto(motoModel.get());
-        infoModel.setPrix(infoRequest.getPrix());
-        infoModel.setArchitectureMoteur(infoRequest.getArchitectureMoteur());
-        infoModel.setCylindre(infoRequest.getCylindre());
-        infoModel.setPuissance(infoRequest.getPuissance());
-        infoModel.setCouple(infoRequest.getCouple());
-        infoModel.setPoid(infoRequest.getPoid());
-        infoModel.setCapaciteReservoir(infoRequest.getCapaciteReservoir());
-        infoModel.setConsommation(infoRequest.getConsommation());
 
         infoModel = this.infoRepository.save(infoModel);
         motoModel.get().setInfos(infoModel);
@@ -62,5 +56,37 @@ public class InfoService {
      */
     public InfoModel getInfoMoto(final String slugMoto) {
         return this.infoRepository.findInfoMoto(slugMoto).orElse(null);
+    }
+
+    /**
+     * Method to update infos
+     *
+     * @param infoRequest InfoRequest
+     *
+     * @return InfoModel
+     */
+    public InfoModel update(final InfoRequest infoRequest) {
+        final InfoModel infoModel = this.getInfoMoto(infoRequest.getSlugMoto());
+
+        this.putDataIntoModel(infoModel, infoRequest);
+
+        return this.infoRepository.save(infoModel);
+    }
+
+    /**
+     * Method to put data from request into model
+     *
+     * @param infoModel   InfoModel
+     * @param infoRequest InfoRequest
+     */
+    private void putDataIntoModel(final InfoModel infoModel, final InfoRequest infoRequest) {
+        infoModel.setPrix(infoRequest.getPrix());
+        infoModel.setArchitectureMoteur(infoRequest.getArchitectureMoteur());
+        infoModel.setCylindre(infoRequest.getCylindre());
+        infoModel.setPuissance(infoRequest.getPuissance());
+        infoModel.setCouple(infoRequest.getCouple());
+        infoModel.setPoid(infoRequest.getPoid());
+        infoModel.setCapaciteReservoir(infoRequest.getCapaciteReservoir());
+        infoModel.setConsommation(infoRequest.getConsommation());
     }
 }

@@ -35,12 +35,27 @@ public class InfoController {
      *
      * @return ResponseEntity<String>
      */
-    @PostMapping("/add-info")
+    @PostMapping("/add")
     public ResponseEntity<String> addInfo(@RequestBody final InfoRequest infoRequest) {
         if (this.infoService.addInfo(infoRequest).getIdInfo() != null) {
             return ResponseEntity.ok("Infos ajoutés");
         }
         return ResponseEntity.ok("Impossible d'ajouter les infos, essayez à nouveau");
+    }
+
+    /**
+     * Method to update info
+     *
+     * @param infoRequest InfoRequest
+     *
+     * @return ResponseEntity<String>
+     */
+    @PostMapping("/update")
+    public ResponseEntity<String> updateInfo(@RequestBody final InfoRequest infoRequest) {
+        if (this.infoService.update(infoRequest) != null) {
+            return ResponseEntity.ok("Infos mise à jour");
+        }
+        return ResponseEntity.ok("Impossible de mettre à jour les infos");
     }
 
     /**
