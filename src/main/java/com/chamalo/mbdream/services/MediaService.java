@@ -137,9 +137,11 @@ public class MediaService {
                 .setStorageBucket("motorbike-dream.appspot.com")
                 .build();
 
-        if (FirebaseApp.getInstance() == null) {
-            FirebaseApp.initializeApp(options);
-        }
+        FirebaseApp.initializeApp(options);
+
+//        if (FirebaseApp.getInstance() == null) {
+//
+//        }
 
         final Bucket bucket = StorageClient.getInstance().bucket();
 
