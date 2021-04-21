@@ -148,10 +148,6 @@ public class MotoService {
     public void deleteMoto(final String slug) {
         MotoModel moto = this.findMotoBySlug(slug);
 
-        for (MediaModel media : moto.getMedias()) {
-            this.mediaRepository.delete(media);
-        }
-
         this.motoRepository.deleteById(moto.getIdMoto());
     }
 }

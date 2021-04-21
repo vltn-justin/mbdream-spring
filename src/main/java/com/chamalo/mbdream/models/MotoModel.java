@@ -52,9 +52,9 @@ public class MotoModel {
     @JoinColumn(name = "categorie_id")
     private CategorieModel categorie;
 
-    @OneToMany(mappedBy = "moto")
+    @OneToMany(mappedBy = "moto", cascade = CascadeType.REMOVE)
     private Collection<MediaModel> medias;
 
-    @OneToOne(mappedBy = "moto")
+    @OneToOne(mappedBy = "moto", cascade = CascadeType.REMOVE)
     private InfoModel infos;
 }

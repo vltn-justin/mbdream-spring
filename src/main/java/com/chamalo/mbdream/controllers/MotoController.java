@@ -115,4 +115,18 @@ public class MotoController {
     public ResponseEntity<Iterable<MotoModel>> findAllFeaturedMoto() {
         return ResponseEntity.ok(this.motoService.findAllFeaturedMoto());
     }
+
+    /**
+     * Method to delete a moto with is slug
+     *
+     * @param slug Slug of moto
+     *
+     * @return ResponseEntity
+     */
+    @GetMapping("/delete/{slug}")
+    public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
+        this.motoService.deleteMoto(slug);
+
+        return ResponseEntity.ok("Moto supprimée");
+    }
 }
