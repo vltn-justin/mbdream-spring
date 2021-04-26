@@ -37,7 +37,7 @@ public class MotoController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("/add-moto")
+    @PostMapping("/add")
     public ResponseEntity<String> addMoto(@RequestBody final MotoRequest motoRequest) {
         MotoModel moto = this.motoService.addMoto(motoRequest);
         if (moto.getIdMoto() != null) {
@@ -53,7 +53,7 @@ public class MotoController {
      *
      * @return null if moto is not find, updatedmoto otherwise
      */
-    @PostMapping("/update-moto")
+    @PostMapping("/update")
     public ResponseEntity<String> updateMoto(@RequestBody final MotoRequest motoRequest) {
         if (this.motoService.updateMoto(motoRequest) != null) {
             return ResponseEntity.ok("Moto mise à jour");
