@@ -2,14 +2,17 @@ package com.chamalo.mbdream.services;
 
 import com.chamalo.mbdream.DTO.MotoRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
-import com.chamalo.mbdream.models.*;
-import com.chamalo.mbdream.repositories.*;
+import com.chamalo.mbdream.models.CategorieModel;
+import com.chamalo.mbdream.models.MarqueModel;
+import com.chamalo.mbdream.models.MotoModel;
+import com.chamalo.mbdream.repositories.CategorieRepository;
+import com.chamalo.mbdream.repositories.MarqueRepository;
+import com.chamalo.mbdream.repositories.MotoRepository;
 import com.github.slugify.Slugify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collection;
 
 @Service
 public class MotoService {
@@ -17,17 +20,14 @@ public class MotoService {
     private final MotoRepository motoRepository;
     private final MarqueRepository marqueRepository;
     private final CategorieRepository categorieRepository;
-    private final MediaRepository mediaRepository;
 
     @Autowired
     public MotoService(final MotoRepository motoRepository,
                        final MarqueRepository marqueRepository,
-                       final CategorieRepository categorieRepository,
-                       final MediaRepository mediaRepository) {
+                       final CategorieRepository categorieRepository) {
         this.motoRepository = motoRepository;
         this.marqueRepository = marqueRepository;
         this.categorieRepository = categorieRepository;
-        this.mediaRepository = mediaRepository;
     }
 
     /**
@@ -123,6 +123,7 @@ public class MotoService {
         // Update tout car le formulaire aura de base toutes les infos et les envois
         updatedMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
 
+        // Si la marque change
         if (!updatedMoto.getMarque().getSlugMarque().equals(motoRequest.getSlugMarque())) {
             final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
                     () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoRequest.getSlugMarque())
@@ -130,6 +131,7 @@ public class MotoService {
             updatedMoto.setMarque(marque);
         }
 
+        // Si la catégorie change
         if (!updatedMoto.getCategorie().getSlugCategorie().equals(motoRequest.getSlugCategorie())) {
             final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
                     () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoRequest.getSlugCategorie())
