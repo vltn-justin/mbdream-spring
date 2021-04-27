@@ -16,26 +16,39 @@ public class MarqueResponse extends Response<MarqueModel>{
 
         map.put("dateCreation", marque.getDateCreation());
         map.put("descriptionMarque", marque.getDescriptionMarque());
+        map.put("nbMoto", marque.getMotos().size());
 
         if (marque.getMotos() != null) {
-            map.put("motos", motoToMap(marque.getMotos()));
+            map.put("motos", motoToMap(marque.getMotos(), ResponseType.LIGHT));
         }
 
+    }
+
+    @Override
+    protected void infoResponse(final Map<String, Object> map, final MarqueModel marque) {
+        this.lightResponse(map, marque);
+
+        map.put("dateCreation", marque.getDateCreation());
+        map.put("descriptionMarque", marque.getDescriptionMarque());
+        map.put("nbMoto", marque.getMotos().size());
+
+        if (marque.getMotos() != null) {
+            map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
+        }
     }
 
     @Override
     protected void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
         map.put("nomMarque", marque.getNomMarque());
         map.put("slugMarque", marque.getSlugMarque());
-        map.put("nbMoto", marque.getMotos().size());
         map.put("logoMarque", marque.getLogoMarque());
     }
 
-    private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection) {
+    private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection, final ResponseType type) {
         List<Map<String, Object>> listMoto = new ArrayList<>();
 
         for(MotoModel moto : motoModelCollection) {
-            listMoto.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
+            listMoto.add(new MotoResponse().buildResponse(type, moto));
         }
 
         return listMoto;

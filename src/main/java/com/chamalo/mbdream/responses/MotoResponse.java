@@ -18,17 +18,7 @@ public class MotoResponse extends Response<MotoModel> {
         map.put("nomMoto", model.getNomMoto());
         map.put("descriptionMoto", model.getDescriptionMoto());
 
-        if (model.getMarque() != null) {
-            map.put("marque", new MarqueResponse().buildResponse(ResponseType.LIGHT, model.getMarque()));
-        } else {
-            map.put("marque", null);
-        }
-
-        if (model.getCategorie() != null) {
-            map.put("categorie", new CategorieResponse().buildResponse(ResponseType.LIGHT, model.getCategorie()));
-        } else {
-            map.put("categorie", null);
-        }
+        this.infoResponse(map, model);
 
         map.put("nbMedia", model.getMedias().size());
 
@@ -36,6 +26,22 @@ public class MotoResponse extends Response<MotoModel> {
             map.put("idInfo", model.getInfos().getIdInfo());
         } else {
             map.put("idInfo", null);
+        }
+    }
+
+    @Override
+    protected void infoResponse(final Map<String, Object> map, final MotoModel model) {
+        this.lightResponse(map, model);
+
+        if (model.getCategorie() != null) {
+            map.put("categorie", new CategorieResponse().buildResponse(ResponseType.LIGHT, model.getCategorie()));
+        } else {
+            map.put("categorie", null);
+        }
+        if (model.getMarque() != null) {
+            map.put("marque", new MarqueResponse().buildResponse(ResponseType.LIGHT, model.getMarque()));
+        } else {
+            map.put("marque", null);
         }
     }
 

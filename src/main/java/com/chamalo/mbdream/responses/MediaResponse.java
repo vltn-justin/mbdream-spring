@@ -13,6 +13,12 @@ public class MediaResponse extends Response<MediaModel> {
     }
 
     @Override
+    protected void infoResponse(final Map<String, Object> map, final MediaModel model) {
+        // Pas d'info response
+        this.basicResponse(map, model);
+    }
+
+    @Override
     protected void lightResponse(final Map<String, Object> map, final MediaModel model) {
         // Pas de light response
         this.basicResponse(map, model);

@@ -20,6 +20,12 @@ public class CategorieResponse extends Response<CategorieModel>{
     }
 
     @Override
+    protected void infoResponse(final Map<String, Object> map, final CategorieModel model) {
+        // Pas d'info response
+        this.basicResponse(map, model);
+    }
+
+    @Override
     protected void lightResponse(final Map<String, Object> map, final CategorieModel categorie) {
         map.put("nomCategorie", categorie.getNomCategorie());
         map.put("slugCategorie", categorie.getSlugCategorie());

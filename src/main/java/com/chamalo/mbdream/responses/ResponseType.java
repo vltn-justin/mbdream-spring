@@ -9,6 +9,10 @@ public enum ResponseType {
      */
     BASIC,
     /**
+     * Response to have info
+     */
+    INFO,
+    /**
      * Light response, juste 2-3 things
      */
     LIGHT

@@ -17,6 +17,9 @@ public abstract class Response<M> {
             case BASIC:
                 this.basicResponse(map, model);
                 break;
+            case INFO:
+                this.infoResponse(map, model);
+                break;
             case LIGHT:
                 this.lightResponse(map, model);
                 break;
@@ -26,6 +29,8 @@ public abstract class Response<M> {
     }
 
     protected abstract void basicResponse(final Map<String, Object> map, final M model);
+
+    protected abstract void infoResponse(final Map<String, Object> map, final M model);
 
     protected abstract void lightResponse(final Map<String, Object> map, final M model);
 }
