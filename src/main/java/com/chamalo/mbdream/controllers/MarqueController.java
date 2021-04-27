@@ -44,8 +44,9 @@ public class MarqueController {
      */
     @PostMapping("/add")
     public ResponseEntity<String> addMarque(@RequestBody final MarqueRequest marqueRequest) {
-        if (this.marqueService.addMarque(marqueRequest).getIdMarque() != null) {
-            return ResponseEntity.ok("Marque ajoutée");
+        final MarqueModel newMarque = this.marqueService.addMarque(marqueRequest);
+        if (newMarque.getIdMarque() != null) {
+            return ResponseEntity.ok("Marque ajoutée - " + newMarque.getSlugMarque());
         }
         return ResponseEntity.ok("Impossible d'ajouter la marque, essayez à nouveau");
     }
