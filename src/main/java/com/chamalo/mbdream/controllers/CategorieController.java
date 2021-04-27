@@ -40,7 +40,7 @@ public class CategorieController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("/add-category")
+    @PostMapping("/add")
     public ResponseEntity<String> addCategorie(@RequestBody final CategorieRequest categorieRequest) {
         if (this.categorieService.addCategorie(categorieRequest).getIdCategorie() != null) {
             return ResponseEntity.ok("Catégorie ajoutée");
