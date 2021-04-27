@@ -71,6 +71,15 @@ public class MarqueService {
     }
 
     /**
+     * Method to get all marques, limited by 10
+     *
+     * @param page Page number
+     *
+     * @return Iterable of MarqueModel
+     */
+    public Iterable<MarqueModel> findAllMarqueByPage(final Integer page) { return this.marqueRepository.getMarqueByPage(page * 10); }
+
+    /**
      * Method to count all marques inside database
      *
      * @return Long

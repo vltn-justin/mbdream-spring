@@ -3,8 +3,10 @@ package com.chamalo.mbdream.controllers;
 import com.chamalo.mbdream.DTO.MarqueRequest;
 import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.models.MarqueModel;
+import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.CategorieResponse;
 import com.chamalo.mbdream.responses.MarqueResponse;
+import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MarqueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class MarqueController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("/add-marque")
+    @PostMapping("/add")
     public ResponseEntity<String> addMarque(@RequestBody final MarqueRequest marqueRequest) {
         if (this.marqueService.addMarque(marqueRequest).getIdMarque() != null) {
             return ResponseEntity.ok("Marque ajoutée");
@@ -55,7 +57,7 @@ public class MarqueController {
      *
      * @return ReponseEntity
      */
-    @PostMapping("/update-marque")
+    @PostMapping("/update")
     public ResponseEntity<String> updateMarque(@RequestBody final MarqueRequest marqueRequest) {
         if (this.marqueService.updateMarque(marqueRequest) != null) {
             return ResponseEntity.ok("Marque mise à jour");
@@ -89,6 +91,24 @@ public class MarqueController {
     @GetMapping("/get")
     public ResponseEntity<List<Map<String, Object>>> findAllMarque() {
         Iterable<MarqueModel> allMarque = this.marqueService.findAllMarque();
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for (MarqueModel marque : allMarque) {
+            mapList.add(new MarqueResponse().buildResponse(ResponseType.LIGHT, marque));
+        }
+
+        return ResponseEntity.ok(mapList);
+    }
+
+    /**
+     * Method to get all marques, limited by 10 per page
+     *
+     * @return Response Entity
+     */
+    @GetMapping(value = "/get/page/{page}")
+    public ResponseEntity<List<Map<String, Object>>> findAllByPage(@PathVariable final Integer page) {
+        Iterable<MarqueModel> allMarque = this.marqueService.findAllMarqueByPage(page);
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 

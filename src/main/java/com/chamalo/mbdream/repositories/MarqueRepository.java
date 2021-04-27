@@ -17,4 +17,7 @@ import java.util.Optional;
 public interface MarqueRepository extends CrudRepository<MarqueModel, Long> {
     @Query("SELECT m FROM Marque m WHERE m.slugMarque = :slug")
     Optional<MarqueModel> findMarqueBySlug(final String slug);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM marque m LIMIT 10 OFFSET :page")
+    Iterable<MarqueModel> getMarqueByPage(final Integer page);
 }
