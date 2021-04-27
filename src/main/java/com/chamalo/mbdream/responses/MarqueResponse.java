@@ -19,22 +19,15 @@ public class MarqueResponse extends Response<MarqueModel>{
         map.put("nbMoto", marque.getMotos().size());
 
         if (marque.getMotos() != null) {
-            map.put("motos", motoToMap(marque.getMotos(), ResponseType.LIGHT));
+            map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
         }
 
     }
 
     @Override
     protected void infoResponse(final Map<String, Object> map, final MarqueModel marque) {
-        this.lightResponse(map, marque);
-
-        map.put("dateCreation", marque.getDateCreation());
-        map.put("descriptionMarque", marque.getDescriptionMarque());
-        map.put("nbMoto", marque.getMotos().size());
-
-        if (marque.getMotos() != null) {
-            map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
-        }
+        // Pas d'info response
+        this.basicResponse(map, marque);
     }
 
     @Override
