@@ -16,7 +16,6 @@ public class MarqueResponse extends Response<MarqueModel>{
 
         map.put("dateCreation", marque.getDateCreation());
         map.put("descriptionMarque", marque.getDescriptionMarque());
-        map.put("logoMarque", marque.getLogoMarque());
 
         if (marque.getMotos() != null) {
             map.put("motos", motoToMap(marque.getMotos()));
@@ -29,6 +28,7 @@ public class MarqueResponse extends Response<MarqueModel>{
         map.put("nomMarque", marque.getNomMarque());
         map.put("slugMarque", marque.getSlugMarque());
         map.put("nbMoto", marque.getMotos().size());
+        map.put("logoMarque", marque.getLogoMarque());
     }
 
     private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection) {
