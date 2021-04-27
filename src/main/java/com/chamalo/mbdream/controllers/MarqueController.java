@@ -114,7 +114,7 @@ public class MarqueController {
         List<Map<String, Object>> mapList = new ArrayList<>();
 
         for (MarqueModel marque : allMarque) {
-            mapList.add(new MarqueResponse().buildResponse(ResponseType.LIGHT, marque));
+            mapList.add(new MarqueResponse().buildResponse(ResponseType.INFO, marque));
         }
 
         return ResponseEntity.ok(mapList);

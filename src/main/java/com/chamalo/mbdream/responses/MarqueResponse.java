@@ -12,11 +12,10 @@ public class MarqueResponse extends Response<MarqueModel>{
 
     @Override
     protected void basicResponse(final Map<String, Object> map, final MarqueModel marque) {
-        this.lightResponse(map, marque);
+        this.infoResponse(map, marque);
 
         map.put("dateCreation", marque.getDateCreation());
         map.put("descriptionMarque", marque.getDescriptionMarque());
-        map.put("nbMoto", marque.getMotos().size());
 
         if (marque.getMotos() != null) {
             map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
@@ -26,15 +25,15 @@ public class MarqueResponse extends Response<MarqueModel>{
 
     @Override
     protected void infoResponse(final Map<String, Object> map, final MarqueModel marque) {
-        // Pas d'info response
-        this.basicResponse(map, marque);
+        map.put("nomMarque", marque.getNomMarque());
+        map.put("slugMarque", marque.getSlugMarque());
+        map.put("logoMarque", marque.getLogoMarque());
     }
 
     @Override
     protected void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
         map.put("nomMarque", marque.getNomMarque());
         map.put("slugMarque", marque.getSlugMarque());
-        map.put("logoMarque", marque.getLogoMarque());
     }
 
     private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection, final ResponseType type) {
