@@ -14,10 +14,6 @@ public class MotoResponse extends Response<MotoModel> {
     protected void basicResponse(final Map<String, Object> map, final MotoModel model) {
         this.lightResponse(map, model);
 
-        map.put("slugMoto", model.getSlugMoto());
-        map.put("nomMoto", model.getNomMoto());
-        map.put("descriptionMoto", model.getDescriptionMoto());
-
         this.infoResponse(map, model);
 
         map.put("nbMedia", model.getMedias().size());
