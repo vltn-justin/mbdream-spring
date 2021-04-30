@@ -34,7 +34,7 @@ public class CategorieResponse extends Response<CategorieModel>{
         List<Map<String, Object>> listMoto = new ArrayList<>();
 
         for (MotoModel moto : motoModelCollection) {
-            listMoto.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
+            listMoto.add(new MotoResponse().buildResponse(ResponseType.INFO, moto));
         }
 
         return listMoto;
