@@ -16,6 +16,7 @@ public class MotoResponse extends Response<MotoModel> {
 
         this.infoResponse(map, model);
 
+        map.put("descriptionMoto", model.getDescriptionMoto());
         map.put("nbMedia", model.getMedias().size());
 
         if (model.getInfos() != null) {
