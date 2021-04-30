@@ -29,7 +29,7 @@ public class MediaService {
     private final MediaRepository mediaRepository;
     private final MotoRepository motoRepository;
 
-    @Value("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json")
+    @Value("classpath:motorbike-dream-firebase-adminsdk-ddhec-d3f4212187.json")
     Resource firebaseCredentials;
 
     @Autowired
@@ -124,7 +124,7 @@ public class MediaService {
      * @throws IOException Exception for FileInputStream
      */
     public String uploadFile(final String storageFilePath, final MultipartFile multipartFile) throws IOException {
-//        final File file = ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-044e9189f5.json");
+//        final File file = ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-d3f4212187.json");
 
 //        final FileInputStream serviceAccount = new FileInputStream(file);
         final InputStream serviceAccount = firebaseCredentials.getInputStream();
