@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,16 +85,23 @@ public class MotoController {
      * @return Response Entity
      */
     @GetMapping(value = "/get/page/{page}")
-    public ResponseEntity<List<Map<String, Object>>> findAllByPage(@PathVariable final Integer page) {
-        Iterable<MotoModel> allMoto = this.motoService.findAllMotoByPage(page);
+    public ResponseEntity<Map<String, Object>> findAllByPage(@PathVariable final Integer page) {
+        final Iterable<MotoModel> allMoto = this.motoService.findAllMotoByPage(page);
 
-        List<Map<String, Object>> mapList = new ArrayList<>();
+        final Map<String, Object> mapResponse = new HashMap<>();
+        final Long count = this.countAllMoto().getBody();
+        mapResponse.put("count", count);
+        mapResponse.put("haveNext", count / 10 < page);
 
-        for (MotoModel moto : allMoto) {
+        final List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for (final MotoModel moto : allMoto) {
             mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
         }
 
-        return ResponseEntity.ok(mapList);
+        mapResponse.put("results", mapList);
+
+        return ResponseEntity.ok(mapResponse);
     }
 
     /**
