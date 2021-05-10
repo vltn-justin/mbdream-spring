@@ -26,8 +26,8 @@ public class CategorieResponse extends Response<CategorieModel>{
 
     @Override
     protected void lightResponse(final Map<String, Object> map, final CategorieModel categorie) {
-        map.put("nomCategorie", categorie.getNomCategorie());
         map.put("slugCategorie", categorie.getSlugCategorie());
+        map.put("nomCategorie", categorie.getNomCategorie());
     }
 
     private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection) {

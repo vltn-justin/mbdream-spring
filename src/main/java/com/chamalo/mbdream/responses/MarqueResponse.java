@@ -25,15 +25,14 @@ public class MarqueResponse extends Response<MarqueModel>{
 
     @Override
     protected void infoResponse(final Map<String, Object> map, final MarqueModel marque) {
-        map.put("nomMarque", marque.getNomMarque());
-        map.put("slugMarque", marque.getSlugMarque());
+        this.lightResponse(map, marque);
         map.put("logoMarque", marque.getLogoMarque());
     }
 
     @Override
     protected void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
-        map.put("nomMarque", marque.getNomMarque());
         map.put("slugMarque", marque.getSlugMarque());
+        map.put("nomMarque", marque.getNomMarque());
     }
 
     private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection, final ResponseType type) {
