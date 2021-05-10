@@ -1,6 +1,7 @@
 package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.DTO.MotoRequest;
+import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
@@ -70,13 +71,15 @@ public class MotoController {
      * @return ResponseEntity of MotoModel
      */
     @GetMapping(value = "/get/{slug}")
-    public ResponseEntity<Map<String, Object>> findMotoBySlug(@PathVariable final String slug) {
-        MotoModel moto = this.motoService.findMotoBySlug(slug);
-
-        if (moto != null) {
-            return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
+    public ResponseEntity<Object> findMotoBySlug(@PathVariable final String slug) {
+        MotoModel moto;
+        try {
+            moto = this.motoService.findMotoBySlug(slug);
+        } catch (final MBDreamException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
     }
 
     /**
