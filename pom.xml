@@ -13,9 +13,93 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Motorbike Dream</name>
     <description>Motorbike Dream project for Spring Boot</description>
+
     <properties>
         <java.version>11</java.version>
     </properties>
+
+    <!-- Sonar profile config -->
+    <profiles>
+        <!-- mvn sonar:sonar -->
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- URL du sonar -->
+                <sonar.host.url>http://localhost:9000</sonar.host.url>
+                <!-- Credentials / Defined inside conf/settings.xml inside maven folder -->
+                <sonar.login>${sonar.token}</sonar.login>
+                <!-- Java version -->
+                <sonar.language>java</sonar.language>
+                <sonar.java.source>${java.version}</sonar.java.source>
+                <!-- SCM Disabled (Warning sur sonar) -->
+                <sonar.scm.disabled>true</sonar.scm.disabled>
+                <!-- Coverage -->
+                <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+                <!-- Exclusions -->
+                <sonar.exclusions>
+                    **/web.xml
+                </sonar.exclusions>
+                <!-- Source folder -->
+                <sonar.sources>
+                    src/main/java
+                </sonar.sources>
+                <!-- Test folder -->
+                <sonar.tests>src/test/java</sonar.tests>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>2.4.5</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <!-- Sonnar plugin -->
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.7.0.1746</version>
+                </plugin>
+
+                <!-- Jacoco -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.7</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,22 +170,4 @@
             <artifactId>postgresql</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>
