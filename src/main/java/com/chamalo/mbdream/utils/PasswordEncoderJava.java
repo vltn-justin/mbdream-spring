@@ -1,5 +1,8 @@
 package com.chamalo.mbdream.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,15 +15,17 @@ import java.security.SecureRandom;
  */
 public class PasswordEncoderJava {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PasswordEncoderJava.class);
+
     /**
      * Method to generate a salt
      *
      * @return salt generated
      */
     public byte[] generateSalt () {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
+        var secureRandom = new SecureRandom();
+        var salt = new byte[16];
+        secureRandom.nextBytes(salt);
         return salt;
     }
 
@@ -34,11 +39,11 @@ public class PasswordEncoderJava {
      */
     public byte[] generatePassword (String password, byte[] salt) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            return md.digest(password.getBytes(StandardCharsets.UTF_8));
+            var messageDigest = MessageDigest.getInstance("SHA-512");
+            messageDigest.update(salt);
+            return messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOGGER.error("Error generating password : ", e);
         }
         return new byte[0];
     }
