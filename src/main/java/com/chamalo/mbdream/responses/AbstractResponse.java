@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @param <M> Model for response
  */
-public abstract class RESPONSE<M> {
+public abstract class AbstractResponse<M> {
 
     public Map<String, Object> buildResponse(final ResponseType type, final M model) {
         Map<String, Object> map = new LinkedHashMap<>();

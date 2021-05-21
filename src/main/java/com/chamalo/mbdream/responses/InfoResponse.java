@@ -4,7 +4,7 @@ import com.chamalo.mbdream.models.InfoModel;
 
 import java.util.Map;
 
-public class InfoResponse extends RESPONSE<InfoModel> {
+public class InfoResponse extends AbstractResponse<InfoModel> {
 
     @Override
     protected void basicResponse(final Map<String, Object> map, final InfoModel model) {

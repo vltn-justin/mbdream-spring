@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Class to build a JSON response for Moto
  */
-public class MotoResponse extends RESPONSE<MotoModel> {
+public class MotoResponse extends AbstractResponse<MotoModel> {
 
     @Override
     protected void basicResponse(final Map<String, Object> map, final MotoModel model) {
