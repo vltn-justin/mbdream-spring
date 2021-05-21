@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Chamalo
  */
 @CrossOrigin(origins = {"http://localhost:4200",
-        "https://motorbike-dream.web.app"}) // Authorize angular
+        "https://motorbike-dream.web.app"})
 @RestController
 @RequestMapping("/info")
 public class InfoController {
@@ -72,7 +72,7 @@ public class InfoController {
      * @return ResponseEntity Map<String, Object> or <String>
      */
     @GetMapping("/get/{slugMoto}")
-    public ResponseEntity<?> getInfoMoto(@PathVariable final String slugMoto) {
+    public ResponseEntity<Object> getInfoMoto(@PathVariable final String slugMoto) {
         InfoModel infos = this.infoService.getInfoMoto(slugMoto);
 
         if (infos == null) {

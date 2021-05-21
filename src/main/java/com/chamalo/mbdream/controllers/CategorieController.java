@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Chamalo
  */
 @CrossOrigin(origins = {"http://localhost:4200",
-        "https://motorbike-dream.web.app"}) // Authorize angular
+        "https://motorbike-dream.web.app"})
 @RestController
 @RequestMapping("/category")
 public class CategorieController {
