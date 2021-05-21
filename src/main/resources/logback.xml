@@ -9,8 +9,6 @@
         </encoder>
     </appender>
 
-    <logger name="mbdream.log.error" level="ERROR" additivity="false"/>
-
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
