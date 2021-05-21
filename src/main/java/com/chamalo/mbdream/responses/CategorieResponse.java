@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Class to build a JSON response for Categorie
  */
-public class CategorieResponse extends Response<CategorieModel>{
+public class CategorieResponse extends RESPONSE<CategorieModel> {
     @Override
     protected void basicResponse(final Map<String, Object> map, final CategorieModel categorie) {
         this.infoResponse(map, categorie);

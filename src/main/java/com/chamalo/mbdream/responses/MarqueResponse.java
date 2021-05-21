@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Class to build a JSON response for Marque
  */
-public class MarqueResponse extends Response<MarqueModel>{
+public class MarqueResponse extends RESPONSE<MarqueModel> {
 
     @Override
     protected void basicResponse(final Map<String, Object> map, final MarqueModel marque) {

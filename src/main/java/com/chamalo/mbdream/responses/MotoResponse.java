@@ -2,13 +2,12 @@ package com.chamalo.mbdream.responses;
 
 import com.chamalo.mbdream.models.MotoModel;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Class to build a JSON response for Moto
  */
-public class MotoResponse extends Response<MotoModel> {
+public class MotoResponse extends RESPONSE<MotoModel> {
 
     @Override
     protected void basicResponse(final Map<String, Object> map, final MotoModel model) {

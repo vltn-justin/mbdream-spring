@@ -4,7 +4,7 @@ import com.chamalo.mbdream.models.MediaModel;
 
 import java.util.Map;
 
-public class MediaResponse extends Response<MediaModel> {
+public class MediaResponse extends RESPONSE<MediaModel> {
     @Override
     protected void basicResponse(final Map<String, Object> map, final MediaModel model) {
         map.put("idMedia", model.getIdMedia());
