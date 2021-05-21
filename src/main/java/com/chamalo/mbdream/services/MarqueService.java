@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.dto.MarqueRequest;
+import com.chamalo.mbdream.dto.MarqueDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MarqueModel;
 import com.chamalo.mbdream.models.MotoModel;
@@ -30,20 +30,20 @@ public class MarqueService {
     /**
      * Method to add a marque to database
      *
-     * @param marqueRequest MarqueRequest with all data
+     * @param marqueDTO MarqueRequest with all data
      *
      * @return ResponseEntity
      */
-    public MarqueModel addMarque (final MarqueRequest marqueRequest) {
+    public MarqueModel addMarque (final MarqueDTO marqueDTO) {
         MarqueModel newMarque = new MarqueModel();
 
-        newMarque.setNomMarque(marqueRequest.getNomMarque());
-        newMarque.setDescriptionMarque(marqueRequest.getDescriptionMarque());
-        newMarque.setLogoMarque(marqueRequest.getLogoMarque());
-        newMarque.setDateCreation(marqueRequest.getDateCreation());
+        newMarque.setNomMarque(marqueDTO.getNomMarque());
+        newMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
+        newMarque.setLogoMarque(marqueDTO.getLogoMarque());
+        newMarque.setDateCreation(marqueDTO.getDateCreation());
 
         Slugify slug = new Slugify();
-        newMarque.setSlugMarque(slug.slugify(marqueRequest.getNomMarque()));
+        newMarque.setSlugMarque(slug.slugify(marqueDTO.getNomMarque()));
 
         return this.marqueRepository.save(newMarque);
     }
@@ -91,17 +91,17 @@ public class MarqueService {
     /**
      * Method to update data of a Marque
      *
-     * @param marqueRequest MarqueRequest with all data
+     * @param marqueDTO MarqueRequest with all data
      *
      * @return updatedMarque
      */
-    public MarqueModel updateMarque (final MarqueRequest marqueRequest) {
-        MarqueModel updatedMarque = this.findMarqueBySlug(marqueRequest.getSlugMarque());
+    public MarqueModel updateMarque (final MarqueDTO marqueDTO) {
+        MarqueModel updatedMarque = this.findMarqueBySlug(marqueDTO.getSlugMarque());
 
-        updatedMarque.setNomMarque(marqueRequest.getNomMarque());
-        updatedMarque.setDescriptionMarque(marqueRequest.getDescriptionMarque());
-        updatedMarque.setLogoMarque(marqueRequest.getLogoMarque());
-        updatedMarque.setDateCreation(marqueRequest.getDateCreation());
+        updatedMarque.setNomMarque(marqueDTO.getNomMarque());
+        updatedMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
+        updatedMarque.setLogoMarque(marqueDTO.getLogoMarque());
+        updatedMarque.setDateCreation(marqueDTO.getDateCreation());
 
         return this.marqueRepository.save(updatedMarque);
     }

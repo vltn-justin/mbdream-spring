@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.dto.CategorieRequest;
+import com.chamalo.mbdream.dto.CategorieDTO;
 import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.responses.CategorieResponse;
 import com.chamalo.mbdream.responses.ResponseType;
@@ -34,13 +34,13 @@ public class CategorieController {
     /**
      * Method to add a Category to database
      *
-     * @param categorieRequest CategorieRequest with all data
+     * @param categorieDTO CategorieRequest with all data
      *
      * @return ResponseEntity
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addCategorie(@RequestBody final CategorieRequest categorieRequest) {
-        if (this.categorieService.addCategorie(categorieRequest).getIdCategorie() != null) {
+    public ResponseEntity<String> addCategorie(@RequestBody final CategorieDTO categorieDTO) {
+        if (this.categorieService.addCategorie(categorieDTO).getIdCategorie() != null) {
             return ResponseEntity.ok("Catégorie ajoutée");
         }
         return ResponseEntity.ok("Impossible d'ajouter la catégorie, essayez à nouveau");

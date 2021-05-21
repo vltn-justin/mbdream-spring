@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MediaRequest {
+public class MediaDTO {
     private Long idMedia;
 
     private String slugMoto;

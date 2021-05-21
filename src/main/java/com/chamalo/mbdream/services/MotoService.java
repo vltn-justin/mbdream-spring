@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.dto.MotoRequest;
+import com.chamalo.mbdream.dto.MotoDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.models.MarqueModel;
@@ -73,31 +73,31 @@ public class MotoService {
     /**
      * Method to add a Moto to database
      *
-     * @param motoRequest MotoRequest with all data
+     * @param motoDTO MotoRequest with all data
      *
      * @return MotoModel
      */
-    public MotoModel addMoto(final MotoRequest motoRequest) {
+    public MotoModel addMoto(final MotoDTO motoDTO) {
         MotoModel newMoto = new MotoModel();
 
         Slugify slug = new Slugify();
-        newMoto.setSlugMoto(slug.slugify(motoRequest.getNomMoto()));
+        newMoto.setSlugMoto(slug.slugify(motoDTO.getNomMoto()));
 
         if (this.motoRepository.findMotoBySlug(newMoto.getSlugMoto()).isPresent()) {
             throw new MBDreamException("Une moto avec le slug " + newMoto.getSlugMoto() + " existe deja");
         }
 
-        newMoto.setNomMoto(motoRequest.getNomMoto());
+        newMoto.setNomMoto(motoDTO.getNomMoto());
         newMoto.setDateAjout(Instant.now());
-        newMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
-        newMoto.setFeatured(motoRequest.isFeatured());
+        newMoto.setDescriptionMoto(motoDTO.getDescriptionMoto());
+        newMoto.setFeatured(motoDTO.isFeatured());
 
-        final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoRequest.getSlugMarque())
+        final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoDTO.getSlugMarque()).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoDTO.getSlugMarque())
         );
 
-        final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoRequest.getSlugCategorie())
+        final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoDTO.getSlugCategorie()).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoDTO.getSlugCategorie())
         );
 
         newMoto.setMarque(marque);
@@ -105,7 +105,7 @@ public class MotoService {
 
         newMoto = this.motoRepository.save(newMoto);
 
-        motoRequest.setSlugMoto(newMoto.getSlugMoto());
+        motoDTO.setSlugMoto(newMoto.getSlugMoto());
 
         return newMoto;
     }
@@ -113,28 +113,28 @@ public class MotoService {
     /**
      * Method to update data of a Moto
      *
-     * @param motoRequest MotoRequest with all data
+     * @param motoDTO MotoRequest with all data
      *
      * @return updatedmoto
      */
-    public MotoModel updateMoto(final MotoRequest motoRequest) {
-        MotoModel updatedMoto = this.findMotoBySlug(motoRequest.getSlugMoto());
+    public MotoModel updateMoto(final MotoDTO motoDTO) {
+        MotoModel updatedMoto = this.findMotoBySlug(motoDTO.getSlugMoto());
 
         // Update tout car le formulaire aura de base toutes les infos et les envois
-        updatedMoto.setDescriptionMoto(motoRequest.getDescriptionMoto());
+        updatedMoto.setDescriptionMoto(motoDTO.getDescriptionMoto());
 
         // Si la marque change
-        if (!updatedMoto.getMarque().getSlugMarque().equals(motoRequest.getSlugMarque())) {
-            final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoRequest.getSlugMarque()).orElseThrow(
-                    () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoRequest.getSlugMarque())
+        if (!updatedMoto.getMarque().getSlugMarque().equals(motoDTO.getSlugMarque())) {
+            final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoDTO.getSlugMarque()).orElseThrow(
+                    () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoDTO.getSlugMarque())
             );
             updatedMoto.setMarque(marque);
         }
 
         // Si la catégorie change
-        if (!updatedMoto.getCategorie().getSlugCategorie().equals(motoRequest.getSlugCategorie())) {
-            final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoRequest.getSlugCategorie()).orElseThrow(
-                    () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoRequest.getSlugCategorie())
+        if (!updatedMoto.getCategorie().getSlugCategorie().equals(motoDTO.getSlugCategorie())) {
+            final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoDTO.getSlugCategorie()).orElseThrow(
+                    () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoDTO.getSlugCategorie())
             );
             updatedMoto.setCategorie(categorie);
         }

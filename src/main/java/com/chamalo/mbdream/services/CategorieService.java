@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.dto.CategorieRequest;
+import com.chamalo.mbdream.dto.CategorieDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.models.MotoModel;
@@ -25,17 +25,17 @@ public class CategorieService {
     /**
      * Method to add a Category to database
      *
-     * @param categorieRequest CategorieRequest with all data
+     * @param categorieDTO CategorieRequest with all data
      *
      * @return ResponseEntity
      */
-    public CategorieModel addCategorie (final CategorieRequest categorieRequest) {
+    public CategorieModel addCategorie (final CategorieDTO categorieDTO) {
         CategorieModel newCategorie = new CategorieModel();
 
-        newCategorie.setNomCategorie(categorieRequest.getNomCategorie());
+        newCategorie.setNomCategorie(categorieDTO.getNomCategorie());
 
         Slugify slug = new Slugify();
-        newCategorie.setSlugCategorie(slug.slugify(categorieRequest.getNomCategorie()));
+        newCategorie.setSlugCategorie(slug.slugify(categorieDTO.getNomCategorie()));
 
         return this.categorieRepository.save(newCategorie);
     }

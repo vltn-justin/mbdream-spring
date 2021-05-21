@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.dto.MarqueRequest;
+import com.chamalo.mbdream.dto.MarqueDTO;
 import com.chamalo.mbdream.models.MarqueModel;
 import com.chamalo.mbdream.responses.MarqueResponse;
 import com.chamalo.mbdream.responses.ResponseType;
@@ -34,13 +34,13 @@ public class MarqueController {
     /**
      * Method to add a marque to database
      *
-     * @param marqueRequest MarqueRequest with all data
+     * @param marqueDTO MarqueRequest with all data
      *
      * @return ResponseEntity
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addMarque(@RequestBody final MarqueRequest marqueRequest) {
-        final MarqueModel newMarque = this.marqueService.addMarque(marqueRequest);
+    public ResponseEntity<String> addMarque(@RequestBody final MarqueDTO marqueDTO) {
+        final MarqueModel newMarque = this.marqueService.addMarque(marqueDTO);
         if (newMarque.getIdMarque() != null) {
             return ResponseEntity.ok("Marque ajoutée - " + newMarque.getSlugMarque());
         }
@@ -50,13 +50,13 @@ public class MarqueController {
     /**
      * Method to update a Marque
      *
-     * @param marqueRequest MarqueRequest with all data
+     * @param marqueDTO MarqueRequest with all data
      *
      * @return ReponseEntity
      */
     @PostMapping("/update")
-    public ResponseEntity<String> updateMarque(@RequestBody final MarqueRequest marqueRequest) {
-        if (this.marqueService.updateMarque(marqueRequest) != null) {
+    public ResponseEntity<String> updateMarque(@RequestBody final MarqueDTO marqueDTO) {
+        if (this.marqueService.updateMarque(marqueDTO) != null) {
             return ResponseEntity.ok("Marque mise à jour");
         }
         return ResponseEntity.ok("Impossible de mettre à jour la marque, essayez à nouveau");

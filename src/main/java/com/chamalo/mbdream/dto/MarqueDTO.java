@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MarqueRequest {
+public class MarqueDTO {
     private String slugMarque;
 
     private String nomMarque;

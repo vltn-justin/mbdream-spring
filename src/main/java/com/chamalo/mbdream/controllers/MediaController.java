@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.dto.MediaRequest;
+import com.chamalo.mbdream.dto.MediaDTO;
 import com.chamalo.mbdream.models.MediaModel;
 import com.chamalo.mbdream.responses.MediaResponse;
 import com.chamalo.mbdream.responses.ResponseType;
@@ -41,15 +41,15 @@ public class MediaController {
     /**
      * Method to add a Media
      *
-     * @param mediaRequest Request with all data
+     * @param mediaDTO Request with all data
      *
      * @return Response Entity
      *
      * @throws IOException Throw with file when you want to save media
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addMedia(@ModelAttribute final MediaRequest mediaRequest) throws IOException {
-        if (this.mediaService.addMedia(mediaRequest).getIdMedia() != null) {
+    public ResponseEntity<String> addMedia(@ModelAttribute final MediaDTO mediaDTO) throws IOException {
+        if (this.mediaService.addMedia(mediaDTO).getIdMedia() != null) {
             return ResponseEntity.ok("Media ajouter à la moto");
         }
 

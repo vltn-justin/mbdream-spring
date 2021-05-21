@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.dto.MotoRequest;
+import com.chamalo.mbdream.dto.MotoDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.MotoResponse;
@@ -35,13 +35,13 @@ public class MotoController {
     /**
      * Method to add a Moto to database
      *
-     * @param motoRequest MotoRequest with all data
+     * @param motoDTO MotoRequest with all data
      *
      * @return ResponseEntity
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addMoto(@RequestBody final MotoRequest motoRequest) {
-        MotoModel moto = this.motoService.addMoto(motoRequest);
+    public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
+        MotoModel moto = this.motoService.addMoto(motoDTO);
         if (moto.getIdMoto() != null) {
             return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
         }
@@ -51,13 +51,13 @@ public class MotoController {
     /**
      * Method to update data of a Moto
      *
-     * @param motoRequest MotoRequest with all data
+     * @param motoDTO MotoRequest with all data
      *
      * @return null if moto is not find, updatedmoto otherwise
      */
     @PostMapping("/update")
-    public ResponseEntity<String> updateMoto(@RequestBody final MotoRequest motoRequest) {
-        if (this.motoService.updateMoto(motoRequest) != null) {
+    public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
+        if (this.motoService.updateMoto(motoDTO) != null) {
             return ResponseEntity.ok("Moto mise à jour");
         }
         return ResponseEntity.ok("Impossible de mettre à jour la moto, essayez à nouveau");

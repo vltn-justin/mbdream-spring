@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MotoRequest {
+public class MotoDTO {
     private String slugMoto;
 
     private String nomMoto;

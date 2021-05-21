@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.dto.InfoRequest;
+import com.chamalo.mbdream.dto.InfoDTO;
 import com.chamalo.mbdream.models.InfoModel;
 import com.chamalo.mbdream.responses.InfoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
@@ -31,13 +31,13 @@ public class InfoController {
     /**
      * Method to add info to moto
      *
-     * @param infoRequest Request with all data
+     * @param infoDTO Request with all data
      *
      * @return ResponseEntity<String>
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addInfo(@RequestBody final InfoRequest infoRequest) {
-        if (this.infoService.addInfo(infoRequest).getIdInfo() != null) {
+    public ResponseEntity<String> addInfo(@RequestBody final InfoDTO infoDTO) {
+        if (this.infoService.addInfo(infoDTO).getIdInfo() != null) {
             return ResponseEntity.ok("Infos ajoutés");
         }
         return ResponseEntity.ok("Impossible d'ajouter les infos, essayez à nouveau");
@@ -46,13 +46,13 @@ public class InfoController {
     /**
      * Method to update info
      *
-     * @param infoRequest InfoRequest
+     * @param infoDTO InfoRequest
      *
      * @return ResponseEntity<String>
      */
     @PostMapping("/update")
-    public ResponseEntity<String> updateInfo(@RequestBody final InfoRequest infoRequest) {
-        if (this.infoService.update(infoRequest) != null) {
+    public ResponseEntity<String> updateInfo(@RequestBody final InfoDTO infoDTO) {
+        if (this.infoService.update(infoDTO) != null) {
             return ResponseEntity.ok("Infos mise à jour");
         }
         return ResponseEntity.ok("Impossible de mettre à jour les infos");

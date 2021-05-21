@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.dto.MediaRequest;
+import com.chamalo.mbdream.dto.MediaDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MediaModel;
 import com.chamalo.mbdream.models.MotoModel;
@@ -38,16 +38,16 @@ public class MediaService {
         this.motoRepository = motoRepository;
     }
 
-    public MediaModel addMedia(final MediaRequest mediaRequest) throws IOException {
-        final MotoModel moto = motoRepository.findMotoBySlug(mediaRequest.getSlugMoto()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la moto avec le slug " + mediaRequest.getSlugMoto())
+    public MediaModel addMedia(final MediaDTO mediaDTO) throws IOException {
+        final MotoModel moto = motoRepository.findMotoBySlug(mediaDTO.getSlugMoto()).orElseThrow(
+                () -> new MBDreamException("Impossible de trouver la moto avec le slug " + mediaDTO.getSlugMoto())
         );
 
         MediaModel mediaModel = new MediaModel();
 
-        if (mediaRequest.getUrlMedia() != null && mediaRequest.getUrlMedia().length() > 1) {
+        if (mediaDTO.getUrlMedia() != null && mediaDTO.getUrlMedia().length() > 1) {
             // Si on ajoute le media via lien
-            mediaModel.setLienMedia(mediaRequest.getUrlMedia());
+            mediaModel.setLienMedia(mediaDTO.getUrlMedia());
         } else {
 //            this.saveMediaIntoFolder(mediaRequest);
 //
@@ -56,11 +56,11 @@ public class MediaService {
 //            } else {
 //                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
 //            }
-            mediaModel.setLienMedia(this.uploadFile("image/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename(), mediaRequest.getFileMedia()));
+            mediaModel.setLienMedia(this.uploadFile("image/moto/" + mediaDTO.getSlugMoto() + "/" + mediaDTO.getFileMedia().getOriginalFilename(), mediaDTO.getFileMedia()));
         }
 
-        mediaModel.setDescriptionMedia(mediaRequest.getDescriptionMedia());
-        mediaModel.setIsVideo(mediaRequest.getIsVideo());
+        mediaModel.setDescriptionMedia(mediaDTO.getDescriptionMedia());
+        mediaModel.setIsVideo(mediaDTO.getIsVideo());
         mediaModel.setMoto(moto);
 
         mediaModel = this.mediaRepository.save(mediaModel);
@@ -86,18 +86,18 @@ public class MediaService {
     /**
      * Method to save a media into folder
      *
-     * @param mediaRequest MediaRequest
+     * @param mediaDTO MediaRequest
      *
      * @throws IOException File exception
      */
-    private void saveMediaIntoFolder(final MediaRequest mediaRequest) throws IOException {
+    private void saveMediaIntoFolder(final MediaDTO mediaDTO) throws IOException {
         // Changer le path pour le final
         String path = "/home/pi/mbdream-spring/resources/static/";
 
-        path += (mediaRequest.getIsVideo() ? "videos/moto/" : "images/moto/");
-        path += mediaRequest.getSlugMoto();
+        path += (mediaDTO.getIsVideo() ? "videos/moto/" : "images/moto/");
+        path += mediaDTO.getSlugMoto();
 
-        final String pathFile = path + "/" + mediaRequest.getFileMedia().getOriginalFilename();
+        final String pathFile = path + "/" + mediaDTO.getFileMedia().getOriginalFilename();
 
         final File folder = new File(path);
 
@@ -110,7 +110,7 @@ public class MediaService {
 
         final File file = new File(pathFile);
 
-        mediaRequest.getFileMedia().transferTo(file);
+        mediaDTO.getFileMedia().transferTo(file);
     }
 
     /**

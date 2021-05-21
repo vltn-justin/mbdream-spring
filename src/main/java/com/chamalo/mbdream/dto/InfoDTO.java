@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InfoRequest {
+public class InfoDTO {
     private String slugMoto;
 
     private Integer prix;

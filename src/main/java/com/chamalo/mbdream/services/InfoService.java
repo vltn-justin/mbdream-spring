@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.dto.InfoRequest;
+import com.chamalo.mbdream.dto.InfoDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.InfoModel;
 import com.chamalo.mbdream.models.MotoModel;
@@ -23,17 +23,17 @@ public class InfoService {
     /**
      * Add info to a moto
      *
-     * @param infoRequest Request with all data
+     * @param infoDTO Request with all data
      *
      * @return InfoModel or throw MBDreamException if moto not found
      */
-    public InfoModel addInfo(final InfoRequest infoRequest) {
-        final MotoModel motoModel = this.motoRepository.findMotoBySlug(infoRequest.getSlugMoto()).
-                orElseThrow(() -> new MBDreamException("Moto introuvable avec le slug " + infoRequest.getSlugMoto()));
+    public InfoModel addInfo(final InfoDTO infoDTO) {
+        final MotoModel motoModel = this.motoRepository.findMotoBySlug(infoDTO.getSlugMoto()).
+                orElseThrow(() -> new MBDreamException("Moto introuvable avec le slug " + infoDTO.getSlugMoto()));
 
         InfoModel infoModel = new InfoModel();
 
-        this.putDataIntoModel(infoModel, infoRequest);
+        this.putDataIntoModel(infoModel, infoDTO);
 
         infoModel.setMoto(motoModel);
 
@@ -58,14 +58,14 @@ public class InfoService {
     /**
      * Method to update infos
      *
-     * @param infoRequest InfoRequest
+     * @param infoDTO InfoRequest
      *
      * @return InfoModel
      */
-    public InfoModel update(final InfoRequest infoRequest) {
-        final InfoModel infoModel = this.getInfoMoto(infoRequest.getSlugMoto());
+    public InfoModel update(final InfoDTO infoDTO) {
+        final InfoModel infoModel = this.getInfoMoto(infoDTO.getSlugMoto());
 
-        this.putDataIntoModel(infoModel, infoRequest);
+        this.putDataIntoModel(infoModel, infoDTO);
 
         return this.infoRepository.save(infoModel);
     }
@@ -74,16 +74,16 @@ public class InfoService {
      * Method to put data from request into model
      *
      * @param infoModel   InfoModel
-     * @param infoRequest InfoRequest
+     * @param infoDTO InfoRequest
      */
-    private void putDataIntoModel(final InfoModel infoModel, final InfoRequest infoRequest) {
-        infoModel.setPrix(infoRequest.getPrix());
-        infoModel.setArchitectureMoteur(infoRequest.getArchitectureMoteur());
-        infoModel.setCylindre(infoRequest.getCylindre());
-        infoModel.setPuissance(infoRequest.getPuissance());
-        infoModel.setCouple(infoRequest.getCouple());
-        infoModel.setPoid(infoRequest.getPoid());
-        infoModel.setCapaciteReservoir(infoRequest.getCapaciteReservoir());
-        infoModel.setConsommation(infoRequest.getConsommation());
+    private void putDataIntoModel(final InfoModel infoModel, final InfoDTO infoDTO) {
+        infoModel.setPrix(infoDTO.getPrix());
+        infoModel.setArchitectureMoteur(infoDTO.getArchitectureMoteur());
+        infoModel.setCylindre(infoDTO.getCylindre());
+        infoModel.setPuissance(infoDTO.getPuissance());
+        infoModel.setCouple(infoDTO.getCouple());
+        infoModel.setPoid(infoDTO.getPoid());
+        infoModel.setCapaciteReservoir(infoDTO.getCapaciteReservoir());
+        infoModel.setConsommation(infoDTO.getConsommation());
     }
 }

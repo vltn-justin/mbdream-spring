@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategorieRequest {
+public class CategorieDTO {
     private String slugCategorie;
 
     private String nomCategorie;
