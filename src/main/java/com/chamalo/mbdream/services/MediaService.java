@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.DTO.MediaRequest;
+import com.chamalo.mbdream.dto.MediaRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MediaModel;
 import com.chamalo.mbdream.models.MotoModel;

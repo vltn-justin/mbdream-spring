@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.DTO.MotoRequest;
+import com.chamalo.mbdream.dto.MotoRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.MotoResponse;

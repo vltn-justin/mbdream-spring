@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.DTO.InfoRequest;
+import com.chamalo.mbdream.dto.InfoRequest;
 import com.chamalo.mbdream.models.InfoModel;
 import com.chamalo.mbdream.responses.InfoResponse;
 import com.chamalo.mbdream.responses.ResponseType;

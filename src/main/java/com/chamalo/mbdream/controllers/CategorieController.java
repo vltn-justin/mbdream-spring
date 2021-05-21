@@ -1,10 +1,8 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.DTO.CategorieRequest;
+import com.chamalo.mbdream.dto.CategorieRequest;
 import com.chamalo.mbdream.models.CategorieModel;
-import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.CategorieResponse;
-import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.CategorieService;
 import org.springframework.beans.factory.annotation.Autowired;

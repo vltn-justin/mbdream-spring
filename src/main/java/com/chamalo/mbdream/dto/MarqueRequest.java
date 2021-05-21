@@ -1,4 +1,4 @@
-package com.chamalo.mbdream.DTO;
+package com.chamalo.mbdream.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

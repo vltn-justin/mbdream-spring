@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.DTO.MarqueRequest;
+import com.chamalo.mbdream.dto.MarqueRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MarqueModel;
 import com.chamalo.mbdream.models.MotoModel;

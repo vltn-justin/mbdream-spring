@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.DTO.CategorieRequest;
+import com.chamalo.mbdream.dto.CategorieRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.models.MotoModel;

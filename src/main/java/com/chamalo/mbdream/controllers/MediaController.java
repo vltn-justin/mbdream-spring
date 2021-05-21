@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.DTO.MediaRequest;
+import com.chamalo.mbdream.dto.MediaRequest;
 import com.chamalo.mbdream.models.MediaModel;
 import com.chamalo.mbdream.responses.MediaResponse;
 import com.chamalo.mbdream.responses.ResponseType;

@@ -1,12 +1,8 @@
 package com.chamalo.mbdream.controllers;
 
-import com.chamalo.mbdream.DTO.MarqueRequest;
-import com.chamalo.mbdream.models.CategorieModel;
+import com.chamalo.mbdream.dto.MarqueRequest;
 import com.chamalo.mbdream.models.MarqueModel;
-import com.chamalo.mbdream.models.MotoModel;
-import com.chamalo.mbdream.responses.CategorieResponse;
 import com.chamalo.mbdream.responses.MarqueResponse;
-import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MarqueService;
 import org.springframework.beans.factory.annotation.Autowired;

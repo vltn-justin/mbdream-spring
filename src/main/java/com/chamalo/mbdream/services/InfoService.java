@@ -1,6 +1,6 @@
 package com.chamalo.mbdream.services;
 
-import com.chamalo.mbdream.DTO.InfoRequest;
+import com.chamalo.mbdream.dto.InfoRequest;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.InfoModel;
 import com.chamalo.mbdream.models.MotoModel;
@@ -8,8 +8,6 @@ import com.chamalo.mbdream.repositories.InfoRepository;
 import com.chamalo.mbdream.repositories.MotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class InfoService {
@@ -30,19 +28,18 @@ public class InfoService {
      * @return InfoModel or throw MBDreamException if moto not found
      */
     public InfoModel addInfo(final InfoRequest infoRequest) {
-        final Optional<MotoModel> motoModel = this.motoRepository.findMotoBySlug(infoRequest.getSlugMoto());
-
-        motoModel.orElseThrow(() -> new MBDreamException("Moto introuvable avec le slug " + infoRequest.getSlugMoto()));
+        final MotoModel motoModel = this.motoRepository.findMotoBySlug(infoRequest.getSlugMoto()).
+                orElseThrow(() -> new MBDreamException("Moto introuvable avec le slug " + infoRequest.getSlugMoto()));
 
         InfoModel infoModel = new InfoModel();
 
         this.putDataIntoModel(infoModel, infoRequest);
 
-        infoModel.setMoto(motoModel.get());
+        infoModel.setMoto(motoModel);
 
         infoModel = this.infoRepository.save(infoModel);
-        motoModel.get().setInfos(infoModel);
-        this.motoRepository.save(motoModel.get());
+        motoModel.setInfos(infoModel);
+        this.motoRepository.save(motoModel);
 
         return infoModel;
     }
