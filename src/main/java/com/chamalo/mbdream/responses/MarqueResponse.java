@@ -3,7 +3,10 @@ package com.chamalo.mbdream.responses;
 import com.chamalo.mbdream.models.MarqueModel;
 import com.chamalo.mbdream.models.MotoModel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class to build a JSON response for Marque
