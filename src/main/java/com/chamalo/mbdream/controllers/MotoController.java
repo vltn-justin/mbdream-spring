@@ -54,7 +54,7 @@ public class MotoController {
 		if (moto.getIdMoto() != null) {
 			return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
 		}
-		return ResponseEntity.ok("Impossible d'ajouter la moto, essayez à nouveau");
+		return ResponseEntity.status(404).body("Impossible d'ajouter la moto, essayez à nouveau");
 	}
 
 	/**
@@ -152,8 +152,12 @@ public class MotoController {
 	 */
 	@GetMapping("/delete/{slug}")
 	public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
-		this.motoService.deleteMoto(slug);
-
-		return ResponseEntity.ok("Moto supprimée");
+		try {
+			this.motoService.deleteMoto(slug);
+			return ResponseEntity.ok("Moto supprimée");
+		} catch (final MBDreamException e) {
+			LOGGER.info(e.getMessage(), e);
+			return ResponseEntity.status(404).body(e.getMessage());
+		}
 	}
 }
