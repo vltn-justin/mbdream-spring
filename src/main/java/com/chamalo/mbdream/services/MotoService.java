@@ -2,14 +2,11 @@ package com.chamalo.mbdream.services;
 
 import com.chamalo.mbdream.dto.MotoDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
-import com.chamalo.mbdream.models.CategorieModel;
-import com.chamalo.mbdream.models.MarqueModel;
 import com.chamalo.mbdream.models.MotoModel;
-import com.chamalo.mbdream.repositories.CategorieRepository;
-import com.chamalo.mbdream.repositories.MarqueRepository;
 import com.chamalo.mbdream.repositories.MotoRepository;
 import com.github.slugify.Slugify;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,16 +16,18 @@ import java.util.Collection;
 public class MotoService {
 
     private final MotoRepository motoRepository;
-    private final MarqueRepository marqueRepository;
-    private final CategorieRepository categorieRepository;
 
+    private final MarqueService marqueService;
+    private final CategorieService categorieService;
+
+    // @Lazy pour eviter une boucle dans les dépendances (MotoService -> MarqueService -> MotoService -> ...)
     @Autowired
     public MotoService(final MotoRepository motoRepository,
-                       final MarqueRepository marqueRepository,
-                       final CategorieRepository categorieRepository) {
+            @Lazy final MarqueService marqueService,
+            @Lazy final CategorieService categorieService) {
         this.motoRepository = motoRepository;
-        this.marqueRepository = marqueRepository;
-        this.categorieRepository = categorieRepository;
+        this.marqueService = marqueService;
+        this.categorieService = categorieService;
     }
 
     /**
@@ -107,21 +106,10 @@ public class MotoService {
         newMoto.setDateAjout(Instant.now());
         newMoto.setDescriptionMoto(motoDTO.getDescriptionMoto());
         newMoto.setFeatured(motoDTO.isFeatured());
-
-        final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoDTO.getSlugMarque()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoDTO.getSlugMarque())
-        );
-
-        final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoDTO.getSlugCategorie()).orElseThrow(
-                () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoDTO.getSlugCategorie())
-        );
-
-        newMoto.setMarque(marque);
-        newMoto.setCategorie(categorie);
+        newMoto.setMarque(this.marqueService.findMarqueBySlug(motoDTO.getSlugMarque()));
+        newMoto.setCategorie(this.categorieService.findCategorieBySlug(motoDTO.getSlugCategorie()));
 
         newMoto = this.motoRepository.save(newMoto);
-
-        motoDTO.setSlugMoto(newMoto.getSlugMoto());
 
         return newMoto;
     }
@@ -134,25 +122,22 @@ public class MotoService {
      * @return updatedmoto
      */
     public MotoModel updateMoto(final MotoDTO motoDTO) {
+        // On va pouvoir seulement mettre à jour la description, la marque et la catégorie
         MotoModel updatedMoto = this.findMotoBySlug(motoDTO.getSlugMoto());
 
-        // Update tout car le formulaire aura de base toutes les infos et les envois
-        updatedMoto.setDescriptionMoto(motoDTO.getDescriptionMoto());
+        // Si la description change
+        if (!updatedMoto.getDescriptionMoto().equals(motoDTO.getDescriptionMoto())) {
+            updatedMoto.setDescriptionMoto(motoDTO.getDescriptionMoto());
+        }
 
         // Si la marque change
-        if (!updatedMoto.getMarque().getSlugMarque().equals(motoDTO.getSlugMarque())) {
-            final MarqueModel marque = this.marqueRepository.findMarqueBySlug(motoDTO.getSlugMarque()).orElseThrow(
-                    () -> new MBDreamException("Impossible de trouver la marque avec le slug " + motoDTO.getSlugMarque())
-            );
-            updatedMoto.setMarque(marque);
+        if (updatedMoto.getMarque() == null || !updatedMoto.getMarque().getSlugMarque().equals(motoDTO.getSlugMarque())) {
+            updatedMoto.setMarque(this.marqueService.findMarqueBySlug(motoDTO.getSlugMarque()));
         }
 
         // Si la catégorie change
-        if (!updatedMoto.getCategorie().getSlugCategorie().equals(motoDTO.getSlugCategorie())) {
-            final CategorieModel categorie = this.categorieRepository.findCategorieBySlug(motoDTO.getSlugCategorie()).orElseThrow(
-                    () -> new MBDreamException("Impossible de trouver la categorie avec le slug " + motoDTO.getSlugCategorie())
-            );
-            updatedMoto.setCategorie(categorie);
+        if (updatedMoto.getCategorie() == null || !updatedMoto.getCategorie().getSlugCategorie().equals(motoDTO.getSlugCategorie())) {
+            updatedMoto.setCategorie(this.categorieService.findCategorieBySlug(motoDTO.getSlugCategorie()));
         }
 
         return this.motoRepository.save(updatedMoto);
