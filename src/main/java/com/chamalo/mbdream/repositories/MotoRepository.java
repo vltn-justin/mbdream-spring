@@ -22,5 +22,5 @@ public interface MotoRepository extends CrudRepository<MotoModel, Long> {
     Optional<MotoModel> findMotoBySlug(final String slug);
 
     @Query(nativeQuery = true, value = "SELECT * FROM moto m LIMIT 10 OFFSET :page")
-    Iterable<MotoModel> getMotoByPage(final Integer page);
+    Collection<MotoModel> findMotoByPage(final Integer page);
 }

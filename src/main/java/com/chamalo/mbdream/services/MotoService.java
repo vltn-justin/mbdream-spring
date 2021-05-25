@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collection;
 
 @Service
 public class MotoService {
@@ -31,13 +32,22 @@ public class MotoService {
     }
 
     /**
-     * Method to get all moto, limited by 10
+     * Method to get all moto, limited by 10 <br>
+     * We multiply by 10, because user will put 1, 2, 3, ...
      *
      * @param page Page number
      *
-     * @return Iterable of MotoModel
+     * @return Collection of MotoModel
      */
-    public Iterable<MotoModel> findAllMotoByPage(final Integer page) { return this.motoRepository.getMotoByPage(page * 10); }
+    public Collection<MotoModel> findMotoByPage(final Integer page) {
+        final Collection<MotoModel> motoModels = this.motoRepository.findMotoByPage(page * 10);
+
+        if (motoModels.size() > 0) {
+            return motoModels;
+        }
+
+        throw new MBDreamException("Aucune motos trouvée !");
+    }
 
     /**
      * Method to get all moto featured
@@ -150,10 +160,9 @@ public class MotoService {
     public void deleteMoto(final String slug) {
         try {
             MotoModel moto = this.findMotoBySlug(slug);
-
             this.motoRepository.delete(moto);
         } catch (final MBDreamException e) {
-            throw new MBDreamException(e.getMessage());
+            throw e;
         }
     }
 }
