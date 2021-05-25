@@ -148,8 +148,12 @@ public class MotoService {
      * @param slug Slug of moto to delete
      */
     public void deleteMoto(final String slug) {
-        MotoModel moto = this.findMotoBySlug(slug);
+        try {
+            MotoModel moto = this.findMotoBySlug(slug);
 
-        this.motoRepository.deleteById(moto.getIdMoto());
+            this.motoRepository.delete(moto);
+        } catch (final MBDreamException e) {
+            throw new MBDreamException(e.getMessage());
+        }
     }
 }
