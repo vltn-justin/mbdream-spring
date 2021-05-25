@@ -42,7 +42,7 @@ public class MotoService {
     public Collection<MotoModel> findMotoByPage(final Integer page) {
         final Collection<MotoModel> motoModels = this.motoRepository.findMotoByPage(page * 10);
 
-        if (motoModels.size() > 0) {
+        if (!motoModels.isEmpty()) {
             return motoModels;
         }
 
@@ -54,8 +54,14 @@ public class MotoService {
      *
      * @return Iterable of MotoModel
      */
-    public Iterable<MotoModel> findAllFeaturedMoto() {
-        return this.motoRepository.findAllFeaturedMoto();
+    public Collection<MotoModel> findFeaturedMoto() {
+        final Collection<MotoModel> motoModels = this.motoRepository.findFeaturedMoto();
+
+        if (!motoModels.isEmpty()) {
+            return motoModels;
+        }
+
+        throw new MBDreamException("Aucune featured moto trouvée");
     }
 
     /**
@@ -158,11 +164,7 @@ public class MotoService {
      * @param slug Slug of moto to delete
      */
     public void deleteMoto(final String slug) {
-        try {
-            MotoModel moto = this.findMotoBySlug(slug);
-            this.motoRepository.delete(moto);
-        } catch (final MBDreamException e) {
-            throw e;
-        }
+        MotoModel moto = this.findMotoBySlug(slug);
+        this.motoRepository.delete(moto);
     }
 }

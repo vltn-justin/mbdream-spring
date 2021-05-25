@@ -6,6 +6,9 @@ import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.responses.MotoResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MotoService;
+import com.chamalo.mbdream.utils.PasswordEncoderJava;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Rest Controller for Moto
@@ -28,7 +35,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/moto")
 public class MotoController {
-    private final MotoService motoService;
+    private static final Logger      LOGGER = LoggerFactory.getLogger(MotoController.class);
+
+    private final        MotoService motoService;
 
     @Autowired
     public MotoController(final MotoService motoService) {
@@ -110,6 +119,7 @@ public class MotoController {
 
             return ResponseEntity.ok(mapResponse);
         } catch (final MBDreamException e) {
+            LOGGER.info(e.getMessage());
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
@@ -130,8 +140,13 @@ public class MotoController {
      * @return ResponseEntity Iterable of MotoModel
      */
     @GetMapping("/featured")
-    public ResponseEntity<Iterable<MotoModel>> findAllFeaturedMoto() {
-        return ResponseEntity.ok(this.motoService.findAllFeaturedMoto());
+    public ResponseEntity<Object> findAllFeaturedMoto() {
+        try {
+            return ResponseEntity.ok(this.motoService.findFeaturedMoto());
+        } catch (final MBDreamException e) {
+            LOGGER.info(e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     /**

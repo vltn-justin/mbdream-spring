@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
  * @author Valentin
  */
 @SpringBootTest
-public class MotoServiceTest {
+class MotoServiceTest {
 
 	private final static MotoModel MOTO_TEST = new MotoModel(1L, "slug_moto", "Moto", "description", null, false, "bgc.png", null, null,
 			null, null);
@@ -46,7 +46,7 @@ public class MotoServiceTest {
 
 		final MotoModel motoFound = motoModelCollection.iterator().next();
 
-		Assertions.assertEquals(motoFound, MOTO_TEST);
+		Assertions.assertEquals(MOTO_TEST, motoFound);
 	}
 
 	/**
@@ -57,6 +57,33 @@ public class MotoServiceTest {
 		when(this.motoRepository.findMotoByPage(10)).thenReturn(Collections.emptyList());
 
 		Assertions.assertThrows(MBDreamException.class, () -> this.service.findMotoByPage(1));
+	}
+
+	/**
+	 * Test OK for {@link MotoService#findFeaturedMoto()}
+	 */
+	@Test
+	void testFindFeaturedOK() {
+		when(this.motoRepository.findFeaturedMoto()).thenReturn(Collections.singletonList(MOTO_TEST));
+
+		final Collection<MotoModel> motoModels = this.service.findFeaturedMoto();
+
+		Assertions.assertNotNull(motoModels);
+		Assertions.assertEquals(1, motoModels.size());
+
+		final MotoModel motoFound = motoModels.iterator().next();
+
+		Assertions.assertEquals(MOTO_TEST, motoFound);
+	}
+
+	/**
+	 * Test KO for {@link MotoService#findFeaturedMoto()}
+	 */
+	@Test
+	void testFindFeaturedKO() {
+		when(this.motoRepository.findFeaturedMoto()).thenReturn(Collections.emptyList());
+
+		Assertions.assertThrows(MBDreamException.class, () -> this.service.findFeaturedMoto());
 	}
 
 	/**
@@ -79,7 +106,7 @@ public class MotoServiceTest {
 		final MotoModel motoFound = this.service.findMotoBySlug(MOTO_TEST.getSlugMoto());
 
 		Assertions.assertNotNull(motoFound);
-		Assertions.assertEquals(motoFound, MOTO_TEST);
+		Assertions.assertEquals(MOTO_TEST, motoFound);
 	}
 
 	/**
@@ -87,16 +114,11 @@ public class MotoServiceTest {
 	 */
 	@Test
 	void testFindSlugKO() {
-		when(this.motoRepository.findMotoBySlug(MOTO_TEST.getSlugMoto())).thenReturn(Optional.empty());
+		// Sonar n'aime pas MOTO_TEST.getSlugMoto() dans la lambda
+		final String slug = MOTO_TEST.getSlugMoto();
 
-		Assertions.assertThrows(MBDreamException.class, () -> this.service.findMotoBySlug(MOTO_TEST.getSlugMoto()));
-	}
+		when(this.motoRepository.findMotoBySlug(slug)).thenReturn(Optional.empty());
 
-	/**
-	 * Test OK for {@link MotoService#deleteMoto(String)}
-	 */
-	@Test
-	void testDeleteOK() {
-		when(this.motoRepository.findMotoBySlug("slug_moto")).thenReturn(Optional.of(MOTO_TEST));
+		Assertions.assertThrows(MBDreamException.class, () -> this.service.findMotoBySlug(slug));
 	}
 }

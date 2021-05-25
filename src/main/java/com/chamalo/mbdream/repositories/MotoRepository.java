@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface MotoRepository extends CrudRepository<MotoModel, Long> {
     @Query("SELECT m FROM Moto m WHERE m.isFeatured = true")
-    Collection<MotoModel> findAllFeaturedMoto();
+    Collection<MotoModel> findFeaturedMoto();
 
     @Query("SELECT m FROM Moto m WHERE m.slugMoto = :slug")
     Optional<MotoModel> findMotoBySlug(final String slug);
