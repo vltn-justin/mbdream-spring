@@ -93,9 +93,9 @@ public class MotoService {
      * @return MotoModel
      */
     public MotoModel addMoto(final MotoDTO motoDTO) {
-        MotoModel newMoto = new MotoModel();
+        var newMoto = new MotoModel();
 
-        Slugify slug = new Slugify();
+        final var slug = new Slugify();
         newMoto.setSlugMoto(slug.slugify(motoDTO.getNomMoto()));
 
         if (this.motoRepository.findMotoBySlug(newMoto.getSlugMoto()).isPresent()) {
