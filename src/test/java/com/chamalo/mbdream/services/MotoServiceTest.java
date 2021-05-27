@@ -8,6 +8,7 @@ import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.repositories.MotoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,10 +27,14 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class MotoServiceTest {
 
-	private final static MotoModel MOTO_TEST = new MotoModel(1L, "slug_moto", "Moto", "description", null, false, "bgc.png", null, null,
+	private final static MotoModel MOTO_TEST = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", null, null,
 			null, null);
 
-	private final static MotoDTO MOTO_DTO = new MotoDTO("slug_dto", "Moto Dto", "description_dto", false, "slug_marque", "slug_cate");
+	private final static MotoDTO MOTO_DTO = new MotoDTO("slug-dto", "Moto Dto", "description_dto", false, "slug-marque", "slug-cate");
+
+	private final static MarqueModel MARQUE_MODEL = new MarqueModel(1L, "marque", "Marque", null, "description", "logo", null);
+
+	private final static CategorieModel CATEGORIE_MODEL = new CategorieModel(1L, "category", "Categorie", null);
 
 	@MockBean
 	private MotoRepository motoRepository;
@@ -37,7 +42,8 @@ class MotoServiceTest {
 	@MockBean
 	private MarqueService marqueService;
 
-	@MockBean CategorieService categorieService;
+	@MockBean
+	CategorieService categorieService;
 
 	@Autowired
 	private MotoService service;
@@ -165,19 +171,129 @@ class MotoServiceTest {
 	}
 
 	/**
-	 * Test OK for {@link MotoService#updateMoto(MotoDTO)}
+	 * Test KO for {@link MotoService#addMoto(MotoDTO)} <br>
+	 * Test throw when get slug
+	 */
+	@Test
+	void testAddKO() {
+		when(this.motoRepository.findMotoBySlug("moto-dto")).thenReturn(Optional.of(MOTO_TEST));
+
+		Assertions.assertThrows(MBDreamException.class, () -> this.service.addMoto(MOTO_DTO));
+	}
+
+	/**
+	 * Test KO 2 for {@link MotoService#addMoto(MotoDTO)} <br>
+	 * Test throw by marque service
+	 */
+	@Test
+	void testAddKO2() {
+		when(this.motoRepository.findMotoBySlug("moto-dto")).thenReturn(Optional.empty());
+		when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenThrow(new MBDreamException("Marque introuvable"));
+
+		Assertions.assertThrows(MBDreamException.class, () -> this.service.addMoto(MOTO_DTO));
+	}
+
+	/**
+	 * Test KO 3 for {@link MotoService#addMoto(MotoDTO)} <br>
+	 * Test throw by categorie service
+	 */
+	@Test
+	void testAddKO3() {
+		when(this.motoRepository.findMotoBySlug("moto-dto")).thenReturn(Optional.empty());
+		when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenReturn(null);
+		when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie()))
+				.thenThrow(new MBDreamException("Categorie introuvable"));
+
+		Assertions.assertThrows(MBDreamException.class, () -> this.service.addMoto(MOTO_DTO));
+	}
+
+	/**
+	 * Test OK for {@link MotoService#addMoto(MotoDTO)}
+	 */
+	@Test
+	void testAddOK() {
+		when(this.motoRepository.findMotoBySlug("moto-dto")).thenReturn(Optional.empty());
+		when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenReturn(null);
+		when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
+		when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
+
+		final MotoModel motoGet = this.service.addMoto(MOTO_DTO);
+
+		Assertions.assertNotNull(motoGet);
+		Assertions.assertEquals(MOTO_TEST, motoGet);
+	}
+
+	/**
+	 * Test OK for {@link MotoService#updateMoto(MotoDTO)} <br>
+	 * marque & category null, description different
 	 */
 	@Test
 	void testUpdateOK() {
 		when(this.motoRepository.findMotoBySlug(MOTO_DTO.getSlugMoto())).thenReturn(Optional.of(MOTO_TEST));
 		when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenReturn(null);
 		when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
-		when(this.motoRepository.save(MOTO_TEST)).thenReturn(MOTO_TEST);
+		when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
 
 		final MotoModel motoGet = this.service.updateMoto(MOTO_DTO);
 
 		Assertions.assertNotNull(motoGet);
 		Assertions.assertEquals(MOTO_TEST, motoGet);
+	}
+
+	/**
+	 * Test OK for {@link MotoService#updateMoto(MotoDTO)} <br>
+	 * Description same, different marque & category
+	 */
+	@Test
+	void testUpdateOK2() {
+		final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", MARQUE_MODEL,
+				CATEGORIE_MODEL, null, null);
+
+		final MotoDTO motoDTO = new MotoDTO("slug-dto", "Moto Dto", "description", false, "slug-marque", "slug-cate");
+
+		when(this.motoRepository.findMotoBySlug(MOTO_DTO.getSlugMoto())).thenReturn(Optional.of(motoModel));
+		when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenReturn(null);
+		when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
+		when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
+
+		final MotoModel motoGet = this.service.updateMoto(motoDTO);
+
+		Assertions.assertNotNull(motoGet);
+		Assertions.assertEquals(MOTO_TEST, motoGet);
+	}
+
+	/**
+	 * Test OK for {@link MotoService#updateMoto(MotoDTO)} <br>
+	 * Description different, marque & category same
+	 */
+	@Test
+	void testUpdateOK3() {
+		final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", MARQUE_MODEL,
+				CATEGORIE_MODEL, null, null);
+
+		final MotoDTO motoDTO = new MotoDTO("slug-dto", "Moto Dto", "description_dto", false, MARQUE_MODEL.getSlugMarque(),
+				CATEGORIE_MODEL.getSlugCategorie());
+
+		when(this.motoRepository.findMotoBySlug(MOTO_DTO.getSlugMoto())).thenReturn(Optional.of(motoModel));
+		when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenReturn(null);
+		when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
+		when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
+
+		final MotoModel motoGet = this.service.updateMoto(motoDTO);
+
+		Assertions.assertNotNull(motoGet);
+		Assertions.assertEquals(MOTO_TEST, motoGet);
+	}
+
+	/**
+	 * Test KO for {@link MotoService#updateMoto(MotoDTO)} <br>
+	 * Exception when findMotoBySlug
+	 */
+	@Test
+	void testUpdateKO1() {
+		when(this.motoRepository.findMotoBySlug(MOTO_DTO.getSlugMoto())).thenReturn(Optional.empty());
+
+		Assertions.assertThrows(MBDreamException.class, () -> this.service.updateMoto(MOTO_DTO));
 	}
 
 	/**
@@ -201,6 +317,6 @@ class MotoServiceTest {
 
 		when(this.motoRepository.findMotoBySlug(slug)).thenReturn(Optional.of(MOTO_TEST));
 
-		this.service.deleteMoto(slug);
+		Assertions.assertDoesNotThrow(() -> this.service.deleteMoto(slug));
 	}
 }
