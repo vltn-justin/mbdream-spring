@@ -27,6 +27,6 @@ public class InfoResponse implements IResponse<InfoModel> {
 	@Override
 	public void lightResponse(final Map<String, Object> map, final InfoModel model) {
 		// Pas de light response pour les infos
-		basicResponse(map, model);
+		this.basicResponse(map, model);
 	}
 }
