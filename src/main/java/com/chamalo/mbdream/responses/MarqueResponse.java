@@ -22,6 +22,8 @@ public class MarqueResponse implements IResponse<MarqueModel> {
 
 		if (marque.getMotos() != null) {
 			map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
+		} else {
+			map.put("motos", null);
 		}
 
 	}
@@ -38,7 +40,7 @@ public class MarqueResponse implements IResponse<MarqueModel> {
 		map.put("nomMarque", marque.getNomMarque());
 	}
 
-	private static List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection, final ResponseType type) {
+	private List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection, final ResponseType type) {
 		List<Map<String, Object>> listMoto = new ArrayList<>();
 
 		for (MotoModel moto : motoModelCollection) {
