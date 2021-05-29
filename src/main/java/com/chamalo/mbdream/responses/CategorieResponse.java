@@ -18,6 +18,8 @@ public class CategorieResponse implements IResponse<CategorieModel> {
 
 		if (categorie.getMotos() != null) {
 			map.put("motos", motoToMap(categorie.getMotos()));
+		} else {
+			map.put("motos", null);
 		}
 
 	}
