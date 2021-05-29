@@ -7,7 +7,6 @@ import java.util.Map;
 public class MediaResponse implements IResponse<MediaModel> {
 	@Override
 	public void basicResponse(final Map<String, Object> map, final MediaModel model) {
-		map.put("idMedia", model.getIdMedia());
 		map.put("lienMedia", model.getLienMedia());
 		map.put("descriptionMedia", model.getDescriptionMedia());
 	}
