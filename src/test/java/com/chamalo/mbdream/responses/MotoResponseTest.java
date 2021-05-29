@@ -22,6 +22,7 @@ class MotoResponseTest {
 		final Map<String, Object> response = new MotoResponse().buildResponse(ResponseType.LIGHT, motoModel);
 
 		Assertions.assertNotNull(response);
+		Assertions.assertEquals(3, response.size());
 		Assertions.assertEquals(motoModel.getSlugMoto(), response.get("slugMoto"));
 		Assertions.assertEquals(motoModel.getNomMoto(), response.get("nomMoto"));
 		Assertions.assertEquals(motoModel.getBackgroundImgMoto(), response.get("backgroundImgMoto"));
@@ -42,6 +43,7 @@ class MotoResponseTest {
 		final Map<String, Object> response = new MotoResponse().buildResponse(ResponseType.INFO, motoModel);
 
 		Assertions.assertNotNull(response);
+		Assertions.assertEquals(5, response.size());
 		Assertions.assertEquals(motoModel.getSlugMoto(), response.get("slugMoto"));
 		Assertions.assertEquals(motoModel.getNomMoto(), response.get("nomMoto"));
 		Assertions.assertEquals(motoModel.getBackgroundImgMoto(), response.get("backgroundImgMoto"));
@@ -59,6 +61,7 @@ class MotoResponseTest {
 		final Map<String, Object> response = new MotoResponse().buildResponse(ResponseType.INFO, motoModel);
 
 		Assertions.assertNotNull(response);
+		Assertions.assertEquals(5, response.size());
 		Assertions.assertEquals(motoModel.getSlugMoto(), response.get("slugMoto"));
 		Assertions.assertEquals(motoModel.getNomMoto(), response.get("nomMoto"));
 		Assertions.assertEquals(motoModel.getBackgroundImgMoto(), response.get("backgroundImgMoto"));
@@ -80,6 +83,7 @@ class MotoResponseTest {
 		final Map<String, Object> response = new MotoResponse().buildResponse(ResponseType.BASIC, motoModel);
 
 		Assertions.assertNotNull(response);
+		Assertions.assertEquals(8, response.size());
 		Assertions.assertEquals(motoModel.getSlugMoto(), response.get("slugMoto"));
 		Assertions.assertEquals(motoModel.getNomMoto(), response.get("nomMoto"));
 		Assertions.assertEquals(motoModel.getBackgroundImgMoto(), response.get("backgroundImgMoto"));
@@ -101,6 +105,7 @@ class MotoResponseTest {
 		final Map<String, Object> response = new MotoResponse().buildResponse(ResponseType.BASIC, motoModel);
 
 		Assertions.assertNotNull(response);
+		Assertions.assertEquals(8, response.size());
 		Assertions.assertEquals(motoModel.getSlugMoto(), response.get("slugMoto"));
 		Assertions.assertEquals(motoModel.getNomMoto(), response.get("nomMoto"));
 		Assertions.assertEquals(motoModel.getBackgroundImgMoto(), response.get("backgroundImgMoto"));
