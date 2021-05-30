@@ -69,7 +69,7 @@ public class MotoController {
 			this.motoService.updateMoto(motoDTO);
 			return ResponseEntity.ok("Moto mise à jour");
 		} catch (final MBDreamException e) {
-			LOGGER.info(e.getMessage(), e);
+			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
 	}
@@ -117,7 +117,7 @@ public class MotoController {
 
 			return ResponseEntity.ok(mapResponse);
 		} catch (final MBDreamException e) {
-			LOGGER.info(e.getMessage(), e);
+			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
 	}
@@ -142,7 +142,7 @@ public class MotoController {
 		try {
 			return ResponseEntity.ok(this.motoService.findFeaturedMoto());
 		} catch (final MBDreamException e) {
-			LOGGER.info(e.getMessage(), e);
+			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
 	}
@@ -159,7 +159,7 @@ public class MotoController {
 			this.motoService.deleteMoto(slug);
 			return ResponseEntity.ok("Moto supprimée");
 		} catch (final MBDreamException e) {
-			LOGGER.info(e.getMessage(), e);
+			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
 	}
