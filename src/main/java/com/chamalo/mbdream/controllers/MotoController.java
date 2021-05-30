@@ -54,7 +54,7 @@ public class MotoController {
 		if (moto.getIdMoto() != null) {
 			return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
 		}
-		return ResponseEntity.status(404).body("Impossible d'ajouter la moto, essayez à nouveau");
+		return ResponseEntity.status(500).body("Impossible d'ajouter la moto, essayez à nouveau");
 	}
 
 	/**
@@ -65,10 +65,13 @@ public class MotoController {
 	 */
 	@PostMapping("/update")
 	public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
-		if (this.motoService.updateMoto(motoDTO) != null) {
+		try {
+			this.motoService.updateMoto(motoDTO);
 			return ResponseEntity.ok("Moto mise à jour");
+		} catch (final MBDreamException e) {
+			LOGGER.info(e.getMessage(), e);
+			return ResponseEntity.status(500).body(e.getMessage());
 		}
-		return ResponseEntity.ok("Impossible de mettre à jour la moto, essayez à nouveau");
 	}
 
 	/**
@@ -157,7 +160,7 @@ public class MotoController {
 			return ResponseEntity.ok("Moto supprimée");
 		} catch (final MBDreamException e) {
 			LOGGER.info(e.getMessage(), e);
-			return ResponseEntity.status(404).body(e.getMessage());
+			return ResponseEntity.status(500).body(e.getMessage());
 		}
 	}
 }
