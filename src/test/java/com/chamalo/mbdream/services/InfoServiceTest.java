@@ -62,12 +62,13 @@ class InfoServiceTest {
 		final InfoDTO infoDTO = new InfoDTO("test", 5000, "architecture_dto", 550, 95, 8, 195, 15D, 5.5D);
 
 		final InfoModel infoModel = new InfoModel(1L, 5000, "architecture", 650, 110, 12, 180, 17D, 12.5D, null);
+
 		final InfoModel updatedInfoModel = new InfoModel(1L, 5000, "architecture_dto", 550, 95, 8, 195, 15D, 5.5D, null);
 
 		Mockito.when(this.repository.findInfoMoto("test")).thenReturn(Optional.of(infoModel));
 		Mockito.when(this.repository.save(updatedInfoModel)).thenReturn(null);
 
-		Assertions.assertDoesNotThrow(() -> this.service.addInfo(infoDTO));
+		Assertions.assertDoesNotThrow(() -> this.service.update(infoDTO));
 	}
 
 	/**
