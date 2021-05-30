@@ -7,7 +7,6 @@ import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.repositories.InfoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +25,21 @@ class InfoServiceTest {
 
 	@Autowired
 	private InfoService service;
+
+	/**
+	 * Test OK for {@link InfoService#addInfo(InfoDTO)}
+	 */
+	@Test
+	void testAddOK() {
+		final InfoDTO infoDTO = new InfoDTO("test", 5000, "architecture", 650, 110, 12, 180, 17D, 12.5D);
+
+		final InfoModel infoModel = new InfoModel(null, 5000, "architecture", 650, 110, 12, 180, 17D, 12.5D, null);
+
+		Mockito.when(this.motoService.findMotoBySlug("test")).thenReturn(new MotoModel());
+		Mockito.when(this.repository.save(infoModel)).thenReturn(null);
+
+		Assertions.assertDoesNotThrow(() -> this.service.addInfo(infoDTO));
+	}
 
 	/**
 	 * Test KO for {@link InfoService#addInfo(InfoDTO)}
