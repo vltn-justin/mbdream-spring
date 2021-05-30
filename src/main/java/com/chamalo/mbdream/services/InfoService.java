@@ -27,7 +27,7 @@ public class InfoService {
 	public void addInfo(final InfoDTO infoDTO) {
 		final var motoModel = this.motoService.findMotoBySlug(infoDTO.getSlugMoto());
 
-		InfoModel infoModel = new InfoModel();
+		final var infoModel = new InfoModel();
 
 		this.putDataIntoModel(infoModel, infoDTO);
 
