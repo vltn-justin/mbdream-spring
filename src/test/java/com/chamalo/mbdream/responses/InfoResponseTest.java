@@ -14,7 +14,7 @@ class InfoResponseTest {
 	 */
 	@Test
 	void testBasicResponse() {
-		final InfoModel infoModel = new InfoModel(1L, 5555, "architecture", "650", 155, 10, 180, 14D, 5.5D, new MotoModel());
+		final InfoModel infoModel = new InfoModel(1L, 5555, "architecture", 650, 155, 10, 180, 14D, 5.5D, new MotoModel());
 
 		final Map<String, Object> response = new InfoResponse().buildResponse(ResponseType.BASIC, infoModel);
 
@@ -35,7 +35,7 @@ class InfoResponseTest {
 	 */
 	@Test
 	void testInfoResponse() {
-		final InfoModel infoModel = new InfoModel(1L, 5555, "architecture", "650", 155, 10, 180, 14D, 5.5D, new MotoModel());
+		final InfoModel infoModel = new InfoModel(1L, 5555, "architecture", 650, 155, 10, 180, 14D, 5.5D, new MotoModel());
 
 		final Map<String, Object> response = new InfoResponse().buildResponse(ResponseType.INFO, infoModel);
 
@@ -56,7 +56,7 @@ class InfoResponseTest {
 	 */
 	@Test
 	void testLightResponse() {
-		final InfoModel infoModel = new InfoModel(1L, 5555, "architecture", "650", 155, 10, 180, 14D, 5.5D, new MotoModel());
+		final InfoModel infoModel = new InfoModel(1L, 5555, "architecture", 650, 155, 10, 180, 14D, 5.5D, new MotoModel());
 
 		final Map<String, Object> response = new InfoResponse().buildResponse(ResponseType.LIGHT, infoModel);
 
