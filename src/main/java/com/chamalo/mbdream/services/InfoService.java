@@ -3,7 +3,6 @@ package com.chamalo.mbdream.services;
 import com.chamalo.mbdream.dto.InfoDTO;
 import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.InfoModel;
-import com.chamalo.mbdream.models.MotoModel;
 import com.chamalo.mbdream.repositories.InfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
