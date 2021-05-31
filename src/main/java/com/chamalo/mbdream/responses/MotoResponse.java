@@ -16,7 +16,12 @@ public class MotoResponse implements IResponse<MotoModel> {
 		this.infoResponse(map, model);
 
 		map.put("descriptionMoto", model.getDescriptionMoto());
-		map.put("nbMedia", model.getMedias().size());
+
+		if(model.getMedias() != null) {
+			map.put("nbMedia", model.getMedias().size());
+		} else {
+			map.put("nbMedia", 0);
+		}
 
 		if (model.getInfos() != null) {
 			map.put("idInfo", model.getInfos().getIdInfo());
