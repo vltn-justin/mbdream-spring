@@ -233,10 +233,7 @@ class MotoServiceTest {
         Mockito.when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
         Mockito.when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
 
-        final MotoModel motoGet = this.service.updateMoto(MOTO_DTO);
-
-        Assertions.assertNotNull(motoGet);
-        Assertions.assertEquals(MOTO_TEST, motoGet);
+        Assertions.assertDoesNotThrow(() -> this.service.updateMoto(MOTO_DTO));
     }
 
     /**
@@ -255,10 +252,7 @@ class MotoServiceTest {
         Mockito.when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
         Mockito.when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
 
-        final MotoModel motoGet = this.service.updateMoto(motoDTO);
-
-        Assertions.assertNotNull(motoGet);
-        Assertions.assertEquals(MOTO_TEST, motoGet);
+        Assertions.assertDoesNotThrow(() -> this.service.updateMoto(motoDTO));
     }
 
     /**
@@ -278,10 +272,8 @@ class MotoServiceTest {
         Mockito.when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenReturn(null);
         Mockito.when(this.motoRepository.save(Mockito.any(MotoModel.class))).thenReturn(MOTO_TEST);
 
-        final MotoModel motoGet = this.service.updateMoto(motoDTO);
 
-        Assertions.assertNotNull(motoGet);
-        Assertions.assertEquals(MOTO_TEST, motoGet);
+        Assertions.assertDoesNotThrow(() -> this.service.updateMoto(motoDTO));
     }
 
     /**
