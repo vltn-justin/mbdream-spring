@@ -106,15 +106,7 @@ public class MotoController {
 			mapResponse.put("count", count);
 			mapResponse.put("haveNext", count / 10 < page);
 
-			final List<Map<String, Object>> mapList = new ArrayList<>();
-
-			for (final MotoModel moto : allMoto) {
-				mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
-			}
-
-			mapResponse.put("results", mapList);
-
-			return ResponseEntity.ok(mapResponse);
+			return listMotoToMap(allMoto, mapResponse);
 		} catch (final MBDreamException e) {
 			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(404).body(e.getMessage());
@@ -139,7 +131,7 @@ public class MotoController {
 	@GetMapping("/featured")
 	public ResponseEntity<Object> findFeaturedMoto() {
 		try {
-			return ResponseEntity.ok(this.motoService.findFeaturedMoto());
+			return listMotoToMap(this.motoService.findFeaturedMoto(), new HashMap<>());
 		} catch (final MBDreamException e) {
 			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(404).body(e.getMessage());
@@ -161,5 +153,23 @@ public class MotoController {
 			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
+	}
+
+	/**
+	 * Method to build response for each moto from a Collection
+	 * @param motoModels Collection of MotoModels
+	 * @param mapResponse Map where to put response
+	 * @return ResponseEntity
+	 */
+	private ResponseEntity<Object> listMotoToMap(final Collection<MotoModel> motoModels, final Map<String, Object> mapResponse) {
+		final List<Map<String, Object>> mapList = new ArrayList<>();
+
+		for (final MotoModel moto : motoModels) {
+			mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
+		}
+
+		mapResponse.put("results", mapList);
+
+		return ResponseEntity.ok(mapResponse);
 	}
 }
