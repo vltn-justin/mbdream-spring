@@ -11,8 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+
 @SpringBootTest
 class MotoControllerTest {
+
+	// TODO add, update, getByPage
 
 	@MockBean private MotoService service;
 
@@ -30,7 +34,6 @@ class MotoControllerTest {
 		final ResponseEntity<Object> response = this.controller.findMotoBySlug("test");
 
 		Assertions.assertEquals(200, response.getStatusCode().value());
-		Assertions.assertNotNull(response.getBody());
 		Assertions.assertEquals(
 				"{slugMoto=slug-moto, nomMoto=Moto, backgroundImgMoto=bgc.png, categorie=null, marque=null, descriptionMoto=description, nbMedia=0, idInfo=null}",
 				response.getBody().toString());
@@ -46,8 +49,7 @@ class MotoControllerTest {
 		final ResponseEntity<Object> response = this.controller.findMotoBySlug("test");
 
 		Assertions.assertEquals(404, response.getStatusCode().value());
-		Assertions.assertNotNull(response.getBody());
-		Assertions.assertEquals("Moto introuvable", response.getBody().toString());
+		Assertions.assertEquals("Moto introuvable", response.getBody());
 	}
 
 	/**
@@ -61,6 +63,33 @@ class MotoControllerTest {
 
 		Assertions.assertNotNull(count);
 		Assertions.assertEquals(5L, count.getBody());
+	}
+
+	/**
+	 * Test OK for {@link MotoController#findFeaturedMoto()}
+	 */
+	@Test
+	void testFeaturedOK() {
+		final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", null, null, null, null);
+
+		Mockito.when(this.service.findFeaturedMoto()).thenReturn(Collections.singletonList(motoModel));
+
+		final ResponseEntity<Object> response = this.controller.findFeaturedMoto();
+
+		Assertions.assertEquals(200, response.getStatusCode().value());
+		Assertions.assertEquals("{results=[{slugMoto=slug-moto, nomMoto=Moto, backgroundImgMoto=bgc.png}]}", response.getBody().toString());
+	}
+
+	/**
+	 * Test KO for {@link MotoController#findFeaturedMoto()}
+	 */
+	@Test
+	void testFeaturedKO() {
+		Mockito.when(this.service.findFeaturedMoto()).thenThrow(new MBDreamException("Aucune featured moto trouvée"));
+
+		final ResponseEntity<Object> response = this.controller.findFeaturedMoto();
+		Assertions.assertEquals(404, response.getStatusCode().value());
+		Assertions.assertEquals("Aucune featured moto trouvée", response.getBody().toString());
 	}
 
 	/**
