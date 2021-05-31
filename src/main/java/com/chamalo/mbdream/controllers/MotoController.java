@@ -82,14 +82,13 @@ public class MotoController {
 	 */
 	@GetMapping(value = "/get/{slug}")
 	public ResponseEntity<Object> findMotoBySlug(@PathVariable final String slug) {
-		MotoModel moto;
 		try {
-			moto = this.motoService.findMotoBySlug(slug);
+			final var moto = this.motoService.findMotoBySlug(slug);
+			return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
 		} catch (final MBDreamException e) {
+			LOGGER.warn(e.getMessage(), e);
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
-
-		return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
 	}
 
 	/**
