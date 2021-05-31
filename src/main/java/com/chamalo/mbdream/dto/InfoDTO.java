@@ -19,7 +19,7 @@ public class InfoDTO {
 
     private String architectureMoteur;
 
-    private String cylindre;
+    private Integer cylindre;
 
     private Integer puissance;
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +37,7 @@ public class InfoModel {
     private String architectureMoteur;
 
     @Column
-    private String cylindre;
+    private Integer cylindre;
 
     @Column
     private Integer puissance;
@@ -53,7 +54,7 @@ public class InfoModel {
     @Column
     private Double consommation;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "moto_id")
     private MotoModel moto;
 }

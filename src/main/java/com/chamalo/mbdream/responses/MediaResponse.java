@@ -4,23 +4,22 @@ import com.chamalo.mbdream.models.MediaModel;
 
 import java.util.Map;
 
-public class MediaResponse extends AbstractResponse<MediaModel> {
-    @Override
-    protected void basicResponse(final Map<String, Object> map, final MediaModel model) {
-        map.put("idMedia", model.getIdMedia());
-        map.put("lienMedia", model.getLienMedia());
-        map.put("descriptionMedia", model.getDescriptionMedia());
-    }
+public class MediaResponse implements IResponse<MediaModel> {
+	@Override
+	public void basicResponse(final Map<String, Object> map, final MediaModel model) {
+		map.put("lienMedia", model.getLienMedia());
+		map.put("descriptionMedia", model.getDescriptionMedia());
+	}
 
-    @Override
-    protected void infoResponse(final Map<String, Object> map, final MediaModel model) {
-        // Pas d'info response
-        this.basicResponse(map, model);
-    }
+	@Override
+	public void infoResponse(final Map<String, Object> map, final MediaModel model) {
+		// Pas d'info response
+		this.basicResponse(map, model);
+	}
 
-    @Override
-    protected void lightResponse(final Map<String, Object> map, final MediaModel model) {
-        // Pas de light response
-        this.basicResponse(map, model);
-    }
+	@Override
+	public void lightResponse(final Map<String, Object> map, final MediaModel model) {
+		// Pas de light response
+		this.basicResponse(map, model);
+	}
 }
