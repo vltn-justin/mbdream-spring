@@ -100,7 +100,7 @@ class MotoResponseTest {
 	@Test
 	void testBasicResponseNull() {
 		final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", null, null,
-				Collections.emptyList(), null);
+				null, null);
 
 		final Map<String, Object> response = new MotoResponse().buildResponse(ResponseType.BASIC, motoModel);
 
@@ -112,7 +112,7 @@ class MotoResponseTest {
 		Assertions.assertNull(response.get("categorie"));
 		Assertions.assertNull(response.get("marque"));
 		Assertions.assertEquals(motoModel.getDescriptionMoto(), response.get("descriptionMoto"));
-		Assertions.assertEquals(motoModel.getMedias().size(), response.get("nbMedia"));
+		Assertions.assertEquals(0, response.get("nbMedia"));
 		Assertions.assertNull(response.get("idInfo"));
 	}
 
