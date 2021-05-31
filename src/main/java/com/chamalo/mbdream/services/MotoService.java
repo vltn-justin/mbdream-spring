@@ -23,8 +23,8 @@ public class MotoService {
     // @Lazy pour eviter une boucle dans les dépendances (MotoService -> MarqueService -> MotoService -> ...)
     @Autowired
     public MotoService(final MotoRepository motoRepository,
-            @Lazy final MarqueService marqueService,
-            @Lazy final CategorieService categorieService) {
+                       @Lazy final MarqueService marqueService,
+                       @Lazy final CategorieService categorieService) {
         this.motoRepository = motoRepository;
         this.marqueService = marqueService;
         this.categorieService = categorieService;
