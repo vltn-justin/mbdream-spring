@@ -67,6 +67,19 @@ class MotoControllerTest {
 	 * Test OK for {@link MotoController#deleteMoto(String)}
 	 */
 	@Test
+	void testDeleteOK() {
+		Mockito.doNothing().when(this.service).deleteMoto("test");
+
+		final ResponseEntity<String> response = this.controller.deleteMoto("test");
+
+		Assertions.assertEquals(200, response.getStatusCode().value());
+		Assertions.assertEquals("Moto supprimée", response.getBody());
+	}
+
+	/**
+	 * Test KO for {@link MotoController#deleteMoto(String)}
+	 */
+	@Test
 	void testDeleteKO() {
 		Mockito.doThrow(MBDreamException.class).when(this.service).deleteMoto("test");
 
@@ -75,4 +88,5 @@ class MotoControllerTest {
 		Assertions.assertEquals(500, response.getStatusCode().value());
 		Assertions.assertNull(response.getBody());
 	}
+
 }
