@@ -121,7 +121,7 @@ public class MotoController {
 			final Map<String, Object> mapResponse = new HashMap<>();
 			final Long count = this.countAllMoto().getBody();
 			mapResponse.put("count", count);
-			mapResponse.put("haveNext", count / 10 < page);
+			mapResponse.put("haveNext", count / 10 > page);
 
 			return listMotoToMap(allMoto, mapResponse);
 		} catch (final MBDreamException e) {
