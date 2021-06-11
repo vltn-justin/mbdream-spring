@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -37,8 +38,7 @@ public class MotoController {
 
 	private final MotoService motoService;
 
-	@Autowired
-	public MotoController(final MotoService motoService) {
+	@Autowired public MotoController(final MotoService motoService) {
 		this.motoService = motoService;
 	}
 
@@ -48,8 +48,7 @@ public class MotoController {
 	 * @param motoDTO MotoRequest with all data
 	 * @return ResponseEntity
 	 */
-	@PostMapping("/add")
-	public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
+	@PostMapping("/add") public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
 		final MotoModel moto = this.motoService.addMoto(motoDTO);
 		if (moto.getIdMoto() != null) {
 			return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
@@ -63,8 +62,7 @@ public class MotoController {
 	 * @param motoDTO MotoRequest with all data
 	 * @return null if moto is not find, updatedmoto otherwise
 	 */
-	@PostMapping("/update")
-	public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
+	@PostMapping("/update") public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
 		try {
 			this.motoService.updateMoto(motoDTO);
 			return ResponseEntity.ok("Moto mise à jour");
@@ -78,10 +76,30 @@ public class MotoController {
 	 * Method to find a Moto with is slug
 	 *
 	 * @param slug Slug
+	 * @param page Page number
+	 * @return ResponseEntity of MotoModel or 404 error
+	 */
+	@GetMapping(value = "/get") public ResponseEntity<Object> findMotoSlugOrPage(
+			@RequestParam(required = false, defaultValue = "") final String slug,
+			@RequestParam(required = false, defaultValue = "-1") final Integer page) {
+		if (!slug.isEmpty()) {
+			return findMotoBySlug(slug);
+		} else {
+			if (page != -1) {
+				return findMotoByPage(page);
+			}
+		}
+
+		return ResponseEntity.status(404).body("Page introuvable");
+	}
+
+	/**
+	 * Method to find a Moto with is slug
+	 *
+	 * @param slug Slug
 	 * @return ResponseEntity of MotoModel
 	 */
-	@GetMapping(value = "/get/{slug}")
-	public ResponseEntity<Object> findMotoBySlug(@PathVariable final String slug) {
+	private ResponseEntity<Object> findMotoBySlug(final String slug) {
 		try {
 			final var moto = this.motoService.findMotoBySlug(slug);
 			return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
@@ -96,8 +114,7 @@ public class MotoController {
 	 *
 	 * @return Response Entity
 	 */
-	@GetMapping(value = "/get/page/{page}")
-	public ResponseEntity<Object> findMotoByPage(@PathVariable final Integer page) {
+	private ResponseEntity<Object> findMotoByPage(final Integer page) {
 		try {
 			final Collection<MotoModel> allMoto = this.motoService.findMotoByPage(page);
 
@@ -118,8 +135,7 @@ public class MotoController {
 	 *
 	 * @return ResponseEntity<Long>
 	 */
-	@GetMapping("/count")
-	public ResponseEntity<Long> countAllMoto() {
+	@GetMapping("/count") public ResponseEntity<Long> countAllMoto() {
 		return ResponseEntity.ok(this.motoService.countAllMoto());
 	}
 
@@ -128,8 +144,7 @@ public class MotoController {
 	 *
 	 * @return ResponseEntity Iterable of MotoModel
 	 */
-	@GetMapping("/featured")
-	public ResponseEntity<Object> findFeaturedMoto() {
+	@GetMapping("/featured") public ResponseEntity<Object> findFeaturedMoto() {
 		try {
 			return listMotoToMap(this.motoService.findFeaturedMoto(), new HashMap<>());
 		} catch (final MBDreamException e) {
@@ -144,8 +159,7 @@ public class MotoController {
 	 * @param slug Slug of moto
 	 * @return ResponseEntity
 	 */
-	@GetMapping("/delete/{slug}")
-	public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
+	@GetMapping("/delete/{slug}") public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
 		try {
 			this.motoService.deleteMoto(slug);
 			return ResponseEntity.ok("Moto supprimée");
@@ -157,7 +171,8 @@ public class MotoController {
 
 	/**
 	 * Method to build response for each moto from a Collection
-	 * @param motoModels Collection of MotoModels
+	 *
+	 * @param motoModels  Collection of MotoModels
 	 * @param mapResponse Map where to put response
 	 * @return ResponseEntity
 	 */

@@ -23,7 +23,18 @@ class MotoControllerTest {
 	@Autowired private MotoController controller;
 
 	/**
-	 * Test OK for {@link MotoController#findMotoBySlug(String)}
+	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)}
+	 */
+	@Test
+	void testFindMotoSlugOrPageKO() {
+		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", -1);
+
+		Assertions.assertEquals(404, response.getStatusCode().value());
+		Assertions.assertEquals("Page introuvable", response.getBody().toString());
+	}
+
+	/**
+	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)}
 	 */
 	@Test
 	void testFindBySlugOK() {
@@ -31,7 +42,7 @@ class MotoControllerTest {
 
 		Mockito.when(this.service.findMotoBySlug("test")).thenReturn(motoModel);
 
-		final ResponseEntity<Object> response = this.controller.findMotoBySlug("test");
+		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("test", null);
 
 		Assertions.assertEquals(200, response.getStatusCode().value());
 		Assertions.assertEquals(
@@ -40,13 +51,13 @@ class MotoControllerTest {
 	}
 
 	/**
-	 * Test KO for {@link MotoController#findMotoBySlug(String)}
+	 * Test KO for {@link MotoController#findMotoSlugOrPage(String, Integer)}
 	 */
 	@Test
 	void testFindBySlugKO() {
 		Mockito.when(this.service.findMotoBySlug("test")).thenThrow(new MBDreamException("Moto introuvable"));
 
-		final ResponseEntity<Object> response = this.controller.findMotoBySlug("test");
+		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("test", null);
 
 		Assertions.assertEquals(404, response.getStatusCode().value());
 		Assertions.assertEquals("Moto introuvable", response.getBody());
