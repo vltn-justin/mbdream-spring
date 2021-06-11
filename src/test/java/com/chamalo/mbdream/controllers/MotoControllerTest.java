@@ -16,7 +16,7 @@ import java.util.Collections;
 @SpringBootTest
 class MotoControllerTest {
 
-	// TODO add, update, getByPage
+	// TODO add, update
 
 	@MockBean private MotoService service;
 
@@ -34,7 +34,33 @@ class MotoControllerTest {
 	}
 
 	/**
-	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)}
+	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page
+	 */
+	@Test
+	void testFindByPageOK() {
+		Mockito.when(this.service.findMotoByPage(1)).thenReturn(Collections.emptyList());
+
+		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", 1);
+
+		Assertions.assertEquals(200, response.getStatusCode().value());
+		Assertions.assertEquals("{count=0, haveNext=false, results=[]}", response.getBody().toString());
+	}
+
+	/**
+	 * Test KO for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page
+	 */
+	@Test
+	void testFindByPageKO() {
+		Mockito.when(this.service.findMotoByPage(1)).thenThrow(new MBDreamException("Aucune motos trouvée !"));
+
+		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", 1);
+
+		Assertions.assertEquals(404, response.getStatusCode().value());
+		Assertions.assertEquals("Aucune motos trouvée !", response.getBody().toString());
+	}
+
+	/**
+	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with slug
 	 */
 	@Test
 	void testFindBySlugOK() {
@@ -51,7 +77,7 @@ class MotoControllerTest {
 	}
 
 	/**
-	 * Test KO for {@link MotoController#findMotoSlugOrPage(String, Integer)}
+	 * Test KO for {@link MotoController#findMotoSlugOrPage(String, Integer)} with slug
 	 */
 	@Test
 	void testFindBySlugKO() {
