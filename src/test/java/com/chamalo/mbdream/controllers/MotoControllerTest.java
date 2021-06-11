@@ -34,7 +34,8 @@ class MotoControllerTest {
 	}
 
 	/**
-	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page
+	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page <br>
+	 * haveNext = false
 	 */
 	@Test
 	void testFindByPageOK() {
@@ -44,6 +45,21 @@ class MotoControllerTest {
 
 		Assertions.assertEquals(200, response.getStatusCode().value());
 		Assertions.assertEquals("{count=0, haveNext=false, results=[]}", response.getBody().toString());
+	}
+
+	/**
+	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page <br>
+	 * haveNext = true
+	 */
+	@Test
+	void testFindByPageOK2() {
+		Mockito.when(this.service.findMotoByPage(1)).thenReturn(Collections.emptyList());
+		Mockito.when(this.service.countAllMoto()).thenReturn(10000L);
+
+		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", 1);
+
+		Assertions.assertEquals(200, response.getStatusCode().value());
+		Assertions.assertEquals("{count=10000, haveNext=true, results=[]}", response.getBody().toString());
 	}
 
 	/**
