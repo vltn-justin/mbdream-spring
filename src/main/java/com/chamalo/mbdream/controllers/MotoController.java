@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +37,8 @@ public class MotoController {
 
 	private final MotoService motoService;
 
-	@Autowired public MotoController(final MotoService motoService) {
+	@Autowired
+	public MotoController(final MotoService motoService) {
 		this.motoService = motoService;
 	}
 
@@ -48,7 +48,8 @@ public class MotoController {
 	 * @param motoDTO MotoRequest with all data
 	 * @return ResponseEntity
 	 */
-	@PostMapping("/add") public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
+	@PostMapping("/add")
+	public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
 		final MotoModel moto = this.motoService.addMoto(motoDTO);
 		if (moto.getIdMoto() != null) {
 			return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
@@ -62,7 +63,8 @@ public class MotoController {
 	 * @param motoDTO MotoRequest with all data
 	 * @return null if moto is not find, updatedmoto otherwise
 	 */
-	@PostMapping("/update") public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
+	@PostMapping("/update")
+	public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
 		try {
 			this.motoService.updateMoto(motoDTO);
 			return ResponseEntity.ok("Moto mise à jour");
@@ -73,15 +75,15 @@ public class MotoController {
 	}
 
 	/**
-	 * Method to find a Moto with is slug
+	 * Method to find a Moto with is slug or find all by page
 	 *
 	 * @param slug Slug
 	 * @param page Page number
-	 * @return ResponseEntity of MotoModel or 404 error
+	 * @return ResponseEntity or 404 error
 	 */
-	@GetMapping(value = "/get") public ResponseEntity<Object> findMotoSlugOrPage(
-			@RequestParam(required = false, defaultValue = "") final String slug,
-			@RequestParam(required = false, defaultValue = "-1") final Integer page) {
+	@GetMapping(value = "/get")
+	public ResponseEntity<Object> findMotoSlugOrPage(@RequestParam(required = false, defaultValue = "") final String slug,
+													 @RequestParam(required = false, defaultValue = "-1") final Integer page) {
 		if (!slug.isEmpty()) {
 			return findMotoBySlug(slug);
 		} else {
@@ -135,7 +137,8 @@ public class MotoController {
 	 *
 	 * @return ResponseEntity<Long>
 	 */
-	@GetMapping("/count") public ResponseEntity<Long> countAllMoto() {
+	@GetMapping("/count")
+	public ResponseEntity<Long> countAllMoto() {
 		return ResponseEntity.ok(this.motoService.countAllMoto());
 	}
 
@@ -144,7 +147,8 @@ public class MotoController {
 	 *
 	 * @return ResponseEntity Iterable of MotoModel
 	 */
-	@GetMapping("/featured") public ResponseEntity<Object> findFeaturedMoto() {
+	@GetMapping("/featured")
+	public ResponseEntity<Object> findFeaturedMoto() {
 		try {
 			return listMotoToMap(this.motoService.findFeaturedMoto(), new HashMap<>());
 		} catch (final MBDreamException e) {
@@ -159,7 +163,12 @@ public class MotoController {
 	 * @param slug Slug of moto
 	 * @return ResponseEntity
 	 */
-	@GetMapping("/delete/{slug}") public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
+	@GetMapping("/delete")
+	public ResponseEntity<String> deleteMoto(@RequestParam(required = false, defaultValue = "") final String slug) {
+		if (slug.isEmpty()) {
+			return ResponseEntity.status(404).body("Page introuvable");
+		}
+
 		try {
 			this.motoService.deleteMoto(slug);
 			return ResponseEntity.ok("Moto supprimée");

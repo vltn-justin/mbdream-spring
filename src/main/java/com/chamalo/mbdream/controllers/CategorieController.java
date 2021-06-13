@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -24,80 +25,84 @@ import java.util.Map;
  *
  * @author Chamalo
  */
-@CrossOrigin(origins = {"http://localhost:4200",
-        "https://motorbike-dream.web.app"})
+@CrossOrigin(origins = {"http://localhost:4200", "https://motorbike-dream.web.app"})
 @RestController
 @RequestMapping("/category")
 public class CategorieController {
 
-    private final CategorieService categorieService;
+	private final CategorieService categorieService;
 
-    @Autowired
-    public CategorieController(final CategorieService categorieService) {
-        this.categorieService = categorieService;
-    }
+	@Autowired
+	public CategorieController(final CategorieService categorieService) {
+		this.categorieService = categorieService;
+	}
 
-    /**
-     * Method to add a Category to database
-     *
-     * @param categorieDTO CategorieRequest with all data
-     *
-     * @return ResponseEntity
-     */
-    @PostMapping("/add")
-    public ResponseEntity<String> addCategorie(@RequestBody final CategorieDTO categorieDTO) {
-        if (this.categorieService.addCategorie(categorieDTO).getIdCategorie() != null) {
-            return ResponseEntity.ok("Catégorie ajoutée");
-        }
-        return ResponseEntity.ok("Impossible d'ajouter la catégorie, essayez à nouveau");
-    }
+	/**
+	 * Method to add a Category to database
+	 *
+	 * @param categorieDTO CategorieRequest with all data
+	 * @return ResponseEntity
+	 */
+	@PostMapping("/add")
+	public ResponseEntity<String> addCategorie(@RequestBody final CategorieDTO categorieDTO) {
+		if (this.categorieService.addCategorie(categorieDTO).getIdCategorie() != null) {
+			return ResponseEntity.ok("Catégorie ajoutée");
+		}
+		return ResponseEntity.ok("Impossible d'ajouter la catégorie, essayez à nouveau");
+	}
 
-    /**
-     * Method to get a category with is slug, mapped at /category/get/slug/
-     *
-     * @param slug Slug of Category
-     *
-     * @return Category or MBDreamException
-     */
-    @GetMapping("/get/{slug}")
-    public ResponseEntity<Map<String, Object>> findCategorieBySlug(@PathVariable final String slug) {
-        CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
+	/**
+	 * Method to find all Categories
+	 *
+	 * @return Iterable of CategorieModel
+	 */
+	@GetMapping("/get")
+	public ResponseEntity<Object> findAllCategorie(@RequestParam(required = false, defaultValue = "") final String slug) {
+		if (slug.isEmpty()) {
+			Iterable<CategorieModel> allCategorie = this.categorieService.findAllCategorie();
 
-        if (categorie != null) {
-            return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
-        }
+			List<Map<String, Object>> mapList = new ArrayList<>();
 
-        return ResponseEntity.notFound().build();
-    }
+			for (CategorieModel categorie : allCategorie) {
+				mapList.add(new CategorieResponse().buildResponse(ResponseType.LIGHT, categorie));
+			}
 
-    /**
-     * Method to find all Categories
-     *
-     * @return Iterable of CategorieModel
-     */
-    @GetMapping("/get")
-    public ResponseEntity<List<Map<String, Object>>> findAllCategorie() {
-        Iterable<CategorieModel> allCategorie = this.categorieService.findAllCategorie();
+			return ResponseEntity.ok(mapList);
+		} else {
+			return this.findCategorieBySlug(slug);
+		}
 
-        List<Map<String, Object>> mapList = new ArrayList<>();
+	}
 
-        for (CategorieModel categorie : allCategorie) {
-            mapList.add(new CategorieResponse().buildResponse(ResponseType.LIGHT, categorie));
-        }
+	/**
+	 * Method to get a category with is slug, mapped at /category/get/slug/
+	 *
+	 * @param slug Slug of Category
+	 * @return Category or MBDreamException
+	 */
+	private ResponseEntity<Object> findCategorieBySlug(@PathVariable final String slug) {
+		CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
 
-        return ResponseEntity.ok(mapList);
-    }
+		if (categorie != null) {
+			return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
+		}
 
-    /**
-     * Method to delete a categorie with is id
-     *
-     * @param slug Slug of categorie to delete
-     *
-     * @return ResponseEntity
-     */
-    @GetMapping("/delete/{slug}")
-    public ResponseEntity<String> deleteCategorie(@PathVariable final String slug) {
-        this.categorieService.deleteCategorie(slug);
-        return ResponseEntity.ok("Catégorie supprimée");
-    }
+		return ResponseEntity.notFound().build();
+	}
+
+	/**
+	 * Method to delete a categorie with is id
+	 *
+	 * @param slug Slug of categorie to delete
+	 * @return ResponseEntity
+	 */
+	@GetMapping("/delete")
+	public ResponseEntity<String> deleteCategorie(@RequestParam(required = false, defaultValue = "") final String slug) {
+		if (slug.isEmpty()) {
+			return ResponseEntity.status(404).body("Page introuvable");
+		}
+
+		this.categorieService.deleteCategorie(slug);
+		return ResponseEntity.ok("Catégorie supprimée");
+	}
 }

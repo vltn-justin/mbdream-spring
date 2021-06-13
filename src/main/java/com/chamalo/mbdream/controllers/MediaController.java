@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,68 +25,72 @@ import java.util.Map;
  *
  * @author Chamalo
  */
-@CrossOrigin(origins = {"http://localhost:4200",
-        "https://motorbike-dream.web.app"})
+@CrossOrigin(origins = {"http://localhost:4200", "https://motorbike-dream.web.app"})
 @RestController
 @RequestMapping("/media")
 public class MediaController {
 
-    private final MediaService mediaService;
+	private final MediaService mediaService;
 
-    @Autowired
-    public MediaController(final MediaService mediaService) {
-        this.mediaService = mediaService;
-    }
+	@Autowired
+	public MediaController(final MediaService mediaService) {
+		this.mediaService = mediaService;
+	}
 
-    /**
-     * Method to add a Media
-     *
-     * @param mediaDTO Request with all data
-     *
-     * @return Response Entity
-     *
-     * @throws IOException Throw with file when you want to save media
-     */
-    @PostMapping("/add")
-    public ResponseEntity<String> addMedia(@ModelAttribute final MediaDTO mediaDTO) throws IOException {
-        if (this.mediaService.addMedia(mediaDTO).getIdMedia() != null) {
-            return ResponseEntity.ok("Media ajouter à la moto");
-        }
+	/**
+	 * Method to add a Media
+	 *
+	 * @param mediaDTO Request with all data
+	 * @return Response Entity
+	 *
+	 * @throws IOException Throw with file when you want to save media
+	 */
+	@PostMapping("/add")
+	public ResponseEntity<String> addMedia(@ModelAttribute final MediaDTO mediaDTO) throws IOException {
+		if (this.mediaService.addMedia(mediaDTO).getIdMedia() != null) {
+			return ResponseEntity.ok("Media ajouter à la moto");
+		}
 
-        return ResponseEntity.ok("Impossible d'ajouter le media, essayez à nouveau");
-    }
+		return ResponseEntity.ok("Impossible d'ajouter le media, essayez à nouveau");
+	}
 
-    /**
-     * Method to get all media from moto
-     *
-     * @param slugMoto Slug of moto
-     *
-     * @return ResponseEntity
-     */
-    @GetMapping("/get/{slugMoto}")
-    public ResponseEntity<List<Map<String, Object>>> getAllMedia(@PathVariable final String slugMoto,
-                                                                 @RequestParam(value = "isVideo", defaultValue = "false") final Boolean isVideo) {
-        Iterable<MediaModel> allMedia = this.mediaService.findAllMedia(slugMoto, isVideo);
+	/**
+	 * Method to get all media from moto
+	 *
+	 * @param slugMoto Slug of moto
+	 * @return ResponseEntity
+	 */
+	@GetMapping("/get")
+	public ResponseEntity<Object> getAllMedia(@RequestParam(required = false, defaultValue = "") final String slugMoto,
+											  @RequestParam(required = false, defaultValue = "false") final Boolean isVideo) {
+		if (slugMoto.isEmpty()) {
+			return ResponseEntity.status(404).body("Page introuvable");
+		}
 
-        List<Map<String, Object>> mapList = new ArrayList<>();
+		Iterable<MediaModel> allMedia = this.mediaService.findAllMedia(slugMoto, isVideo);
 
-        for (MediaModel media : allMedia) {
-            mapList.add(new MediaResponse().buildResponse(ResponseType.BASIC, media));
-        }
+		List<Map<String, Object>> mapList = new ArrayList<>();
 
-        return ResponseEntity.ok(mapList);
-    }
+		for (MediaModel media : allMedia) {
+			mapList.add(new MediaResponse().buildResponse(ResponseType.BASIC, media));
+		}
 
-    /**
-     * Method to delete a media
-     *
-     * @param idMedia ID of media to delete
-     *
-     * @return ResponseEntity
-     */
-    @GetMapping("/delete/{idMedia}")
-    public ResponseEntity<String> deleteMedia(@PathVariable final String idMedia) {
-        this.mediaService.deleteMedia(idMedia);
-        return ResponseEntity.ok("Media supprimer");
-    }
+		return ResponseEntity.ok(mapList);
+	}
+
+	/**
+	 * Method to delete a media
+	 *
+	 * @param idMedia ID of media to delete
+	 * @return ResponseEntity
+	 */
+	@GetMapping("/delete")
+	public ResponseEntity<String> deleteMedia(@RequestParam(required = false, defaultValue = "") final String idMedia) {
+		if (idMedia.isEmpty()) {
+			return ResponseEntity.status(404).body("Page introuvable");
+		}
+
+		this.mediaService.deleteMedia(idMedia);
+		return ResponseEntity.ok("Media supprimer");
+	}
 }

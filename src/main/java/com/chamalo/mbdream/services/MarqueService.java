@@ -17,107 +17,95 @@ import org.springframework.stereotype.Service;
 @Service
 public class MarqueService {
 
-    private final MarqueRepository marqueRepository;
+	private final MarqueRepository marqueRepository;
 
-    private final MotoService motoService;
+	private final MotoService motoService;
 
-    @Autowired
-    public MarqueService (final MarqueRepository marqueRepository, final MotoService motoService) {
-        this.marqueRepository = marqueRepository;
-        this.motoService = motoService;
-    }
+	@Autowired
+	public MarqueService(final MarqueRepository marqueRepository, final MotoService motoService) {
+		this.marqueRepository = marqueRepository;
+		this.motoService = motoService;
+	}
 
-    /**
-     * Method to add a marque to database
-     *
-     * @param marqueDTO MarqueRequest with all data
-     *
-     * @return ResponseEntity
-     */
-    public MarqueModel addMarque (final MarqueDTO marqueDTO) {
-        MarqueModel newMarque = new MarqueModel();
+	/**
+	 * Method to add a marque to database
+	 *
+	 * @param marqueDTO MarqueRequest with all data
+	 * @return ResponseEntity
+	 */
+	public MarqueModel addMarque(final MarqueDTO marqueDTO) {
+		MarqueModel newMarque = new MarqueModel();
 
-        newMarque.setNomMarque(marqueDTO.getNomMarque());
-        newMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
-        newMarque.setLogoMarque(marqueDTO.getLogoMarque());
-        newMarque.setDateCreation(marqueDTO.getDateCreation());
+		newMarque.setNomMarque(marqueDTO.getNomMarque());
+		newMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
+		newMarque.setLogoMarque(marqueDTO.getLogoMarque());
+		newMarque.setDateCreation(marqueDTO.getDateCreation());
 
-        Slugify slug = new Slugify();
-        newMarque.setSlugMarque(slug.slugify(marqueDTO.getNomMarque()));
+		Slugify slug = new Slugify();
+		newMarque.setSlugMarque(slug.slugify(marqueDTO.getNomMarque()));
 
-        return this.marqueRepository.save(newMarque);
-    }
+		return this.marqueRepository.save(newMarque);
+	}
 
-    /**
-     * Method to get a marque with is slug
-     *
-     * @param slug Slug of marque
-     *
-     * @return MarqueModel if found, MBDreamException otherwise
-     */
-    public MarqueModel findMarqueBySlug(final String slug) {
-        return this.marqueRepository.findMarqueBySlug(slug).orElseThrow(
-                () -> new MBDreamException("Marque introuvable avec le slug " + slug)
-        );
-    }
+	/**
+	 * Method to get a marque with is slug
+	 *
+	 * @param slug Slug of marque
+	 * @return MarqueModel if found, MBDreamException otherwise
+	 */
+	public MarqueModel findMarqueBySlug(final String slug) {
+		return this.marqueRepository.findMarqueBySlug(slug)
+				.orElseThrow(() -> new MBDreamException("Marque introuvable avec le slug " + slug));
+	}
 
-    /**
-     * Method to get all marques
-     *
-     * @return Iterable of MarqueModel
-     */
-    public Iterable<MarqueModel> findAllMarque () {
-        return this.marqueRepository.findAll();
-    }
+	/**
+	 * Method to get all marques, limited by 10
+	 *
+	 * @param page Page number
+	 * @return Iterable of MarqueModel
+	 */
+	public Iterable<MarqueModel> findAllMarqueByPage(final Integer page) {
+		return this.marqueRepository.getMarqueByPage(page * 10);
+	}
 
-    /**
-     * Method to get all marques, limited by 10
-     *
-     * @param page Page number
-     *
-     * @return Iterable of MarqueModel
-     */
-    public Iterable<MarqueModel> findAllMarqueByPage(final Integer page) { return this.marqueRepository.getMarqueByPage(page * 10); }
+	/**
+	 * Method to count all marques inside database
+	 *
+	 * @return Long
+	 */
+	public Long countAllMarque() {
+		return this.marqueRepository.count();
+	}
 
-    /**
-     * Method to count all marques inside database
-     *
-     * @return Long
-     */
-    public Long countAllMarque () {
-        return this.marqueRepository.count();
-    }
+	/**
+	 * Method to update data of a Marque
+	 *
+	 * @param marqueDTO MarqueRequest with all data
+	 * @return updatedMarque
+	 */
+	public MarqueModel updateMarque(final MarqueDTO marqueDTO) {
+		MarqueModel updatedMarque = this.findMarqueBySlug(marqueDTO.getSlugMarque());
 
-    /**
-     * Method to update data of a Marque
-     *
-     * @param marqueDTO MarqueRequest with all data
-     *
-     * @return updatedMarque
-     */
-    public MarqueModel updateMarque (final MarqueDTO marqueDTO) {
-        MarqueModel updatedMarque = this.findMarqueBySlug(marqueDTO.getSlugMarque());
+		updatedMarque.setNomMarque(marqueDTO.getNomMarque());
+		updatedMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
+		updatedMarque.setLogoMarque(marqueDTO.getLogoMarque());
+		updatedMarque.setDateCreation(marqueDTO.getDateCreation());
 
-        updatedMarque.setNomMarque(marqueDTO.getNomMarque());
-        updatedMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
-        updatedMarque.setLogoMarque(marqueDTO.getLogoMarque());
-        updatedMarque.setDateCreation(marqueDTO.getDateCreation());
+		return this.marqueRepository.save(updatedMarque);
+	}
 
-        return this.marqueRepository.save(updatedMarque);
-    }
+	/**
+	 * Method to delete marque
+	 *
+	 * @param slug Slug of marque to delete
+	 */
+	public void deleteMarque(final String slug) {
+		final MarqueModel marque = this.findMarqueBySlug(slug);
 
-    /**
-     * Method to delete marque
-     *
-     * @param slug Slug of marque to delete
-     */
-    public void deleteMarque (final String slug) {
-        final MarqueModel marque = this.findMarqueBySlug(slug);
+		for (MotoModel moto : marque.getMotos()) {
+			motoService.deleteMoto(moto.getIdMoto().toString());
+		}
 
-        for (MotoModel moto : marque.getMotos()) {
-            motoService.deleteMoto(moto.getIdMoto().toString());
-        }
-
-        this.marqueRepository.delete(marque);
-    }
+		this.marqueRepository.delete(marque);
+	}
 }
