@@ -23,32 +23,21 @@ class MotoControllerTest {
 	@Autowired private MotoController controller;
 
 	/**
-	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)}
-	 */
-	@Test
-	void testFindMotoSlugOrPageKO() {
-		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", -1);
-
-		Assertions.assertEquals(404, response.getStatusCode().value());
-		Assertions.assertEquals("Page introuvable", response.getBody().toString());
-	}
-
-	/**
-	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page <br>
+	 * Test OK for {@link MotoController#findMotoByPage(Integer)} with page <br>
 	 * haveNext = false
 	 */
 	@Test
 	void testFindByPageOK() {
 		Mockito.when(this.service.findMotoByPage(1)).thenReturn(Collections.emptyList());
 
-		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", 1);
+		final ResponseEntity<Object> response = this.controller.findMotoByPage(1);
 
 		Assertions.assertEquals(200, response.getStatusCode().value());
 		Assertions.assertEquals("{count=0, haveNext=false, results=[]}", response.getBody().toString());
 	}
 
 	/**
-	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page <br>
+	 * Test OK for {@link MotoController#findMotoByPage(Integer)} with page <br>
 	 * haveNext = true
 	 */
 	@Test
@@ -56,27 +45,27 @@ class MotoControllerTest {
 		Mockito.when(this.service.findMotoByPage(1)).thenReturn(Collections.emptyList());
 		Mockito.when(this.service.countAllMoto()).thenReturn(10000L);
 
-		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", 1);
+		final ResponseEntity<Object> response = this.controller.findMotoByPage(1);
 
 		Assertions.assertEquals(200, response.getStatusCode().value());
 		Assertions.assertEquals("{count=10000, haveNext=true, results=[]}", response.getBody().toString());
 	}
 
 	/**
-	 * Test KO for {@link MotoController#findMotoSlugOrPage(String, Integer)} with page
+	 * Test KO for {@link MotoController#findMotoByPage(Integer)} with page
 	 */
 	@Test
 	void testFindByPageKO() {
 		Mockito.when(this.service.findMotoByPage(1)).thenThrow(new MBDreamException("Aucune motos trouvée !"));
 
-		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("", 1);
+		final ResponseEntity<Object> response = this.controller.findMotoByPage(1);
 
 		Assertions.assertEquals(404, response.getStatusCode().value());
 		Assertions.assertEquals("Aucune motos trouvée !", response.getBody().toString());
 	}
 
 	/**
-	 * Test OK for {@link MotoController#findMotoSlugOrPage(String, Integer)} with slug
+	 * Test OK for {@link MotoController#findMotoBySlug(String)} with slug
 	 */
 	@Test
 	void testFindBySlugOK() {
@@ -84,7 +73,7 @@ class MotoControllerTest {
 
 		Mockito.when(this.service.findMotoBySlug("test")).thenReturn(motoModel);
 
-		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("test", null);
+		final ResponseEntity<Object> response = this.controller.findMotoBySlug("test");
 
 		Assertions.assertEquals(200, response.getStatusCode().value());
 		Assertions.assertEquals(
@@ -93,13 +82,13 @@ class MotoControllerTest {
 	}
 
 	/**
-	 * Test KO for {@link MotoController#findMotoSlugOrPage(String, Integer)} with slug
+	 * Test KO for {@link MotoController#findMotoBySlug(String)} with slug
 	 */
 	@Test
 	void testFindBySlugKO() {
 		Mockito.when(this.service.findMotoBySlug("test")).thenThrow(new MBDreamException("Moto introuvable"));
 
-		final ResponseEntity<Object> response = this.controller.findMotoSlugOrPage("test", null);
+		final ResponseEntity<Object> response = this.controller.findMotoBySlug("test");
 
 		Assertions.assertEquals(404, response.getStatusCode().value());
 		Assertions.assertEquals("Moto introuvable", response.getBody());

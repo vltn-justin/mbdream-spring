@@ -11,8 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +34,7 @@ import java.util.Map;
  */
 @CrossOrigin(origins = {"http://localhost:4200", "https://motorbike-dream.web.app"})
 @RestController
-@RequestMapping("/moto")
+@RequestMapping("/motos")
 public class MotoController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MotoController.class);
 
@@ -48,7 +51,7 @@ public class MotoController {
 	 * @param motoDTO MotoRequest with all data
 	 * @return ResponseEntity
 	 */
-	@PostMapping("/add")
+	@PostMapping("")
 	public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
 		final MotoModel moto = this.motoService.addMoto(motoDTO);
 		if (moto.getIdMoto() != null) {
@@ -60,12 +63,14 @@ public class MotoController {
 	/**
 	 * Method to update data of a Moto
 	 *
+	 * @param slugMoto Slug of moto
 	 * @param motoDTO MotoRequest with all data
-	 * @return null if moto is not find, updatedmoto otherwise
+	 * @return MBDreamException if not found, updatedmoto otherwise
 	 */
-	@PostMapping("/update")
-	public ResponseEntity<String> updateMoto(@RequestBody final MotoDTO motoDTO) {
+	@PutMapping("/{slugMoto}")
+	public ResponseEntity<String> updateMoto(@PathVariable final String slugMoto, @RequestBody final MotoDTO motoDTO) {
 		try {
+			motoDTO.setSlugMoto(slugMoto);
 			this.motoService.updateMoto(motoDTO);
 			return ResponseEntity.ok("Moto mise à jour");
 		} catch (final MBDreamException e) {
@@ -75,33 +80,13 @@ public class MotoController {
 	}
 
 	/**
-	 * Method to find a Moto with is slug or find all by page
-	 *
-	 * @param slug Slug
-	 * @param page Page number
-	 * @return ResponseEntity or 404 error
-	 */
-	@GetMapping(value = "/get")
-	public ResponseEntity<Object> findMotoSlugOrPage(@RequestParam(required = false, defaultValue = "") final String slug,
-													 @RequestParam(required = false, defaultValue = "-1") final Integer page) {
-		if (!slug.isEmpty()) {
-			return findMotoBySlug(slug);
-		} else {
-			if (page != -1) {
-				return findMotoByPage(page);
-			}
-		}
-
-		return ResponseEntity.status(404).body("Page introuvable");
-	}
-
-	/**
 	 * Method to find a Moto with is slug
 	 *
 	 * @param slug Slug
 	 * @return ResponseEntity of MotoModel
 	 */
-	private ResponseEntity<Object> findMotoBySlug(final String slug) {
+	@GetMapping(value = "/{slug}")
+	public ResponseEntity<Object> findMotoBySlug(@PathVariable final String slug) {
 		try {
 			final var moto = this.motoService.findMotoBySlug(slug);
 			return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
@@ -116,7 +101,8 @@ public class MotoController {
 	 *
 	 * @return Response Entity
 	 */
-	private ResponseEntity<Object> findMotoByPage(final Integer page) {
+	@GetMapping(value = "")
+	public ResponseEntity<Object> findMotoByPage(@RequestParam(required = false, defaultValue = "0") final Integer page) {
 		try {
 			final Collection<MotoModel> allMoto = this.motoService.findMotoByPage(page);
 
@@ -163,12 +149,8 @@ public class MotoController {
 	 * @param slug Slug of moto
 	 * @return ResponseEntity
 	 */
-	@GetMapping("/delete")
-	public ResponseEntity<String> deleteMoto(@RequestParam(required = false, defaultValue = "") final String slug) {
-		if (slug.isEmpty()) {
-			return ResponseEntity.status(404).body("Page introuvable");
-		}
-
+	@DeleteMapping("/{slug}")
+	public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
 		try {
 			this.motoService.deleteMoto(slug);
 			return ResponseEntity.ok("Moto supprimée");

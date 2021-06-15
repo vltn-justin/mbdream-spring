@@ -8,8 +8,11 @@ import com.chamalo.mbdream.services.MarqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +29,7 @@ import java.util.Map;
  */
 @CrossOrigin(origins = {"http://localhost:4200", "https://motorbike-dream.web.app"})
 @RestController
-@RequestMapping("/marque")
+@RequestMapping("/marques")
 public class MarqueController {
 
 	private final MarqueService marqueService;
@@ -42,7 +45,7 @@ public class MarqueController {
 	 * @param marqueDTO MarqueRequest with all data
 	 * @return ResponseEntity
 	 */
-	@PostMapping("/add")
+	@PostMapping("")
 	public ResponseEntity<String> addMarque(@RequestBody final MarqueDTO marqueDTO) {
 		final MarqueModel newMarque = this.marqueService.addMarque(marqueDTO);
 		if (newMarque.getIdMarque() != null) {
@@ -54,45 +57,30 @@ public class MarqueController {
 	/**
 	 * Method to update a Marque
 	 *
+	 * @param slug      Slug of Marque
 	 * @param marqueDTO MarqueRequest with all data
 	 * @return ReponseEntity
 	 */
-	@PostMapping("/update")
-	public ResponseEntity<String> updateMarque(@RequestBody final MarqueDTO marqueDTO) {
+	@PutMapping("/{slug}")
+	public ResponseEntity<String> updateMarque(@PathVariable final String slug, @RequestBody final MarqueDTO marqueDTO) {
+		marqueDTO.setSlugMarque(slug);
+
 		if (this.marqueService.updateMarque(marqueDTO) != null) {
 			return ResponseEntity.ok("Marque mise à jour");
 		}
-		return ResponseEntity.ok("Impossible de mettre à jour la marque, essayez à nouveau");
-	}
 
-	/**
-	 * Method to find a Marque with is slug or find all by page
-	 *
-	 * @param slug Slug
-	 * @param page Page number
-	 * @return ResponseEntity or 404 error
-	 */
-	@GetMapping("/get")
-	public ResponseEntity<Object> findMarqueSlugOrPage(@RequestParam(required = false, defaultValue = "") final String slug,
-													   @RequestParam(required = false, defaultValue = "-1") final Integer page) {
-		if (!slug.isEmpty()) {
-			return this.findMarqueBySlug(slug);
-		} else {
-			if (page != -1) {
-				return this.findAllByPage(page);
-			}
-		}
-		return ResponseEntity.status(404).body("Page introuvable");
+		return ResponseEntity.ok("Impossible de mettre à jour la marque, essayez à nouveau");
 	}
 
 	/**
 	 * Method to get a marque with is id, mapped at /marque/get/slug/
 	 *
-	 * @param slug Slug of marque
+	 * @param slugMarque Slug of marque
 	 * @return Marque or MBDreamException
 	 */
-	private ResponseEntity<Object> findMarqueBySlug(final String slug) {
-		MarqueModel marque = this.marqueService.findMarqueBySlug(slug);
+	@GetMapping("/{slugMarque}")
+	public ResponseEntity<Object> findMarqueBySlug(@PathVariable final String slugMarque) {
+		MarqueModel marque = this.marqueService.findMarqueBySlug(slugMarque);
 
 		if (marque != null) {
 			return ResponseEntity.ok(new MarqueResponse().buildResponse(ResponseType.BASIC, marque));
@@ -106,7 +94,8 @@ public class MarqueController {
 	 *
 	 * @return Response Entity
 	 */
-	private ResponseEntity<Object> findAllByPage(final Integer page) {
+	@GetMapping("")
+	private ResponseEntity<Object> findAllByPage(@RequestParam(defaultValue = "0", required = false) final Integer page) {
 		Iterable<MarqueModel> allMarque = this.marqueService.findAllMarqueByPage(page);
 
 		List<Map<String, Object>> mapList = new ArrayList<>();
@@ -131,15 +120,12 @@ public class MarqueController {
 	/**
 	 * Method to delete a marque with is id
 	 *
-	 * @param slug Slug of Marque
+	 * @param slugMarque Slug of Marque
 	 * @return ResponseEntity
 	 */
-	@GetMapping("/delete")
-	public ResponseEntity<String> deleteMarque(@RequestParam(required = false, defaultValue = "") final String slug) {
-		if (slug.isEmpty()) {
-			return ResponseEntity.status(404).body("Page introuvable");
-		}
-		this.marqueService.deleteMarque(slug);
+	@DeleteMapping("/{slugMarque}")
+	public ResponseEntity<String> deleteMarque(@PathVariable final String slugMarque) {
+		this.marqueService.deleteMarque(slugMarque);
 		return ResponseEntity.ok("Marque supprimé");
 	}
 }

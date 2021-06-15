@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin(origins = {"http://localhost:4200", "https://motorbike-dream.web.app"})
 @RestController
-@RequestMapping("/info")
+@RequestMapping("/infos")
 public class InfoController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InfoController.class);
@@ -41,10 +43,10 @@ public class InfoController {
 	/**
 	 * Method to add info to moto
 	 *
-	 * @param infoDTO Request with all data
+	 * @param infoDTO  Request with all data
 	 * @return ResponseEntity<String>
 	 */
-	@PostMapping("/add")
+	@PostMapping("")
 	public ResponseEntity<String> addInfo(@RequestBody final InfoDTO infoDTO) {
 		try {
 			this.infoService.addInfo(infoDTO);
@@ -58,12 +60,14 @@ public class InfoController {
 	/**
 	 * Method to update info
 	 *
-	 * @param infoDTO InfoRequest
+	 * @param slugMoto Slug of moto
+	 * @param infoDTO  InfoRequest
 	 * @return ResponseEntity<String>
 	 */
-	@PostMapping("/update")
-	public ResponseEntity<String> updateInfo(@RequestBody final InfoDTO infoDTO) {
+	@PutMapping("/{slugMoto}")
+	public ResponseEntity<String> updateInfo(@PathVariable final String slugMoto, @RequestBody final InfoDTO infoDTO) {
 		try {
+			infoDTO.setSlugMoto(slugMoto);
 			this.infoService.update(infoDTO);
 			return ResponseEntity.ok("Infos mise à jour");
 		} catch (final MBDreamException e) {
@@ -78,12 +82,8 @@ public class InfoController {
 	 * @param slugMoto Slug of moto
 	 * @return ResponseEntity Map<String, Object> or <String>
 	 */
-	@GetMapping("/get")
-	public ResponseEntity<Object> getInfoMoto(@RequestParam(required = false, defaultValue = "") final String slugMoto) {
-		if (slugMoto.isEmpty()) {
-			return ResponseEntity.status(404).body("Page introuvable");
-		}
-
+	@GetMapping("/{slugMoto}")
+	public ResponseEntity<Object> getInfoMoto(@PathVariable final String slugMoto) {
 		InfoModel infos = this.infoService.findInfoMoto(slugMoto);
 
 		if (infos == null) {

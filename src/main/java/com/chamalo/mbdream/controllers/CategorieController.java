@@ -8,6 +8,7 @@ import com.chamalo.mbdream.services.CategorieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 @CrossOrigin(origins = {"http://localhost:4200", "https://motorbike-dream.web.app"})
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategorieController {
 
 	private final CategorieService categorieService;
@@ -43,7 +44,7 @@ public class CategorieController {
 	 * @param categorieDTO CategorieRequest with all data
 	 * @return ResponseEntity
 	 */
-	@PostMapping("/add")
+	@PostMapping("")
 	public ResponseEntity<String> addCategorie(@RequestBody final CategorieDTO categorieDTO) {
 		if (this.categorieService.addCategorie(categorieDTO).getIdCategorie() != null) {
 			return ResponseEntity.ok("Catégorie ajoutée");
@@ -56,21 +57,18 @@ public class CategorieController {
 	 *
 	 * @return Iterable of CategorieModel
 	 */
-	@GetMapping("/get")
-	public ResponseEntity<Object> findAllCategorie(@RequestParam(required = false, defaultValue = "") final String slug) {
-		if (slug.isEmpty()) {
-			Iterable<CategorieModel> allCategorie = this.categorieService.findAllCategorie();
+	@GetMapping("")
+	public ResponseEntity<Object> findAllCategorie() {
 
-			List<Map<String, Object>> mapList = new ArrayList<>();
+		Iterable<CategorieModel> allCategorie = this.categorieService.findAllCategorie();
 
-			for (CategorieModel categorie : allCategorie) {
-				mapList.add(new CategorieResponse().buildResponse(ResponseType.LIGHT, categorie));
-			}
+		List<Map<String, Object>> mapList = new ArrayList<>();
 
-			return ResponseEntity.ok(mapList);
-		} else {
-			return this.findCategorieBySlug(slug);
+		for (CategorieModel categorie : allCategorie) {
+			mapList.add(new CategorieResponse().buildResponse(ResponseType.LIGHT, categorie));
 		}
+
+		return ResponseEntity.ok(mapList);
 
 	}
 
@@ -80,8 +78,9 @@ public class CategorieController {
 	 * @param slug Slug of Category
 	 * @return Category or MBDreamException
 	 */
-	private ResponseEntity<Object> findCategorieBySlug(@PathVariable final String slug) {
-		CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
+	@GetMapping("/{slug}")
+	public ResponseEntity<Object> findCategorieBySlug(@PathVariable final String slug) {
+		final CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
 
 		if (categorie != null) {
 			return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
@@ -96,12 +95,8 @@ public class CategorieController {
 	 * @param slug Slug of categorie to delete
 	 * @return ResponseEntity
 	 */
-	@GetMapping("/delete")
-	public ResponseEntity<String> deleteCategorie(@RequestParam(required = false, defaultValue = "") final String slug) {
-		if (slug.isEmpty()) {
-			return ResponseEntity.status(404).body("Page introuvable");
-		}
-
+	@DeleteMapping("/{slug}")
+	public ResponseEntity<String> deleteCategorie(@PathVariable final String slug) {
 		this.categorieService.deleteCategorie(slug);
 		return ResponseEntity.ok("Catégorie supprimée");
 	}
