@@ -65,6 +65,7 @@ public class MotoModel {
     @OneToMany(mappedBy = "moto", cascade = CascadeType.REMOVE)
     private Collection<MediaModel> medias;
 
-    @OneToOne(mappedBy = "moto", cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "info_id")
     private InfoModel infos;
 }

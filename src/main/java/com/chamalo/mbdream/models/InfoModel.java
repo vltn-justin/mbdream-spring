@@ -54,7 +54,6 @@ public class InfoModel {
     @Column
     private Double consommation;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "moto_id")
+    @OneToOne(mappedBy = "infos", cascade = CascadeType.PERSIST)
     private MotoModel moto;
 }
