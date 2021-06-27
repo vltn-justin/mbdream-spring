@@ -48,7 +48,7 @@ public class MediaController {
      *
      * @throws IOException Throw with file when you want to save media
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<String> addMedia(@ModelAttribute final MediaDTO mediaDTO) throws IOException {
         if (this.mediaService.addMedia(mediaDTO).getIdMedia() != null) {
             return ResponseEntity.ok("Media ajouter à la moto");

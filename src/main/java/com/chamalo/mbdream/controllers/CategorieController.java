@@ -44,7 +44,7 @@ public class CategorieController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<String> addCategorie(@RequestBody final CategorieDTO categorieDTO) {
         if (this.categorieService.addCategorie(categorieDTO).getIdCategorie() != null) {
             return ResponseEntity.ok("Catégorie ajoutée");
@@ -57,7 +57,7 @@ public class CategorieController {
      *
      * @return Iterable of CategorieModel
      */
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Object> findAllCategorie() {
 
         Iterable<CategorieModel> allCategorie = this.categorieService.findAllCategorie();

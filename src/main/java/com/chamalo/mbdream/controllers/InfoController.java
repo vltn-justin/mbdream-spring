@@ -46,7 +46,7 @@ public class InfoController {
      *
      * @return ResponseEntity<String>
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<String> addInfo(@RequestBody final InfoDTO infoDTO) {
         try {
             this.infoService.addInfo(infoDTO);

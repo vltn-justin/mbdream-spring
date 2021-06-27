@@ -46,7 +46,7 @@ public class MarqueController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<String> addMarque(@RequestBody final MarqueDTO marqueDTO) {
         final MarqueModel newMarque = this.marqueService.addMarque(marqueDTO);
         if (newMarque.getIdMarque() != null) {
@@ -98,7 +98,7 @@ public class MarqueController {
      *
      * @return Response Entity
      */
-    @GetMapping("")
+    @GetMapping
     private ResponseEntity<Object> findAllByPage(
             @RequestParam(defaultValue = "0", required = false) final Integer page) {
         Iterable<MarqueModel> allMarque = this.marqueService.findAllMarqueByPage(page);
