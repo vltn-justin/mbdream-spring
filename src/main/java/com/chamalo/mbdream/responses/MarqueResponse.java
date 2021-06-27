@@ -13,40 +13,41 @@ import java.util.Map;
  */
 public class MarqueResponse implements IResponse<MarqueModel> {
 
-	@Override
-	public void basicResponse(final Map<String, Object> map, final MarqueModel marque) {
-		this.infoResponse(map, marque);
+    @Override
+    public void basicResponse(final Map<String, Object> map, final MarqueModel marque) {
+        this.infoResponse(map, marque);
 
-		map.put("dateCreation", marque.getDateCreation());
-		map.put("descriptionMarque", marque.getDescriptionMarque());
+        map.put("dateCreation", marque.getDateCreation());
+        map.put("descriptionMarque", marque.getDescriptionMarque());
 
-		if (marque.getMotos() != null) {
-			map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
-		} else {
-			map.put("motos", null);
-		}
+        if (marque.getMotos() != null) {
+            map.put("motos", motoToMap(marque.getMotos(), ResponseType.INFO));
+        } else {
+            map.put("motos", null);
+        }
 
-	}
+    }
 
-	@Override
-	public void infoResponse(final Map<String, Object> map, final MarqueModel marque) {
-		this.lightResponse(map, marque);
-		map.put("logoMarque", marque.getLogoMarque());
-	}
+    @Override
+    public void infoResponse(final Map<String, Object> map, final MarqueModel marque) {
+        this.lightResponse(map, marque);
+        map.put("logoMarque", marque.getLogoMarque());
+    }
 
-	@Override
-	public void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
-		map.put("slugMarque", marque.getSlugMarque());
-		map.put("nomMarque", marque.getNomMarque());
-	}
+    @Override
+    public void lightResponse(final Map<String, Object> map, final MarqueModel marque) {
+        map.put("slugMarque", marque.getSlugMarque());
+        map.put("nomMarque", marque.getNomMarque());
+    }
 
-	private List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection, final ResponseType type) {
-		List<Map<String, Object>> listMoto = new ArrayList<>();
+    private List<Map<String, Object>> motoToMap(final Collection<MotoModel> motoModelCollection,
+                                                final ResponseType type) {
+        List<Map<String, Object>> listMoto = new ArrayList<>();
 
-		for (MotoModel moto : motoModelCollection) {
-			listMoto.add(new MotoResponse().buildResponse(type, moto));
-		}
+        for (MotoModel moto : motoModelCollection) {
+            listMoto.add(new MotoResponse().buildResponse(type, moto));
+        }
 
-		return listMoto;
-	}
+        return listMoto;
+    }
 }

@@ -33,7 +33,7 @@ public class MediaDTO {
      *
      * @return Boolean isVideo
      */
-    public boolean getIsVideo () {
+    public boolean getIsVideo() {
         return isVideo;
     }
 
@@ -42,7 +42,7 @@ public class MediaDTO {
      *
      * @param isVideo Boolean isVideo
      */
-    public void setIsVideo (final boolean isVideo) {
+    public void setIsVideo(final boolean isVideo) {
         this.isVideo = isVideo;
     }
 }

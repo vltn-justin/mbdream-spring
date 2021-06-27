@@ -36,136 +36,143 @@ import java.util.Map;
 @RestController
 @RequestMapping("/motos")
 public class MotoController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MotoController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MotoController.class);
 
-	private final MotoService motoService;
+    private final MotoService motoService;
 
-	@Autowired
-	public MotoController(final MotoService motoService) {
-		this.motoService = motoService;
-	}
+    @Autowired
+    public MotoController(final MotoService motoService) {
+        this.motoService = motoService;
+    }
 
-	/**
-	 * Method to add a Moto to database
-	 *
-	 * @param motoDTO MotoRequest with all data
-	 * @return ResponseEntity
-	 */
-	@PostMapping
-	public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
-		final MotoModel moto = this.motoService.addMoto(motoDTO);
-		if (moto.getIdMoto() != null) {
-			return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
-		}
-		return ResponseEntity.status(500).body("Impossible d'ajouter la moto, essayez à nouveau");
-	}
+    /**
+     * Method to add a Moto to database
+     *
+     * @param motoDTO MotoRequest with all data
+     *
+     * @return ResponseEntity
+     */
+    @PostMapping
+    public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
+        final MotoModel moto = this.motoService.addMoto(motoDTO);
+        if (moto.getIdMoto() != null) {
+            return ResponseEntity.ok("Moto ajoutée - " + moto.getSlugMoto());
+        }
+        return ResponseEntity.status(500).body("Impossible d'ajouter la moto, essayez à nouveau");
+    }
 
-	/**
-	 * Method to update data of a Moto
-	 *
-	 * @param slugMoto Slug of moto
-	 * @param motoDTO MotoRequest with all data
-	 * @return MBDreamException if not found, updatedmoto otherwise
-	 */
-	@PutMapping("/{slugMoto}")
-	public ResponseEntity<String> updateMoto(@PathVariable final String slugMoto, @RequestBody final MotoDTO motoDTO) {
-		try {
-			motoDTO.setSlugMoto(slugMoto);
-			this.motoService.updateMoto(motoDTO);
-			return ResponseEntity.ok("Moto mise à jour");
-		} catch (final MBDreamException e) {
-			LOGGER.warn(e.getMessage(), e);
-			return ResponseEntity.status(500).body(e.getMessage());
-		}
-	}
+    /**
+     * Method to update data of a Moto
+     *
+     * @param slugMoto Slug of moto
+     * @param motoDTO  MotoRequest with all data
+     *
+     * @return MBDreamException if not found, updatedmoto otherwise
+     */
+    @PutMapping("/{slugMoto}")
+    public ResponseEntity<String> updateMoto(@PathVariable final String slugMoto, @RequestBody final MotoDTO motoDTO) {
+        try {
+            motoDTO.setSlugMoto(slugMoto);
+            this.motoService.updateMoto(motoDTO);
+            return ResponseEntity.ok("Moto mise à jour");
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 
-	/**
-	 * Method to find a Moto with is slug
-	 *
-	 * @param slug Slug
-	 * @return ResponseEntity of MotoModel
-	 */
-	@GetMapping(value = "/{slug}")
-	public ResponseEntity<Object> findMotoBySlug(@PathVariable final String slug) {
-		try {
-			final var moto = this.motoService.findMotoBySlug(slug);
-			return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
-		} catch (final MBDreamException e) {
-			LOGGER.warn(e.getMessage(), e);
-			return ResponseEntity.status(404).body(e.getMessage());
-		}
-	}
+    /**
+     * Method to find a Moto with is slug
+     *
+     * @param slug Slug
+     *
+     * @return ResponseEntity of MotoModel
+     */
+    @GetMapping(value = "/{slug}")
+    public ResponseEntity<Object> findMotoBySlug(@PathVariable final String slug) {
+        try {
+            final var moto = this.motoService.findMotoBySlug(slug);
+            return ResponseEntity.ok(new MotoResponse().buildResponse(ResponseType.BASIC, moto));
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
-	/**
-	 * Method to get all moto, limited by 10 per page
-	 *
-	 * @return Response Entity
-	 */
-	@GetMapping
-	public ResponseEntity<Object> findMotoByPage(@RequestParam(required = false, defaultValue = "0") final Integer page) {
-		try {
-			final Collection<MotoModel> allMoto = this.motoService.findMotoByPage(page);
+    /**
+     * Method to get all moto, limited by 10 per page
+     *
+     * @return Response Entity
+     */
+    @GetMapping
+    public ResponseEntity<Object> findMotoByPage(
+            @RequestParam(required = false, defaultValue = "0") final Integer page) {
+        try {
+            final Collection<MotoModel> allMoto = this.motoService.findMotoByPage(page);
 
-			final Map<String, Object> mapResponse = new HashMap<>();
-			final Long count = this.countAllMoto().getBody();
-			mapResponse.put("count", count);
+            final Map<String, Object> mapResponse = new HashMap<>();
+            final Long count = this.countAllMoto().getBody();
+            mapResponse.put("count", count);
 
-			if (count == null) {
-				mapResponse.put("haveNext", false);
-			} else {
-				mapResponse.put("haveNext", count / 10 > page);
-			}
+            if (count == null) {
+                mapResponse.put("haveNext", false);
+            } else {
+                mapResponse.put("haveNext", count / 10 > page);
+            }
 
-			return listMotoToMap(allMoto, mapResponse);
-		} catch (final MBDreamException e) {
-			LOGGER.warn(e.getMessage(), e);
-			return ResponseEntity.status(404).body(e.getMessage());
-		}
-	}
+            return listMotoToMap(allMoto, mapResponse);
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
-	/**
-	 * Method to count all motos inside database
-	 *
-	 * @return ResponseEntity<Long>
-	 */
-	@GetMapping("/count")
-	public ResponseEntity<Long> countAllMoto() {
-		return ResponseEntity.ok(this.motoService.countAllMoto());
-	}
+    /**
+     * Method to count all motos inside database
+     *
+     * @return ResponseEntity<Long>
+     */
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAllMoto() {
+        return ResponseEntity.ok(this.motoService.countAllMoto());
+    }
 
-	/**
-	 * Method to delete a moto with is slug
-	 *
-	 * @param slug Slug of moto
-	 * @return ResponseEntity
-	 */
-	@DeleteMapping("/{slug}")
-	public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
-		try {
-			this.motoService.deleteMoto(slug);
-			return ResponseEntity.ok("Moto supprimée");
-		} catch (final MBDreamException e) {
-			LOGGER.warn(e.getMessage(), e);
-			return ResponseEntity.status(500).body(e.getMessage());
-		}
-	}
+    /**
+     * Method to delete a moto with is slug
+     *
+     * @param slug Slug of moto
+     *
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<String> deleteMoto(@PathVariable final String slug) {
+        try {
+            this.motoService.deleteMoto(slug);
+            return ResponseEntity.ok("Moto supprimée");
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 
-	/**
-	 * Method to build response for each moto from a Collection
-	 *
-	 * @param motoModels  Collection of MotoModels
-	 * @param mapResponse Map where to put response
-	 * @return ResponseEntity
-	 */
-	private ResponseEntity<Object> listMotoToMap(final Collection<MotoModel> motoModels, final Map<String, Object> mapResponse) {
-		final List<Map<String, Object>> mapList = new ArrayList<>();
+    /**
+     * Method to build response for each moto from a Collection
+     *
+     * @param motoModels  Collection of MotoModels
+     * @param mapResponse Map where to put response
+     *
+     * @return ResponseEntity
+     */
+    private ResponseEntity<Object> listMotoToMap(final Collection<MotoModel> motoModels,
+                                                 final Map<String, Object> mapResponse) {
+        final List<Map<String, Object>> mapList = new ArrayList<>();
 
-		for (final MotoModel moto : motoModels) {
-			mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
-		}
+        for (final MotoModel moto : motoModels) {
+            mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
+        }
 
-		mapResponse.put("results", mapList);
+        mapResponse.put("results", mapList);
 
-		return ResponseEntity.ok(mapResponse);
-	}
+        return ResponseEntity.ok(mapResponse);
+    }
 }

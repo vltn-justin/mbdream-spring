@@ -22,7 +22,7 @@ public class PasswordEncoderJava {
      *
      * @return salt generated
      */
-    public byte[] generateSalt () {
+    public byte[] generateSalt() {
         var secureRandom = new SecureRandom();
         var salt = new byte[16];
         secureRandom.nextBytes(salt);
@@ -37,7 +37,7 @@ public class PasswordEncoderJava {
      *
      * @return Encoded password
      */
-    public byte[] generatePassword (String password, byte[] salt) {
+    public byte[] generatePassword(String password, byte[] salt) {
         try {
             var messageDigest = MessageDigest.getInstance("SHA-512");
             messageDigest.update(salt);

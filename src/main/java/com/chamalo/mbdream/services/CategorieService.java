@@ -17,7 +17,7 @@ public class CategorieService {
     private final MotoRepository motoRepository;
 
     @Autowired
-    public CategorieService (final CategorieRepository categorieRepository, final MotoRepository motoRepository) {
+    public CategorieService(final CategorieRepository categorieRepository, final MotoRepository motoRepository) {
         this.categorieRepository = categorieRepository;
         this.motoRepository = motoRepository;
     }
@@ -29,7 +29,7 @@ public class CategorieService {
      *
      * @return ResponseEntity
      */
-    public CategorieModel addCategorie (final CategorieDTO categorieDTO) {
+    public CategorieModel addCategorie(final CategorieDTO categorieDTO) {
         CategorieModel newCategorie = new CategorieModel();
 
         newCategorie.setNomCategorie(categorieDTO.getNomCategorie());
@@ -47,7 +47,7 @@ public class CategorieService {
      *
      * @return Category or MBDreamException
      */
-    public CategorieModel findCategorieBySlug (final String slug) {
+    public CategorieModel findCategorieBySlug(final String slug) {
         return this.categorieRepository.findCategorieBySlug(slug).orElseThrow(
                 () -> new MBDreamException("Impossible de trouver la catégorie avec le slug " + slug)
         );
@@ -58,12 +58,13 @@ public class CategorieService {
      *
      * @return Iterable of CategorieModel
      */
-    public Iterable<CategorieModel> findAllCategorie () {
+    public Iterable<CategorieModel> findAllCategorie() {
         return this.categorieRepository.findAll();
     }
 
     /**
      * Method to delete a Category with is slug
+     *
      * @param slug Slug of Category
      */
     public void deleteCategorie(final String slug) {
