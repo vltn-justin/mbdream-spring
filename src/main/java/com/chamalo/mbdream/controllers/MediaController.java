@@ -1,10 +1,13 @@
 package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.dto.MediaDTO;
+import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MediaModel;
 import com.chamalo.mbdream.responses.MediaResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MediaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +34,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/medias")
 public class MediaController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
 
     private final MediaService mediaService;
 
@@ -67,15 +72,21 @@ public class MediaController {
     @GetMapping("/{slugMoto}")
     public ResponseEntity<Object> getAllMedia(@PathVariable final String slugMoto,
                                               @RequestParam(required = false, defaultValue = "false") final Boolean isVideo) {
-        Iterable<MediaModel> allMedia = this.mediaService.findAllMedia(slugMoto, isVideo);
+        try {
+            final Iterable<MediaModel> allMedia = this.mediaService.findAllMedia(slugMoto, isVideo);
 
-        List<Map<String, Object>> mapList = new ArrayList<>();
+            final List<Map<String, Object>> mapList = new ArrayList<>();
 
-        for (MediaModel media : allMedia) {
-            mapList.add(new MediaResponse().buildResponse(ResponseType.BASIC, media));
+            for (MediaModel media : allMedia) {
+                mapList.add(new MediaResponse().buildResponse(ResponseType.BASIC, media));
+            }
+
+            return ResponseEntity.ok(mapList);
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
         }
 
-        return ResponseEntity.ok(mapList);
     }
 
     /**
@@ -87,7 +98,12 @@ public class MediaController {
      */
     @DeleteMapping("/{idMedia}")
     public ResponseEntity<String> deleteMedia(@PathVariable final String idMedia) {
-        this.mediaService.deleteMedia(idMedia);
-        return ResponseEntity.ok("Media supprimer");
+        try {
+            this.mediaService.deleteMedia(idMedia);
+            return ResponseEntity.ok("Media supprimer");
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

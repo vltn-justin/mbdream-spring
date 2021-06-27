@@ -1,10 +1,13 @@
 package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.dto.MarqueDTO;
+import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.MarqueModel;
 import com.chamalo.mbdream.responses.MarqueResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.MarqueService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +34,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/marques")
 public class MarqueController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MarqueController.class);
 
     private final MarqueService marqueService;
 
@@ -68,11 +73,9 @@ public class MarqueController {
                                                @RequestBody final MarqueDTO marqueDTO) {
         marqueDTO.setSlugMarque(slug);
 
-        if (this.marqueService.updateMarque(marqueDTO) != null) {
-            return ResponseEntity.ok("Marque mise à jour");
-        }
+        this.marqueService.updateMarque(marqueDTO);
 
-        return ResponseEntity.ok("Impossible de mettre à jour la marque, essayez à nouveau");
+        return ResponseEntity.ok("Marque mise à jour");
     }
 
     /**
@@ -84,13 +87,14 @@ public class MarqueController {
      */
     @GetMapping("/{slugMarque}")
     public ResponseEntity<Object> findMarqueBySlug(@PathVariable final String slugMarque) {
-        MarqueModel marque = this.marqueService.findMarqueBySlug(slugMarque);
+        try {
+            final MarqueModel marque = this.marqueService.findMarqueBySlug(slugMarque);
 
-        if (marque != null) {
             return ResponseEntity.ok(new MarqueResponse().buildResponse(ResponseType.BASIC, marque));
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
         }
-
-        return ResponseEntity.status(404).body("Marque introuvable");
     }
 
     /**
@@ -101,15 +105,21 @@ public class MarqueController {
     @GetMapping
     private ResponseEntity<Object> findAllByPage(
             @RequestParam(defaultValue = "0", required = false) final Integer page) {
-        Iterable<MarqueModel> allMarque = this.marqueService.findAllMarqueByPage(page);
+        try {
+            final Iterable<MarqueModel> allMarque = this.marqueService.findAllMarqueByPage(page);
 
-        List<Map<String, Object>> mapList = new ArrayList<>();
+            final List<Map<String, Object>> mapList = new ArrayList<>();
 
-        for (MarqueModel marque : allMarque) {
-            mapList.add(new MarqueResponse().buildResponse(ResponseType.INFO, marque));
+            for (MarqueModel marque : allMarque) {
+                mapList.add(new MarqueResponse().buildResponse(ResponseType.INFO, marque));
+            }
+
+            return ResponseEntity.ok(mapList);
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
         }
 
-        return ResponseEntity.ok(mapList);
     }
 
     /**
@@ -131,7 +141,12 @@ public class MarqueController {
      */
     @DeleteMapping("/{slugMarque}")
     public ResponseEntity<String> deleteMarque(@PathVariable final String slugMarque) {
-        this.marqueService.deleteMarque(slugMarque);
-        return ResponseEntity.ok("Marque supprimé");
+        try {
+            this.marqueService.deleteMarque(slugMarque);
+            return ResponseEntity.ok("Marque supprimé");
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

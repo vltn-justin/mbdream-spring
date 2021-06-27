@@ -86,12 +86,13 @@ public class InfoController {
      */
     @GetMapping("/{slugMoto}")
     public ResponseEntity<Object> getInfoMoto(@PathVariable final String slugMoto) {
-        InfoModel infos = this.infoService.findInfoMoto(slugMoto);
+        try {
+            final InfoModel infos = this.infoService.findInfoMoto(slugMoto);
 
-        if (infos == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pas d'infos pour cette moto");
+            return ResponseEntity.ok(new InfoResponse().buildResponse(ResponseType.BASIC, infos));
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
         }
-
-        return ResponseEntity.ok(new InfoResponse().buildResponse(ResponseType.BASIC, infos));
     }
 }

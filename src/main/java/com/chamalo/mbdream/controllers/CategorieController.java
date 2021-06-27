@@ -1,10 +1,13 @@
 package com.chamalo.mbdream.controllers;
 
 import com.chamalo.mbdream.dto.CategorieDTO;
+import com.chamalo.mbdream.exceptions.MBDreamException;
 import com.chamalo.mbdream.models.CategorieModel;
 import com.chamalo.mbdream.responses.CategorieResponse;
 import com.chamalo.mbdream.responses.ResponseType;
 import com.chamalo.mbdream.services.CategorieService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +32,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/categories")
 public class CategorieController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategorieController.class);
 
     private final CategorieService categorieService;
 
@@ -81,13 +86,14 @@ public class CategorieController {
      */
     @GetMapping("/{slug}")
     public ResponseEntity<Object> findCategorieBySlug(@PathVariable final String slug) {
-        final CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
+        try {
+            final CategorieModel categorie = this.categorieService.findCategorieBySlug(slug);
 
-        if (categorie != null) {
             return ResponseEntity.ok(new CategorieResponse().buildResponse(ResponseType.BASIC, categorie));
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     /**
@@ -99,7 +105,12 @@ public class CategorieController {
      */
     @DeleteMapping("/{slug}")
     public ResponseEntity<String> deleteCategorie(@PathVariable final String slug) {
-        this.categorieService.deleteCategorie(slug);
-        return ResponseEntity.ok("Catégorie supprimée");
+        try {
+            this.categorieService.deleteCategorie(slug);
+            return ResponseEntity.ok("Catégorie supprimée");
+        } catch (final MBDreamException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
