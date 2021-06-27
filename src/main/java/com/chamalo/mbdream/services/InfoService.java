@@ -44,7 +44,7 @@ public class InfoService {
      */
     public InfoModel findInfoMoto(final String slugMoto) {
         return this.infoRepository.findInfoMoto(slugMoto)
-                .orElseThrow(() -> new MBDreamException("Impossible de trouver une moto avec ces infos"));
+                .orElseThrow(() -> new MBDreamException("Impossible de trouver des infos pour cette moto"));
     }
 
     /**
