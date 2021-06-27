@@ -49,13 +49,6 @@ public class MediaService {
             // Si on ajoute le media via lien
             mediaModel.setLienMedia(mediaDTO.getUrlMedia());
         } else {
-//            this.saveMediaIntoFolder(mediaRequest);
-//
-//            if (mediaRequest.getIsVideo()) {
-//                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/video/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
-//            } else {
-//                mediaModel.setLienMedia("http://chamalo-web.ddns.net:16650/media/images/moto/" + mediaRequest.getSlugMoto() + "/" + mediaRequest.getFileMedia().getOriginalFilename());
-//            }
             mediaModel.setLienMedia(this.uploadFile(
                     "image/moto/" + mediaDTO.getSlugMoto() + "/" + mediaDTO.getFileMedia().getOriginalFilename(),
                     mediaDTO.getFileMedia()));
@@ -86,36 +79,6 @@ public class MediaService {
     }
 
     /**
-     * Method to save a media into folder
-     *
-     * @param mediaDTO MediaRequest
-     *
-     * @throws IOException File exception
-     */
-    private void saveMediaIntoFolder(final MediaDTO mediaDTO) throws IOException {
-        // Changer le path pour le final
-        String path = "/home/pi/mbdream-spring/resources/static/";
-
-        path += (mediaDTO.getIsVideo() ? "videos/moto/" : "images/moto/");
-        path += mediaDTO.getSlugMoto();
-
-        final String pathFile = path + "/" + mediaDTO.getFileMedia().getOriginalFilename();
-
-        final File folder = new File(path);
-
-        // Create folder if doesn't exist
-        if (!folder.exists()) {
-            if (!folder.mkdir()) {
-                throw new MBDreamException("Erreur à la création du dossier de sauvegarde");
-            }
-        }
-
-        final File file = new File(pathFile);
-
-        mediaDTO.getFileMedia().transferTo(file);
-    }
-
-    /**
      * Method to upload a file into firebase storage
      *
      * @param storageFilePath File path where the file will be saved
@@ -126,9 +89,6 @@ public class MediaService {
      * @throws IOException Exception for FileInputStream
      */
     public String uploadFile(final String storageFilePath, final MultipartFile multipartFile) throws IOException {
-//        final File file = ResourceUtils.getFile("classpath:motorbike-dream-firebase-adminsdk-ddhec-d3f4212187.json");
-
-//        final FileInputStream serviceAccount = new FileInputStream(file);
         final InputStream serviceAccount = firebaseCredentials.getInputStream();
 
         final FirebaseOptions options = FirebaseOptions.builder()
