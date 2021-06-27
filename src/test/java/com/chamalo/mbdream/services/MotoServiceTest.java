@@ -26,12 +26,15 @@ import java.util.Optional;
 @SpringBootTest
 class MotoServiceTest {
 
-    private final static MotoModel MOTO_TEST = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", null, null,
+    private final static MotoModel MOTO_TEST = new MotoModel(1L, "slug-moto", "Moto", "description", null, "bgc.png",
+            null, null,
             null, null);
 
-    private final static MotoDTO MOTO_DTO = new MotoDTO("slug-dto", "Moto Dto", "description_dto", false, "slug-marque", "slug-cate");
+    private final static MotoDTO MOTO_DTO = new MotoDTO("slug-dto", "Moto Dto", "description_dto", false, "slug-marque",
+            "slug-cate");
 
-    private final static MarqueModel MARQUE_MODEL = new MarqueModel(1L, "marque", "Marque", null, "description", "logo", null);
+    private final static MarqueModel MARQUE_MODEL = new MarqueModel(1L, "marque", "Marque", null, "description", "logo",
+            null);
 
     private final static CategorieModel CATEGORIE_MODEL = new CategorieModel(1L, "category", "Categorie", null);
 
@@ -154,7 +157,8 @@ class MotoServiceTest {
      */
     @Test
     void testUpdateKOMarque() {
-        Mockito.when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenThrow(new MBDreamException("Marque introuvable"));
+        Mockito.when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque()))
+                .thenThrow(new MBDreamException("Marque introuvable"));
 
         Assertions.assertThrows(MBDreamException.class, () -> this.service.updateMoto(MOTO_DTO));
     }
@@ -164,7 +168,8 @@ class MotoServiceTest {
      */
     @Test
     void testUpdateKOCategorie() {
-        Mockito.when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie())).thenThrow(new MBDreamException("Marque introuvable"));
+        Mockito.when(this.categorieService.findCategorieBySlug(MOTO_DTO.getSlugCategorie()))
+                .thenThrow(new MBDreamException("Marque introuvable"));
 
         Assertions.assertThrows(MBDreamException.class, () -> this.service.updateMoto(MOTO_DTO));
     }
@@ -187,7 +192,8 @@ class MotoServiceTest {
     @Test
     void testAddKO2() {
         Mockito.when(this.motoRepository.findMotoBySlug("moto-dto")).thenReturn(Optional.empty());
-        Mockito.when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque())).thenThrow(new MBDreamException("Marque introuvable"));
+        Mockito.when(this.marqueService.findMarqueBySlug(MOTO_DTO.getSlugMarque()))
+                .thenThrow(new MBDreamException("Marque introuvable"));
 
         Assertions.assertThrows(MBDreamException.class, () -> this.service.addMoto(MOTO_DTO));
     }
@@ -242,7 +248,7 @@ class MotoServiceTest {
      */
     @Test
     void testUpdateOK2() {
-        final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", MARQUE_MODEL,
+        final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, "bgc.png", MARQUE_MODEL,
                 CATEGORIE_MODEL, null, null);
 
         final MotoDTO motoDTO = new MotoDTO("slug-dto", "Moto Dto", "description", false, "slug-marque", "slug-cate");
@@ -261,10 +267,11 @@ class MotoServiceTest {
      */
     @Test
     void testUpdateOK3() {
-        final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, false, "bgc.png", MARQUE_MODEL,
+        final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, "bgc.png", MARQUE_MODEL,
                 CATEGORIE_MODEL, null, null);
 
-        final MotoDTO motoDTO = new MotoDTO("slug-dto", "Moto Dto", "description_dto", false, MARQUE_MODEL.getSlugMarque(),
+        final MotoDTO motoDTO = new MotoDTO("slug-dto", "Moto Dto", "description_dto", false,
+                MARQUE_MODEL.getSlugMarque(),
                 CATEGORIE_MODEL.getSlugCategorie());
 
         Mockito.when(this.motoRepository.findMotoBySlug(MOTO_DTO.getSlugMoto())).thenReturn(Optional.of(motoModel));

@@ -48,9 +48,6 @@ public class MotoModel {
     @Column(columnDefinition = "DATE", nullable = false)
     private Instant dateAjout;
 
-    @Column(columnDefinition = "BOOLEAN", nullable = false)
-    private boolean isFeatured;
-
     @Column(columnDefinition = "TEXT")
     private String backgroundImgMoto;
 
