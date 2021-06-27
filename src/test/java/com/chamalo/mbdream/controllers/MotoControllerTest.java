@@ -111,35 +111,6 @@ class MotoControllerTest {
     }
 
     /**
-     * Test OK for {@link MotoController#findFeaturedMoto()}
-     */
-    @Test
-    void testFeaturedOK() {
-        final MotoModel motoModel = new MotoModel(1L, "slug-moto", "Moto", "description", null, "bgc.png", null, null,
-                null, null);
-
-        Mockito.when(this.service.findFeaturedMoto()).thenReturn(Collections.singletonList(motoModel));
-
-        final ResponseEntity<Object> response = this.controller.findFeaturedMoto();
-
-        Assertions.assertEquals(200, response.getStatusCode().value());
-        Assertions.assertEquals("{results=[{slugMoto=slug-moto, nomMoto=Moto, backgroundImgMoto=bgc.png}]}",
-                response.getBody().toString());
-    }
-
-    /**
-     * Test KO for {@link MotoController#findFeaturedMoto()}
-     */
-    @Test
-    void testFeaturedKO() {
-        Mockito.when(this.service.findFeaturedMoto()).thenThrow(new MBDreamException("Aucune featured moto trouvée"));
-
-        final ResponseEntity<Object> response = this.controller.findFeaturedMoto();
-        Assertions.assertEquals(404, response.getStatusCode().value());
-        Assertions.assertEquals("Aucune featured moto trouvée", response.getBody().toString());
-    }
-
-    /**
      * Test OK for {@link MotoController#deleteMoto(String)}
      */
     @Test

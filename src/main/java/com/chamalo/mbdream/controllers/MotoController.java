@@ -51,7 +51,7 @@ public class MotoController {
 	 * @param motoDTO MotoRequest with all data
 	 * @return ResponseEntity
 	 */
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<String> addMoto(@RequestBody final MotoDTO motoDTO) {
 		final MotoModel moto = this.motoService.addMoto(motoDTO);
 		if (moto.getIdMoto() != null) {
@@ -101,7 +101,7 @@ public class MotoController {
 	 *
 	 * @return Response Entity
 	 */
-	@GetMapping(value = "")
+	@GetMapping
 	public ResponseEntity<Object> findMotoByPage(@RequestParam(required = false, defaultValue = "0") final Integer page) {
 		try {
 			final Collection<MotoModel> allMoto = this.motoService.findMotoByPage(page);
@@ -109,7 +109,12 @@ public class MotoController {
 			final Map<String, Object> mapResponse = new HashMap<>();
 			final Long count = this.countAllMoto().getBody();
 			mapResponse.put("count", count);
-			mapResponse.put("haveNext", count / 10 > page);
+
+			if (count == null) {
+				mapResponse.put("haveNext", false);
+			} else {
+				mapResponse.put("haveNext", count / 10 > page);
+			}
 
 			return listMotoToMap(allMoto, mapResponse);
 		} catch (final MBDreamException e) {
@@ -126,21 +131,6 @@ public class MotoController {
 	@GetMapping("/count")
 	public ResponseEntity<Long> countAllMoto() {
 		return ResponseEntity.ok(this.motoService.countAllMoto());
-	}
-
-	/**
-	 * Method to get all moto featured
-	 *
-	 * @return ResponseEntity Iterable of MotoModel
-	 */
-	@GetMapping("/featured")
-	public ResponseEntity<Object> findFeaturedMoto() {
-		try {
-			return listMotoToMap(this.motoService.findFeaturedMoto(), new HashMap<>());
-		} catch (final MBDreamException e) {
-			LOGGER.warn(e.getMessage(), e);
-			return ResponseEntity.status(404).body(e.getMessage());
-		}
 	}
 
 	/**

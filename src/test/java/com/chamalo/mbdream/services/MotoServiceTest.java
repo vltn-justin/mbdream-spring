@@ -78,33 +78,6 @@ class MotoServiceTest {
     }
 
     /**
-     * Test OK for {@link MotoService#findFeaturedMoto()}
-     */
-    @Test
-    void testFindFeaturedOK() {
-        Mockito.when(this.motoRepository.findFeaturedMoto()).thenReturn(Collections.singletonList(MOTO_TEST));
-
-        final Collection<MotoModel> motoModels = this.service.findFeaturedMoto();
-
-        Assertions.assertNotNull(motoModels);
-        Assertions.assertEquals(1, motoModels.size());
-
-        final MotoModel motoFound = motoModels.iterator().next();
-
-        Assertions.assertEquals(MOTO_TEST, motoFound);
-    }
-
-    /**
-     * Test KO for {@link MotoService#findFeaturedMoto()}
-     */
-    @Test
-    void testFindFeaturedKO() {
-        Mockito.when(this.motoRepository.findFeaturedMoto()).thenReturn(Collections.emptyList());
-
-        Assertions.assertThrows(MBDreamException.class, () -> this.service.findFeaturedMoto());
-    }
-
-    /**
      * Test OK for {@link MotoService#countAllMoto()}
      */
     @Test

@@ -48,21 +48,6 @@ public class MotoService {
     }
 
     /**
-     * Method to get all moto featured
-     *
-     * @return Iterable of MotoModel
-     */
-    public Collection<MotoModel> findFeaturedMoto() {
-        final Collection<MotoModel> motoModels = this.motoRepository.findFeaturedMoto();
-
-        if (!motoModels.isEmpty()) {
-            return motoModels;
-        }
-
-        throw new MBDreamException("Aucune featured moto trouvée");
-    }
-
-    /**
      * Method to count all moto inside database
      *
      * @return Long
