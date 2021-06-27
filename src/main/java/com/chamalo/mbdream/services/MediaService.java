@@ -8,7 +8,6 @@ import com.chamalo.mbdream.repositories.MediaRepository;
 import com.chamalo.mbdream.repositories.MotoRepository;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Acl;
-import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
@@ -18,9 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -43,7 +40,7 @@ public class MediaService {
                 () -> new MBDreamException("Impossible de trouver la moto avec le slug " + mediaDTO.getSlugMoto())
         );
 
-        MediaModel mediaModel = new MediaModel();
+        var mediaModel = new MediaModel();
 
         if (mediaDTO.getUrlMedia() != null && mediaDTO.getUrlMedia().length() > 1) {
             // Si on ajoute le media via lien
@@ -55,7 +52,7 @@ public class MediaService {
         }
 
         mediaModel.setDescriptionMedia(mediaDTO.getDescriptionMedia());
-        mediaModel.setIsVideo(mediaDTO.getIsVideo());
+        mediaModel.setIsVideo(mediaDTO.isVideo());
         mediaModel.setMoto(moto);
 
         mediaModel = this.mediaRepository.save(mediaModel);
@@ -89,7 +86,7 @@ public class MediaService {
      * @throws IOException Exception for FileInputStream
      */
     public String uploadFile(final String storageFilePath, final MultipartFile multipartFile) throws IOException {
-        final InputStream serviceAccount = firebaseCredentials.getInputStream();
+        final var serviceAccount = firebaseCredentials.getInputStream();
 
         final FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -100,9 +97,9 @@ public class MediaService {
             FirebaseApp.initializeApp(options, "mbdream_bucket");
         }
 
-        final Bucket bucket = StorageClient.getInstance(FirebaseApp.getInstance("mbdream_bucket")).bucket();
+        final var bucket = StorageClient.getInstance(FirebaseApp.getInstance("mbdream_bucket")).bucket();
 
-        final InputStream tempFile = multipartFile.getInputStream();
+        final var tempFile = multipartFile.getInputStream();
 
         bucket.create(storageFilePath, tempFile, "media");
         // Make file readable public

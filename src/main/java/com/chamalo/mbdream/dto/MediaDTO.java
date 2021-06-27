@@ -33,7 +33,7 @@ public class MediaDTO {
      *
      * @return Boolean isVideo
      */
-    public boolean getIsVideo() {
+    public boolean isVideo() {
         return isVideo;
     }
 

@@ -35,14 +35,14 @@ public class MarqueService {
      * @return ResponseEntity
      */
     public MarqueModel addMarque(final MarqueDTO marqueDTO) {
-        MarqueModel newMarque = new MarqueModel();
+        final var newMarque = new MarqueModel();
 
         newMarque.setNomMarque(marqueDTO.getNomMarque());
         newMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
         newMarque.setLogoMarque(marqueDTO.getLogoMarque());
         newMarque.setDateCreation(marqueDTO.getDateCreation());
 
-        Slugify slug = new Slugify();
+        final var slug = new Slugify();
         newMarque.setSlugMarque(slug.slugify(marqueDTO.getNomMarque()));
 
         return this.marqueRepository.save(newMarque);

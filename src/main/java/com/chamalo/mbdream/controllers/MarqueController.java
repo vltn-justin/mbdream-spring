@@ -103,7 +103,7 @@ public class MarqueController {
      * @return Response Entity
      */
     @GetMapping
-    private ResponseEntity<Object> findAllByPage(
+    public ResponseEntity<Object> findAllByPage(
             @RequestParam(defaultValue = "0", required = false) final Integer page) {
         try {
             final Iterable<MarqueModel> allMarque = this.marqueService.findAllMarqueByPage(page);

@@ -30,11 +30,11 @@ public class CategorieService {
      * @return ResponseEntity
      */
     public CategorieModel addCategorie(final CategorieDTO categorieDTO) {
-        CategorieModel newCategorie = new CategorieModel();
+        final var newCategorie = new CategorieModel();
 
         newCategorie.setNomCategorie(categorieDTO.getNomCategorie());
 
-        Slugify slug = new Slugify();
+        final var slug = new Slugify();
         newCategorie.setSlugCategorie(slug.slugify(categorieDTO.getNomCategorie()));
 
         return this.categorieRepository.save(newCategorie);
