@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,6 +48,6 @@ public class MarqueModel {
     @Column
     private String logoMarque;
 
-    @OneToMany(mappedBy = "marque")
+    @OneToMany(mappedBy = "marque", cascade = CascadeType.REMOVE)
     private Collection<MotoModel> motos;
 }

@@ -84,18 +84,16 @@ public class MarqueService {
      * Method to update data of a Marque
      *
      * @param marqueDTO MarqueRequest with all data
-     *
-     * @return updatedMarque
      */
-    public MarqueModel updateMarque(final MarqueDTO marqueDTO) {
-        MarqueModel updatedMarque = this.findMarqueBySlug(marqueDTO.getSlugMarque());
+    public void updateMarque(final MarqueDTO marqueDTO) {
+        final var updatedMarque = this.findMarqueBySlug(marqueDTO.getSlugMarque());
 
         updatedMarque.setNomMarque(marqueDTO.getNomMarque());
         updatedMarque.setDescriptionMarque(marqueDTO.getDescriptionMarque());
         updatedMarque.setLogoMarque(marqueDTO.getLogoMarque());
         updatedMarque.setDateCreation(marqueDTO.getDateCreation());
 
-        return this.marqueRepository.save(updatedMarque);
+        this.marqueRepository.save(updatedMarque);
     }
 
     /**
@@ -104,11 +102,7 @@ public class MarqueService {
      * @param slug Slug of marque to delete
      */
     public void deleteMarque(final String slug) {
-        final MarqueModel marque = this.findMarqueBySlug(slug);
-
-        for (MotoModel moto : marque.getMotos()) {
-            motoService.deleteMoto(moto.getIdMoto().toString());
-        }
+        final var marque = this.findMarqueBySlug(slug);
 
         this.marqueRepository.delete(marque);
     }

@@ -2,12 +2,28 @@ package com.chamalo.mbdream.responses;
 
 import com.chamalo.mbdream.models.MotoModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Class to build a JSON response for Moto
  */
 public class MotoResponse implements IResponse<MotoModel> {
+
+    public List<Map<String, Object>> listResponse(final Collection<MotoModel> models) {
+        final var motos = new ArrayList<Map<String, Object>>();
+
+        for (final var moto : models) {
+            final var mapMoto = new LinkedHashMap<String, Object>();
+            this.lightResponse(mapMoto, moto);
+            motos.add(mapMoto);
+        }
+
+        return motos;
+    }
 
     @Override
     public void basicResponse(final Map<String, Object> map, final MotoModel model) {

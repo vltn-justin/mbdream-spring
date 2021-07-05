@@ -21,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -120,7 +118,9 @@ public class MotoController {
                 mapResponse.put("haveNext", count / 10 > page);
             }
 
-            return listMotoToMap(allMoto, mapResponse);
+            mapResponse.put("results", new MotoResponse().listResponse(allMoto));
+
+            return ResponseEntity.ok(mapResponse);
         } catch (final MBDreamException e) {
             LOGGER.warn(e.getMessage(), e);
             return ResponseEntity.status(404).body(e.getMessage());
@@ -153,26 +153,5 @@ public class MotoController {
             LOGGER.warn(e.getMessage(), e);
             return ResponseEntity.status(500).body(e.getMessage());
         }
-    }
-
-    /**
-     * Method to build response for each moto from a Collection
-     *
-     * @param motoModels  Collection of MotoModels
-     * @param mapResponse Map where to put response
-     *
-     * @return ResponseEntity
-     */
-    private ResponseEntity<Object> listMotoToMap(final Collection<MotoModel> motoModels,
-                                                 final Map<String, Object> mapResponse) {
-        final List<Map<String, Object>> mapList = new ArrayList<>();
-
-        for (final MotoModel moto : motoModels) {
-            mapList.add(new MotoResponse().buildResponse(ResponseType.LIGHT, moto));
-        }
-
-        mapResponse.put("results", mapList);
-
-        return ResponseEntity.ok(mapResponse);
     }
 }

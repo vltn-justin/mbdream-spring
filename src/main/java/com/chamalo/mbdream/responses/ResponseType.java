@@ -13,7 +13,7 @@ public enum ResponseType {
      */
     INFO,
     /**
-     * Light response, juste 2-3 things
+     * Light response, just 2-3 things
      */
     LIGHT
 }

@@ -68,9 +68,9 @@ public class CategorieService {
      * @param slug Slug of Category
      */
     public void deleteCategorie(final String slug) {
-        CategorieModel categorie = this.findCategorieBySlug(slug);
+        final var categorie = this.findCategorieBySlug(slug);
 
-        for (MotoModel moto : categorie.getMotos()) {
+        for (final var moto : categorie.getMotos()) {
             moto.setCategorie(null);
             this.motoRepository.save(moto);
         }
